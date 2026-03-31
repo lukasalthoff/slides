@@ -1,0 +1,885 @@
+@import url(https://fonts.googleapis.com/css?family=Zilla+Slab:300,300i,400,400i,500,500i,700,700i);
+
+/* ===========================================
+   Lukas Althoff Style Guide
+   Primary: Dark Navy #1A3A68
+   Accent: Bright Blue #3C8BF2
+   Quote/Box: #1A3A68
+   =========================================== */
+
+/* Bold and italic */
+.b {
+  font-weight: bold;
+}
+.it {
+  font-style: italic;
+}
+
+/* Primary highlight class */
+.hi {
+  font-weight: 600;
+  color: #1A3A68 !important;
+}
+
+/* Color highlights - matching Lukas Althoff's style guide */
+.hi-navy {
+  font-weight: 600;
+  color: #1A3A68 !important;
+}
+.hi-blue {
+  font-weight: 600;
+  color: #397FDB !important;
+}
+.hi-lightblue {
+  font-weight: 600;
+  color: #5293DD !important;
+}
+.hi-paleblue {
+  font-weight: 600;
+  color: #7DACDE !important;
+}
+.hi-darkgray {
+  font-weight: 600;
+  color: #374151 !important;
+}
+.hi-gray {
+  font-weight: 600;
+  color: #6B7280 !important;
+}
+
+/* Legacy color mappings for LaTeX compatibility */
+.hi-pink {
+  font-weight: 600;
+  color: #D4484C !important;
+}
+.hi-slate {
+  font-weight: 600;
+  color: #23373B !important;
+}
+.hi-turquoise {
+  font-weight: 600;
+  color: #44C1C4 !important;
+}
+.hi-purple {
+  font-weight: 600;
+  color: #6A5ACD !important;
+}
+.hi-lablue {
+  font-weight: 600;
+  color: #1A3A68 !important;
+}
+.hi-newblue {
+  font-weight: 600;
+  color: #397FDB !important;
+}
+.hi-orange {
+  font-weight: 600;
+  color: #FFA500 !important;
+}
+.hi-laorange {
+  font-weight: 600;
+  color: #FA7D17 !important;
+}
+.hi-yellow {
+  font-weight: 600;
+  color: #F6C443 !important;
+}
+.hi-layellow {
+  font-weight: 600;
+  color: #F6C443 !important;
+}
+.hi-green {
+  font-weight: 600;
+  color: #7CAE96 !important;
+}
+.hi-lagreen {
+  font-weight: 600;
+  color: #2D693C !important;
+}
+.hi-grey {
+  font-weight: 600;
+  color: #6B7280 !important;
+}
+.hi-red {
+  font-weight: 600;
+  color: #fb6107 !important;
+}
+.hi-lared {
+  font-weight: 600;
+  color: #D4484C !important;
+}
+.hi-lalightblue {
+  font-weight: 600;
+  color: #397FDB !important;
+}
+
+/* Plain text colors */
+.navy {
+  color: #1A3A68 !important;
+}
+.blue {
+  color: #397FDB !important;
+}
+.lightblue {
+  color: #5293DD !important;
+}
+.darkgray {
+  color: #374151 !important;
+}
+.gray {
+  color: #6B7280 !important;
+}
+.lightgray {
+  color: #F5F7FA !important;
+}
+.white {
+  color: #ffffff !important;
+}
+.black {
+  color: #000000 !important;
+}
+
+/* Legacy plain colors */
+.pink {
+  color: #D4484C !important;
+}
+.slate {
+  color: #23373B !important;
+}
+.turquoise {
+  color: #44C1C4 !important;
+}
+.purple {
+  color: #6A5ACD !important;
+}
+.lablue {
+  color: #1A3A68 !important;
+}
+.newblue {
+  color: #397FDB !important;
+}
+.orange {
+  color: #FFA500 !important;
+}
+.laorange {
+  color: #FA7D17 !important;
+}
+.yellow {
+  color: #D8BD44 !important;
+}
+.layellow {
+  color: #F6C443 !important;
+}
+.green {
+  color: #7CAE96 !important;
+}
+.lagreen {
+  color: #2D693C !important;
+}
+.grey {
+  color: #6B7280 !important;
+}
+.grey-mid {
+  color: #6B7280 !important;
+}
+.grey-vlight {
+  color: #F5F7FA !important;
+}
+.red {
+  color: #fb6107 !important;
+}
+.lared {
+  color: #D4484C !important;
+}
+.lalightblue {
+  color: #397FDB !important;
+}
+
+/* Mono-spaced font */
+.mono {
+  font-family: monospace;
+}
+
+/* Text decorations */
+.ul {
+  text-decoration: underline;
+}
+.ol {
+  text-decoration: overline;
+}
+.st {
+  text-decoration: line-through;
+}
+
+/* Fraction styling */
+.top {
+  display: inline-block;
+}
+.bottom {
+  border-top: solid black 1px;
+  display: inline-block;
+  clear: left;
+}
+
+.remark-code-line-highlighted {
+  background-color: rgba(57, 127, 219, 0.3);
+}
+
+/* Transparent text (helpful for spacing) */
+.tran {
+  opacity: 0 !important;
+}
+
+/* Size classes */
+.bigger {
+  font-size: 125%;
+}
+.smaller {
+  font-size: 95%;
+}
+.smallest {
+  font-size: 85%;
+}
+.small {
+  font-size: 75%;
+}
+.tiny {
+  font-size: 50%;
+}
+
+/* Main slide content */
+.remark-slide-content {
+  background-color: #ffffff;
+  font-size: 24px;
+  padding: 1em 2em 1em 2em;
+}
+
+/* Inverse slides - light gray background */
+.inverse, .agenda {
+  background-color: #F0F0F0;
+  color: #1A3A68;
+  text-shadow: none;
+}
+
+.inverse h1, .inverse h2, .inverse h3,
+.agenda h1, .agenda h2, .agenda h3 {
+  color: #1A3A68;
+}
+
+/* Title slide - base styles (overridden at end of file) */
+
+/* Padding */
+.pad-left {
+  margin-left: 5%;
+}
+
+/* Footnotes */
+.footnote {
+  bottom: 1.5em;
+  font-size: 70%;
+  color: #6B7280;
+}
+
+/* Dark slide variant */
+.dark-slide {
+  background-color: #F0F0F0;
+  border-top: 0px solid #F0F0F0;
+}
+.dark-slide .remark-slide-number {
+  display: none;
+}
+
+/* White slide variant */
+.white-slide {
+  background-color: #ffffff;
+  border-top: 0px solid #ffffff;
+}
+.white-slide .remark-slide-number {
+  display: none;
+}
+
+/* Quote slide layout */
+.remark-slide-content.quote-slide {
+  background-color: #ffffff;
+  border-top: none !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+  min-height: 100%;
+  padding: 0 2em;
+  box-sizing: border-box;
+  overflow: hidden;
+  box-shadow: 0 0 0 200vmax #ffffff;
+}
+
+.quote-box {
+  width: 75%;
+  max-width: 960px;
+  aspect-ratio: 16 / 9;
+  background-color: #1A3A68;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: 400;
+  font-size: 1.5em;
+  line-height: 1.2;
+  padding: 24px 32px;
+  box-sizing: border-box;
+}
+
+.quote-box p {
+  margin: 0;
+}
+
+.quote-source {
+  margin-top: 20px;
+  color: #1A3A68;
+  font-weight: 400;
+  font-size: 1em;
+}
+
+/* Blurry background image slide */
+.bg-blurry {
+  background-image: url("files/blurry_background.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Countdown timer */
+.timer-countdown {
+  font-size: 120px;
+  font-weight: 700;
+  color: #1A3A68;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  text-shadow: none;
+}
+
+.timer-quote {
+  font-size: 48px;
+  font-weight: 600;
+  color: #1A3A68;
+  text-align: center;
+  line-height: 1.15;
+  max-width: 80%;
+  margin: 0 auto 28px;
+}
+
+.timer-sep {
+  width: 60%;
+  height: 2px;
+  background-color: #1A3A68;
+  margin: 0 auto 40px;
+  opacity: 0.45;
+}
+
+.timer-controls {
+  margin-top: 24px;
+  display: inline-flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+}
+
+.timer-toggle {
+  background-color: #1A3A68;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 22px;
+  font-size: 24px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.timer-toggle.is-reset {
+  font-size: 22px;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+}
+
+.timer-toggle:hover {
+  background-color: #1A3A68;
+}
+
+.timer-toggle:active {
+  background-color: #1A3A68;
+}
+
+.timer-toggle:focus-visible {
+  outline: 3px solid rgba(31, 74, 189, 0.35);
+  outline-offset: 3px;
+}
+
+
+/* Math styling */
+.mjx-chtml {
+  font-size: 103% !important;
+}
+
+/* Mono-spaced font, smaller */
+.mono-small {
+  font-family: monospace;
+  font-size: 20px;
+}
+.mono-small .mjx-chtml {
+  font-size: 103% !important;
+}
+
+/* Pseudocode blocks */
+.pseudocode, .pseudocode-small {
+  font-family: monospace;
+  background: #F5F7FA;
+  border-radius: 3px;
+  padding: 10px;
+}
+.pseudocode-small {
+  font-size: 20px;
+}
+
+/* Super and subscript */
+.super {
+  vertical-align: super;
+  font-size: 70%;
+}
+.sub {
+  vertical-align: sub;
+  font-size: 70%;
+}
+
+/* Code blocks */
+.remark-code {
+  font-size: 70%;
+}
+
+/* Inverse slide headers */
+.inverse > h1 {
+  color: #1A3A68;
+  font-weight: bold;
+}
+
+.inverse > h2 {
+  color: #3C8BF2;
+  font-weight: 300;
+  font-size: 40px;
+  font-style: italic;
+  margin-top: -25px;
+}
+
+/* Inline code */
+.remark-inline-code {
+  background: #F5F7FA;
+  border-radius: 3px;
+  padding: 4px;
+}
+
+/* Column layouts - 2/3 left; 1/3 right */
+.more-left {
+  float: left;
+  width: 63%;
+}
+.less-right {
+  float: right;
+  width: 31%;
+}
+.more-right ~ * {
+  clear: both;
+}
+
+/* Two column layout */
+.pull-left {
+  float: left;
+  width: 47%;
+}
+.pull-right {
+  float: right;
+  width: 47%;
+}
+
+.col-left {
+  float: left;
+  width: 47%;
+  margin-top: -1em;
+}
+.col-right {
+  float: right;
+  width: 47%;
+  margin-top: -1em;
+}
+
+/* Tables */
+table {
+  color: #374151;
+  font-size: 16pt;
+}
+th {
+  background-color: #F5F7FA;
+  color: #1A3A68;
+  font-weight: bold;
+}
+td {
+  background-color: #ffffff;
+}
+tr:nth-child(even) td {
+  background-color: #F5F7FA;
+}
+
+/* Question and answer */
+.qa {
+  font-weight: 500;
+  color: #397FDB !important;
+  font-family: 'Zilla Slab' !important;
+}
+
+/* Attention */
+.attn {
+  font-weight: 500;
+  color: #D4484C !important;
+  font-family: 'Zilla Slab' !important;
+}
+
+/* Example */
+.ex {
+  font-weight: 300;
+  color: #6B7280 !important;
+}
+
+/* Note */
+.note {
+  font-weight: 300;
+  font-style: italic;
+  color: #374151 !important;
+  font-family: 'Zilla Slab' !important;
+}
+
+/* Source footnote styling */
+.source {
+  font-size: 60%;
+  color: #6B7280;
+  position: absolute;
+  bottom: 1em;
+}
+
+/* Remove orange line from metropolis theme */
+hr, .title-slide h2::after, .mline h1::after {
+  content: '';
+  display: block;
+  border: none;
+  background-color: #E5E7EB;
+  color: #E5E7EB;
+  height: 1px;
+}
+
+/* Very bold text - applies to **text** (markdown bold) */
+.remark-slide-content strong {
+  color: #000000;
+  font-weight: 800;
+}
+
+/* Legacy ulla classes - kept for backward compatibility */
+.ullas, .ullar, .ullan, .ullao, .ullalab {
+  color: #000000;
+  font-weight: 800;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* Vertical centering of slide content (LaTeX \btVfill equivalent)
+   Uses absolute positioning so the parent layout is never modified,
+   avoiding any remark.js rendering artefacts.                        */
+.remark-slide-content {
+  position: relative;
+}
+
+.center-content {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 2em;
+  right: 2em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Tighter bullet-point spacing */
+.remark-slide-content li {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+/* More breathing room above top-level bullets */
+.remark-slide-content > ul > li,
+.remark-slide-content > ol > li,
+.remark-slide-content .center-content > ul > li,
+.remark-slide-content .center-content > ol > li {
+  margin-top: 0.4em;
+}
+.remark-slide-content ul,
+.remark-slide-content ol {
+  margin-top: 0.15em;
+  margin-bottom: 0.15em;
+}
+/* Remove gap between a parent bullet and its nested sub-bullets */
+.remark-slide-content li > ul,
+.remark-slide-content li > ol {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+/* Remove paragraph spacing inside list items and center-content (created by markdown) */
+.remark-slide-content li > p,
+.remark-slide-content .center-content > p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* Center images by default */
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Full width image */
+.full-width img {
+  width: 100%;
+}
+
+/* Blockquotes - styled with accent color */
+blockquote {
+  border-left: 4px solid #397FDB;
+  padding-left: 1em;
+  color: #374151;
+  font-style: italic;
+}
+
+/* Links - Bright Blue per style guide */
+a {
+  color: #1A3A68;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #1A3A68;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Slide number styling */
+.remark-slide-number {
+  color: #6B7280;
+  font-size: 12pt;
+}
+
+/* ===========================================
+   Override Metropolis Theme Header Bar
+   Light gray bar instead of blue/gray
+   =========================================== */
+
+/* Override the metropolis header bar - make it light gray */
+.remark-slide-content:not(.inverse):not(.title-slide):not(.agenda) {
+  border-top: 3px solid #B8B8B8;
+}
+
+/* Slide titles (h1) - Navy blue, smaller size to fit one line */
+.remark-slide-content h1 {
+  color: #1A3A68;
+  font-size: 1.4em;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 0.5em;
+}
+
+/* Override metropolis h1 specifically */
+.remark-slide-content:not(.inverse):not(.title-slide):not(.agenda) h1 {
+  color: #1A3A68;
+  font-size: 1.4em;
+  font-weight: 700;
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0.6em;
+}
+
+/* Remove any colored bar from metropolis */
+.remark-slide-content::before {
+  display: none !important;
+}
+
+/* Override metropolis progress bar if present */
+.remark-slide-content.hljs-default {
+  border-top-color: #D0D0D0 !important;
+}
+
+/* Ensure inverse slides keep their styling - no bar at all */
+.inverse, .agenda {
+  border-top: none !important;
+}
+
+.inverse h1, .agenda h1 {
+  color: #1A3A68 !important;
+  border-bottom: none;
+}
+
+/* Title slide specific overrides */
+.title-slide {
+  background-color: #ffffff !important;
+  border-top: none !important;
+}
+
+.title-slide h1 {
+  font-size: 1.8em !important;
+  font-weight: bold !important;
+  color: #1A3A68 !important;
+  border-bottom: none !important;
+}
+
+.title-slide h2 {
+  color: #3C8BF2 !important;
+  font-size: 1.8em !important;
+  font-weight: 400 !important;
+}
+
+.title-slide h3 {
+  color: #6B7280 !important;
+}
+
+/* ===========================================
+   Agenda Slides - Section Navigation
+   =========================================== */
+
+/* Agenda slide styling - blue background, vertically centered */
+.agenda {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  height: 100% !important;
+  min-height: 100% !important;
+}
+
+.agenda h1 {
+  font-size: 1.6em !important;
+  font-weight: 700 !important;
+  margin-bottom: 1em !important;
+}
+
+/* Agenda list items - numbered, muted light blue by default */
+.agenda-list {
+  list-style: none;
+  padding-left: 0;
+  font-size: 1.1em;
+  line-height: 2;
+  counter-reset: agenda-counter;
+}
+
+.agenda-list li {
+  color: #9CA3AF;
+  padding: 0.2em 0;
+  counter-increment: agenda-counter;
+}
+
+.agenda-list li::before {
+  content: counter(agenda-counter) ". ";
+  color: #1A3A68;
+  margin-right: 0.3em;
+}
+
+/* Current/active section - dark navy */
+.agenda-list li.current {
+  color: #1A3A68;
+  font-weight: 600;
+}
+
+/* Completed sections - medium gray */
+.agenda-list li.done {
+  color: #6B7280;
+}
+
+/* Upcoming sections - muted gray */
+.agenda-list li.upcoming {
+  color: #9CA3AF;
+}
+
+/* Nested agenda sub-items (e.g., 3.1, 3.2) */
+.agenda-list ul {
+  list-style: none;
+  padding-left: 1.5em;
+  margin-top: 0.3em;
+  counter-reset: agenda-sub-counter;
+}
+
+.agenda-list ul li {
+  font-size: 0.95em;
+  line-height: 1.8;
+  counter-increment: agenda-sub-counter;
+  color: #9CA3AF;
+}
+
+.agenda-list ul li::before {
+  content: counter(agenda-counter) "." counter(agenda-sub-counter) " ";
+}
+
+.agenda .remark-slide-number {
+  color: #6B7280;
+}
+
+/* ===========================================
+   Button Links (matching website style)
+   =========================================== */
+
+/* Button style for "Details" type links */
+a.btn {
+  display: inline-block;
+  padding: 0px 10px;
+  border: 1px solid #1A3A68;
+  border-radius: 3px;
+  text-decoration: none;
+  font-size: 0.92em;
+  font-weight: 500;
+  color: #1A3A68;
+  background-color: transparent;
+  transition: background-color 0.2s, color 0.2s;
+  margin-right: 4px;
+}
+
+a.btn:visited {
+  color: #1A3A68;
+}
+
+a.btn:hover {
+  background-color: #1A3A68;
+  color: #fff;
+}
+
+/* Back button - positioned at bottom of slide */
+a.btn-back {
+  position: absolute;
+  bottom: 40px;
+  left: 60px;
+}
+
+/* Add arrow to external link buttons */
+a.btn[target="_blank"]::after {
+  content: " ↗";
+  font-size: 0.85em;
+}
+
+/* Email links - light blue, no button styling */
+a[href^="mailto:"] {
+  color: #1A3A68;
+  text-decoration: none;
+}
+
+a[href^="mailto:"]:hover {
+  text-decoration: underline;
+}
+
+a[href^="mailto:"]:visited {
+  color: #1A3A68;
+}

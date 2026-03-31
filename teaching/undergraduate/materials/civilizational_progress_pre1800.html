@@ -1,0 +1,81 @@
+<style>html,body{margin:0;padding:0;overflow:hidden;height:100%;}</style>
+<div style="display:flex;align-items:center;justify-content:center;height:100%;box-sizing:border-box;"><div style="width:100%;max-width:900px;padding:0 1rem;">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+<label style="display:flex;align-items:center;gap:6px;font-size:15px;color:#555;cursor:pointer;user-select:none;">
+<input type="checkbox" id="log-toggle" onchange="toggleLog()" style="cursor:pointer;"> Log scale
+</label>
+<span style="font-size:14px;color:#888;margin-left:auto;">Based on Maddison Project estimates, world average</span>
+</div>
+<div style="position:relative;width:100%;height:350px;">
+<canvas id="mainChart"></canvas>
+</div>
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const NAVY='#1A3A68';
+const years=[-10000,-5000,-3000,-1000,-500,1,500,1000,1200,1500,1600,1700];
+const values=[400,430,500,550,580,600,550,600,650,700,750,800];
+let logScale=false;
+let chart;
+
+function fmtYear(y){
+  if(y<0){const a=Math.abs(y);return (a>=1000?a.toLocaleString():String(a))+' BCE';}
+  if(y===0)return '1 CE';
+  return String(y);
+}
+
+function makeChart(){
+  const ctx=document.getElementById('mainChart').getContext('2d');
+  if(chart)chart.destroy();
+  const grad=ctx.createLinearGradient(0,0,0,350);
+  grad.addColorStop(0,NAVY+'30');
+  grad.addColorStop(1,NAVY+'05');
+
+  const points=years.map((yr,i)=>({x:yr,y:values[i]}));
+
+  chart=new Chart(ctx,{
+    type:'line',
+    data:{datasets:[{data:points,borderColor:NAVY,backgroundColor:grad,borderWidth:2.5,pointRadius:3,pointBackgroundColor:NAVY,pointBorderColor:'#fff',pointBorderWidth:1.5,pointHoverRadius:6,fill:true,tension:0.3}]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:NAVY,titleFont:{size:15},bodyFont:{size:15},padding:10,cornerRadius:8,
+          callbacks:{
+            title:function(items){return fmtYear(items[0].parsed.x);},
+            label:function(item){return '$'+item.parsed.y.toLocaleString();}
+          }
+        }
+      },
+      scales:{
+        x:{
+          type:'linear',
+          min:-10000,max:1700,
+          grid:{display:false},
+          ticks:{
+            font:{size:14},color:'#555',
+            stepSize:2000,
+            callback:function(v){return fmtYear(v);}
+          }
+        },
+        y:{
+          type:logScale?'logarithmic':'linear',
+          grid:{display:false},
+          ticks:{font:{size:16},color:'#555',callback:function(v){return '$'+v.toLocaleString();}},
+          title:{display:true,text:'GDP per capita (1990 int. $)',font:{size:17},color:'#555'}
+        }
+      },
+      animation:{duration:600,easing:'easeOutQuart'}
+    }
+  });
+}
+
+function toggleLog(){
+  logScale=document.getElementById('log-toggle').checked;
+  makeChart();
+}
+
+makeChart();
+</script>

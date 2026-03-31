@@ -1,0 +1,256 @@
+<style>
+html,body{margin:0;padding:0;overflow:hidden;height:100%;}
+.mt-btn {
+  font-size:18px; padding:10px 16px; border-radius:6px;
+  border:1.5px solid #1A3A68; background:transparent; color:#1A3A68;
+  cursor:pointer; transition:all 0.2s; font-weight:500;
+  text-align:left; width:100%; box-sizing:border-box;
+}
+.mt-btn:hover { background:#1A3A68; color:#fff; }
+.mt-btn.active { background:#1A3A68; color:#fff; }
+.mt-btn.done { opacity:0.55; }
+</style>
+<div style="display: flex; align-items: center; justify-content: center; height: 100%; box-sizing: border-box; padding: 0.5rem 1rem;">
+  <div style="flex: 0 0 220px; display: flex; flex-direction: column; gap: 12px; padding-right: 24px;">
+    <button id="btn0" class="mt-btn active">0: Old world</button>
+    <button id="btn1" class="mt-btn">1: Introduce technology</button>
+    <button id="btn2" class="mt-btn">2: New world</button>
+  </div>
+  <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; min-width: 0; height: 100%;">
+    <canvas id="topChart" style="width: 100%; height: 46%;"></canvas>
+    <canvas id="botChart" style="width: 100%; height: 40%; margin-top: 4px;"></canvas>
+  </div>
+</div>
+<script>
+(function() {
+  const NAVY = '#1A3A68';
+  const LALIGHTBLUE = '#397FDB';
+  const c1 = document.getElementById('topChart');
+  const c2 = document.getElementById('botChart');
+  const ctx1 = c1.getContext('2d');
+  const ctx2 = c2.getContext('2d');
+
+  function setupHiDPI(canvas, ctx) {
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    return { w: rect.width, h: rect.height };
+  }
+  const btn0 = document.getElementById('btn0');
+  const btn1 = document.getElementById('btn1');
+  const btn2 = document.getElementById('btn2');
+  const btns = [btn0, btn1, btn2];
+
+  const textColor = '#2C2C2A';
+  const mutedColor = '#888';
+  const axisColor = 'rgba(0,0,0,0.4)';
+  const dashColor = 'rgba(0,0,0,0.3)';
+  const curveColor = NAVY;
+  const newCurveColor = LALIGHTBLUE;
+  const dotColor = NAVY;
+  const trailColor = 'rgba(57,127,219,0.35)';
+  const highlightColor = LALIGHTBLUE;
+  const axisLabelColor = '#555';
+
+  const A0 = 4.5, A1 = 6, yBar = 2, slope = 0.00015;
+  function yFromL(A, L) { return A - slope * L; }
+  function LFromY(A, y) { return (A - y) / slope; }
+  function nFromY(y) { return 0.03 * (y - yBar); }
+  function Lstar(A) { return LFromY(A, yBar); }
+
+  let phase = 0, displayA = A0, currentL = Lstar(A0), animFrame = null, trail = [];
+
+  let top, bot;
+  function recalcLayout() {
+    const s1 = setupHiDPI(c1, ctx1);
+    const s2 = setupHiDPI(c2, ctx2);
+    top = { l: 50, r: 140, t: 30, b: 36, w: s1.w, h: s1.h };
+    bot = { l: 50, r: 140, t: 28, b: 42, w: s2.w, h: s2.h };
+    top.pw = top.w - top.l - top.r; top.ph = top.h - top.t - top.b;
+    bot.pw = bot.w - bot.l - bot.r; bot.ph = bot.h - bot.t - bot.b;
+  }
+  const yMin = 0.5, yMax = 5, LMin = 0, LMax = 30000, nMin = -0.06, nMax = 0.1;
+
+  function mapTop(y, L) { return [top.l + (y - yMin)/(yMax - yMin)*top.pw, top.t + top.ph - (L - LMin)/(LMax - LMin)*top.ph]; }
+  function mapBot(y, n) { return [bot.l + (y - yMin)/(yMax - yMin)*bot.pw, bot.t + bot.ph - (n - nMin)/(nMax - nMin)*bot.ph]; }
+
+  function drawArrow(ctx, x, y, v) {
+    ctx.beginPath();
+    if (v) { ctx.moveTo(x-6,y+9); ctx.lineTo(x,y); ctx.lineTo(x+6,y+9); }
+    else { ctx.moveTo(x-9,y-6); ctx.lineTo(x,y); ctx.lineTo(x-9,y+6); }
+    ctx.stroke();
+  }
+
+  function drawCurve(ctx, A, color, dashed) {
+    ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.setLineDash(dashed ? [8,5] : []);
+    ctx.beginPath(); let s = false;
+    for (let y = yMin+0.1; y <= yMax; y += 0.02) {
+      let L = LFromY(A,y); if (L > LMax || L < 0) continue;
+      let [px,py] = mapTop(y,L);
+      if (!s) { ctx.moveTo(px,py); s=true; } else ctx.lineTo(px,py);
+    }
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+
+  function drawDash(ctx, x, y, p) {
+    let pan = p === 'top' ? top : bot;
+    ctx.setLineDash([6,5]); ctx.strokeStyle = dashColor; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(pan.l,y); ctx.lineTo(x,y); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x,pan.t+pan.ph); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  function styleButtons() {
+    btns.forEach((b, i) => {
+      b.className = 'mt-btn';
+      if (i === phase || (phase === 3 && i === 2)) {
+        b.classList.add('active');
+      } else if (i < phase) {
+        b.classList.add('done');
+      }
+    });
+  }
+
+  function drawTopPanel() {
+    ctx1.clearRect(0,0,top.w,top.h);
+    ctx1.strokeStyle = axisColor; ctx1.lineWidth = 2;
+    ctx1.beginPath(); ctx1.moveTo(top.l,top.t); ctx1.lineTo(top.l,top.t+top.ph); ctx1.lineTo(top.l+top.pw,top.t+top.ph); ctx1.stroke();
+    drawArrow(ctx1,top.l,top.t,true); drawArrow(ctx1,top.l+top.pw,top.t+top.ph,false);
+
+    ctx1.font = '500 18px system-ui, sans-serif'; ctx1.fillStyle = axisLabelColor; ctx1.textAlign = 'left';
+    ctx1.fillText('Population (L)',top.l, top.t - 10);
+
+    ctx1.font = '18px system-ui, sans-serif'; ctx1.fillStyle = axisLabelColor; ctx1.textAlign = 'right';
+    ctx1.fillText('Income per capita (y)',top.l+top.pw,top.t+top.ph+30);
+
+    let showNew = phase >= 1;
+    drawCurve(ctx1, A0, curveColor, showNew);
+    if (showNew) drawCurve(ctx1, displayA, newCurveColor, false);
+
+    let Ls0 = Lstar(A0); let [eqX0,eqY0] = mapTop(yBar,Ls0);
+    drawDash(ctx1,eqX0,eqY0,'top');
+    ctx1.font = '500 20px system-ui, sans-serif'; ctx1.fillStyle = mutedColor; ctx1.textAlign = 'right';
+    ctx1.fillText('L*',top.l-10,eqY0+6);
+
+    if (showNew) {
+      let LsN = Lstar(displayA); let [eqXN,eqYN] = mapTop(yBar,LsN);
+      drawDash(ctx1,eqXN,eqYN,'top');
+      ctx1.fillStyle = newCurveColor; ctx1.textAlign = 'right';
+      ctx1.fillText("L*'",top.l-10,eqYN+6);
+    }
+
+    if (phase === 1) {
+      let yJ = yFromL(displayA,currentL); let [jx,jy] = mapTop(yJ,currentL);
+      let [ox] = mapTop(yBar,currentL);
+      ctx1.strokeStyle = highlightColor; ctx1.lineWidth = 2.5; ctx1.setLineDash([5,4]);
+      ctx1.beginPath(); ctx1.moveTo(ox,jy); ctx1.lineTo(jx,jy); ctx1.stroke(); ctx1.setLineDash([]);
+      ctx1.fillStyle = highlightColor; ctx1.font = '500 18px system-ui, sans-serif'; ctx1.textAlign = 'left';
+      ctx1.fillText('income jumps',jx+10,jy-8);
+    }
+
+    let curY = yFromL(displayA,currentL); let [dotX,dotY] = mapTop(curY,currentL);
+    if (trail.length > 1) {
+      ctx1.strokeStyle = trailColor; ctx1.lineWidth = 2.5; ctx1.beginPath();
+      let [tx,ty] = mapTop(trail[0][0],trail[0][1]); ctx1.moveTo(tx,ty);
+      for (let i=1;i<trail.length;i++) { [tx,ty] = mapTop(trail[i][0],trail[i][1]); ctx1.lineTo(tx,ty); }
+      ctx1.stroke();
+    }
+    ctx1.fillStyle = dotColor; ctx1.beginPath(); ctx1.arc(dotX,dotY,7,0,Math.PI*2); ctx1.fill();
+
+    // Labels inside plot, just above x-axis on the far right
+    ctx1.font = '500 18px system-ui, sans-serif'; ctx1.textAlign = 'right';
+    let labelX = top.l + top.pw - 8;
+    let labelY0 = top.t + top.ph - 10;
+    if (phase === 0) {
+      ctx1.fillStyle = curveColor;
+      ctx1.fillText('Technology', labelX, labelY0);
+    } else {
+      ctx1.fillStyle = curveColor;
+      ctx1.fillText('Old tech', labelX, labelY0);
+      let newL = LFromY(displayA, yMax);
+      let [,newLy] = mapTop(yMax, Math.max(newL, 0));
+      ctx1.fillStyle = newCurveColor;
+      ctx1.fillText('New tech', labelX, newLy - 30);
+    }
+  }
+
+  function drawBotPanel() {
+    ctx2.clearRect(0,0,bot.w,bot.h);
+    ctx2.strokeStyle = axisColor; ctx2.lineWidth = 2;
+    ctx2.beginPath(); ctx2.moveTo(bot.l,bot.t); ctx2.lineTo(bot.l,bot.t+bot.ph); ctx2.lineTo(bot.l+bot.pw,bot.t+bot.ph); ctx2.stroke();
+    drawArrow(ctx2,bot.l,bot.t,true); drawArrow(ctx2,bot.l+bot.pw,bot.t+bot.ph,false);
+
+    ctx2.font = '500 18px system-ui, sans-serif'; ctx2.fillStyle = axisLabelColor; ctx2.textAlign = 'left';
+    ctx2.fillText('Population growth (n)',bot.l, bot.t - 8);
+
+    ctx2.font = '18px system-ui, sans-serif'; ctx2.fillStyle = axisLabelColor; ctx2.textAlign = 'right';
+    ctx2.fillText('Income per capita (y)',bot.l+bot.pw,bot.t+bot.ph+35);
+
+    let [,zeroY] = mapBot(yMin,0);
+    ctx2.setLineDash([6,5]); ctx2.strokeStyle = dashColor; ctx2.lineWidth = 2;
+    ctx2.beginPath(); ctx2.moveTo(bot.l,zeroY); ctx2.lineTo(bot.l+bot.pw,zeroY); ctx2.stroke(); ctx2.setLineDash([]);
+    ctx2.font = '500 20px system-ui, sans-serif'; ctx2.fillStyle = mutedColor; ctx2.textAlign = 'right';
+    ctx2.fillText('0',bot.l-10,zeroY+6);
+
+    ctx2.strokeStyle = curveColor; ctx2.lineWidth = 3; ctx2.beginPath();
+    let [sx,sy] = mapBot(yMin,nFromY(yMin)); let [ex,ey] = mapBot(yMax,nFromY(yMax));
+    ctx2.moveTo(sx,sy); ctx2.lineTo(ex,ey); ctx2.stroke();
+
+    let [ysX] = mapBot(yBar,0);
+    ctx2.setLineDash([6,5]); ctx2.strokeStyle = dashColor; ctx2.lineWidth = 2;
+    ctx2.beginPath(); ctx2.moveTo(ysX,bot.t); ctx2.lineTo(ysX,bot.t+bot.ph); ctx2.stroke(); ctx2.setLineDash([]);
+    ctx2.font = '500 20px system-ui, sans-serif'; ctx2.fillStyle = mutedColor; ctx2.textAlign = 'center';
+    ctx2.fillText('y*',ysX,bot.t+bot.ph+22);
+
+    let curY = yFromL(displayA,currentL); let curN = nFromY(curY);
+    let [dotX,dotY] = mapBot(curY,curN);
+    ctx2.fillStyle = dotColor; ctx2.beginPath(); ctx2.arc(dotX,dotY,7,0,Math.PI*2); ctx2.fill();
+
+    if (phase === 1) {
+      ctx2.fillStyle = highlightColor; ctx2.font = '500 18px system-ui, sans-serif'; ctx2.textAlign = 'left';
+      ctx2.fillText('n > 0: population will grow',dotX+12,dotY+22);
+    }
+
+    let [,nExitPy] = mapBot(yMax, nFromY(yMax));
+  }
+
+  function draw() {
+    recalcLayout();
+    drawTopPanel(); drawBotPanel();
+  }
+
+  btn0.addEventListener('click', function() {
+    if (animFrame) cancelAnimationFrame(animFrame);
+    displayA = A0; currentL = Lstar(A0); phase = 0; trail = [];
+    styleButtons(); draw();
+  });
+  btn1.addEventListener('click', function() {
+    if (animFrame) cancelAnimationFrame(animFrame);
+    displayA = A1; currentL = Lstar(A0); phase = 1; trail = [];
+    styleButtons(); draw();
+  });
+  btn2.addEventListener('click', function() {
+    if (phase < 1) { displayA = A1; currentL = Lstar(A0); }
+    phase = 2; trail = [];
+    let curY = yFromL(displayA,currentL); trail.push([curY,currentL]);
+    styleButtons();
+    function step() {
+      let dt = 0.5;
+      let curY = yFromL(displayA,currentL); let curN = nFromY(curY);
+      currentL += curN * currentL * dt;
+      if (currentL < 10) currentL = 10;
+      trail.push([yFromL(displayA,currentL),currentL]);
+      if (trail.length > 300) trail.shift();
+      draw();
+      let Ls = Lstar(displayA);
+      if (Math.abs(currentL - Ls)/Ls < 0.002) { currentL = Ls; phase = 3; trail = []; styleButtons(); draw(); return; }
+      animFrame = requestAnimationFrame(step);
+    }
+    step();
+  });
+
+  styleButtons(); draw();
+})();
+</script>

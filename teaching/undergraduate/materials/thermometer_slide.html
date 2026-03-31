@@ -1,0 +1,127 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;600;700&display=swap');
+*{box-sizing:border-box;margin:0;font-family:'Fira Sans',sans-serif}
+.thermo-col{position:relative;width:100%;height:460px;overflow:visible}
+.tube{position:absolute;left:50%;transform:translateX(-50%);width:24px;border-radius:12px;border:1.5px solid #1A3A68;overflow:hidden;z-index:1}
+.tube-fill{position:absolute;bottom:0;width:100%}
+.tech-dot{position:absolute;left:50%;transform:translate(-50%,-50%);width:10px;height:10px;border-radius:50%;background:#fff;border:2px solid;z-index:2}
+.tech-text{position:absolute;display:flex;align-items:center;gap:4px}
+.tech-line{height:1px;flex-shrink:0;opacity:0.25}
+.tech-label{font-size:19px;font-weight:600;white-space:nowrap}
+.tech-date{font-size:14px;color:#888;white-space:nowrap}
+.phase-divider{position:absolute;left:0;right:0;height:0;border-top:1.5px dashed;z-index:0}
+.phase-label-tag{position:absolute;font-size:13px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;z-index:3}
+</style>
+<div class="thermo-col" id="thermoCol" style="height:460px">
+<div class="tube" id="tube" style="height:100%">
+<div class="tube-fill" style="height:97%;background:linear-gradient(to top,#1A3A68 0%,#1A3A68 20%,#3C8BF2 40%,#3C8BF2 60%,#7DACDE 80%,#BDD7EE 100%)"></div>
+</div>
+</div>
+<script>
+// Phase colors
+const PHASE_COLORS={
+ice:'#1A3A68',
+melt:'#3C8BF2',
+water:'#D85A30',
+steam:'#A32D2D'
+};
+
+// Phase boundaries (at these temps, draw dashed lines)
+// Ice: 32–42, Melt: 42–80, Water: 80–210, Steam: 210–212
+const phases=[
+{name:'Neolithic',t0:32,t1:42,color:PHASE_COLORS.ice},
+{name:'Intellectual',t0:42,t1:80,color:PHASE_COLORS.melt},
+{name:'Industrial',t0:80,t1:210,color:PHASE_COLORS.water},
+{name:'Digital/AI',t0:210,t1:212,color:PHASE_COLORS.steam}
+];
+
+// Techs with phase assignment
+const techs=[
+{name:'Food storage',date:'12,000 BCE',temp:34,side:'R',offset:24,phase:'ice'},
+{name:'Agriculture',date:'10,000 BCE',temp:38,side:'L',offset:24,phase:'ice'},
+{name:'Irrigation',date:'6,000 BCE',temp:44,side:'R',offset:200,phase:'melt'},
+{name:'Writing',date:'3,200 BCE',temp:50,side:'L',offset:130,phase:'melt'},
+{name:'Iron smelting',date:'1,200 BCE',temp:61,side:'R',offset:24,phase:'melt'},
+{name:'Paper',date:'~100 CE',temp:67,side:'L',offset:24,phase:'melt'},
+{name:'Mech. clock',date:'1300',temp:73,side:'R',offset:200,phase:'melt'},
+{name:'Printing press',date:'1440',temp:82,side:'L',offset:130,phase:'water'},
+{name:'Navigation',date:'~1500',temp:88,side:'R',offset:24,phase:'water'},
+{name:'Steam engine',date:'1769',temp:105,side:'L',offset:24,phase:'water'},
+{name:'Telegraph',date:'1837',temp:120,side:'R',offset:24,phase:'water'},
+{name:'Electricity',date:'1882',temp:135,side:'L',offset:130,phase:'water'},
+{name:'Radio',date:'1920',temp:155,side:'R',offset:130,phase:'water'},
+{name:'Computer',date:'1945',temp:175,side:'L',offset:24,phase:'water'},
+{name:'Internet',date:'1990s',temp:190,side:'R',offset:24,phase:'water'},
+{name:'Smartphone',date:'2007',temp:200,side:'L',offset:24,phase:'water'},
+{name:'LLMs',date:'2022',temp:211.9,side:'R',offset:130,phase:'steam'}
+];
+
+const colEl=document.getElementById('thermoCol');
+const totalH=460;
+const topPad=15,botPad=15;
+const usableH=totalH-topPad-botPad;
+const minT=32,maxT=212;
+
+function tempToY(t){
+return topPad+(1-(t-minT)/(maxT-minT))*usableH;
+}
+
+// Draw phase divider lines and labels
+phases.forEach((p,i)=>{
+if(i>0){
+// Dashed line at phase boundary
+const y=tempToY(p.t0);
+const div=document.createElement('div');
+div.className='phase-divider';
+div.style.top=y+'px';
+div.style.borderColor=p.color;
+div.style.opacity='0.4';
+colEl.appendChild(div);
+}
+// Phase label on the far right
+const midT=(p.t0+p.t1)/2;
+const midY=tempToY(midT);
+const lbl=document.createElement('div');
+lbl.className='phase-label-tag';
+lbl.style.cssText=`right:8px;top:${midY-8}px;color:${p.color}`;
+lbl.textContent=p.name;
+colEl.appendChild(lbl);
+});
+
+// Draw tech markers
+techs.forEach(t=>{
+const y=tempToY(t.temp);
+const isLeft=t.side==='L';
+const col=PHASE_COLORS[t.phase];
+
+// Dot on the tube
+const dot=document.createElement('div');
+dot.className='tech-dot';
+dot.style.top=y+'px';
+dot.style.borderColor=col;
+colEl.appendChild(dot);
+
+// Text + connecting line
+const el=document.createElement('div');
+el.className='tech-text';
+if(isLeft){
+el.style.cssText=`right:calc(50% + 14px);top:${y-13}px;flex-direction:row;text-align:left`;
+}else{
+el.style.cssText=`left:calc(50% + 14px);top:${y-13}px;flex-direction:row;text-align:left`;
+}
+const line=document.createElement('div');
+line.className='tech-line';
+line.style.width=t.offset+'px';
+line.style.background=col;
+const tw=document.createElement('div');
+tw.innerHTML=`<div class="tech-label" style="color:${col}">${t.name}</div><div class="tech-date">${t.date}</div>`;
+if(isLeft){
+el.appendChild(tw);
+el.appendChild(line);
+}else{
+el.appendChild(line);
+el.appendChild(tw);
+}
+colEl.appendChild(el);
+});
+</script>

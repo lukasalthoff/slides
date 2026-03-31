@@ -1,0 +1,349 @@
+<meta charset="UTF-8">
+<style>
+html,body{margin:0;padding:0;overflow:hidden;height:100%;}
+.me-btn {
+  font-size:16px; padding:10px 14px; border-radius:6px;
+  border:1.5px solid #1A3A68; background:transparent; color:#1A3A68;
+  cursor:pointer; transition:all 0.2s; font-weight:500;
+  text-align:left; width:100%; box-sizing:border-box;
+}
+.me-btn:hover { background:#1A3A68; color:#fff; }
+.me-btn.active { background:#1A3A68; color:#fff; }
+.me-btn.done { opacity:0.55; }
+</style>
+<div style="display: flex; align-items: center; justify-content: center; height: 100%; box-sizing: border-box; padding: 0.5rem 1rem;">
+  <div style="flex: 0 0 240px; display: flex; flex-direction: column; gap: 10px; padding-right: 20px;">
+    <button id="btn0" class="me-btn active">0: Malthusian world</button>
+    <button id="btn1" class="me-btn">1: Kremer (1993) — more people, more ideas</button>
+    <button id="btn2" class="me-btn">2: Galor and Weil (2000) — demographic transition</button>
+    <button id="btn3" class="me-btn">3: Escape</button>
+  </div>
+  <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; min-width: 0; height: 100%;">
+    <canvas id="topChart" style="width: 100%; height: 46%;"></canvas>
+    <canvas id="botChart" style="width: 100%; height: 40%; margin-top: 4px;"></canvas>
+  </div>
+</div>
+<script>
+(function() {
+  const NAVY = '#1A3A68';
+  const LALIGHTBLUE = '#397FDB';
+  const c1 = document.getElementById('topChart');
+  const c2 = document.getElementById('botChart');
+  const ctx1 = c1.getContext('2d');
+  const ctx2 = c2.getContext('2d');
+
+  function setupHiDPI(canvas, ctx) {
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    return { w: rect.width, h: rect.height };
+  }
+  const btn0 = document.getElementById('btn0');
+  const btn1 = document.getElementById('btn1');
+  const btn2 = document.getElementById('btn2');
+  const btn3 = document.getElementById('btn3');
+  const btns = [btn0, btn1, btn2, btn3];
+
+  const textColor = '#2C2C2A';
+  const mutedColor = '#888';
+  const axisColor = 'rgba(0,0,0,0.4)';
+  const dashColor = 'rgba(0,0,0,0.3)';
+  const curveColor = NAVY;
+  const newCurveColor = LALIGHTBLUE;
+  const dotColor = NAVY;
+  const trailColor = 'rgba(57,127,219,0.35)';
+  const axisLabelColor = '#555';
+
+  const A0 = 4.5, yBar = 2, slope = 0.00015;
+  const yMinP = 0.5, yMaxP = 12, LMin = 0, LMax = 40000, nMin = -0.04, nMax = 0.12;
+
+  function yFromL(A, L) { return A - slope * L; }
+  function LFromY(A, y) { return (A - y) / slope; }
+  function nMalthus(y) { return 0.03 * (y - yBar); }
+
+  const yHigh = 10;
+  // Demographic transition: follows Malthusian line, then smoothly peels off
+  // Uses a logistic decay that kicks in around yTurn, always stays <= nMalthus
+  const yTurn = 4; // income where transition begins
+  const steepness = 1.2;
+  function nDemographic(y) {
+    let nM = nMalthus(y);
+    if (y <= yBar) return nM;
+    // Damping factor: 1 near yBar, falls to 0 approaching yHigh
+    let damp = 1 / (1 + Math.exp(steepness * (y - yTurn)));
+    // Blend: at low y, follows Malthus; at high y, converges to 0
+    return nM * damp;
+  }
+
+  const kremer = 0.0001;
+  function aFromL(L) { return A0 * (1 + kremer * L); }
+
+  // Pre-compute Kremer tech levels — exponentially increasing gaps (accelerating tech)
+  const kremerLevels = [
+    A0,
+    aFromL(1000),
+    aFromL(3000),
+    aFromL(7000),
+    aFromL(15000),
+    aFromL(20000),
+    aFromL(28000),
+    aFromL(40000)
+  ];
+  // Escape target: dot lands on the aFromL(20000) curve where n ≈ 0
+  const escapeL = 20000;
+  const escapeA = aFromL(escapeL);
+
+  let phase = 0, animFrame = null, trail = [];
+  let currentL = LFromY(A0, yBar);
+  let currentA = A0;
+  let useKremer = false, useDemographic = false;
+
+  let top, bot;
+  function recalcLayout() {
+    const s1 = setupHiDPI(c1, ctx1);
+    const s2 = setupHiDPI(c2, ctx2);
+    top = { l: 50, r: 140, t: 30, b: 36, w: s1.w, h: s1.h };
+    bot = { l: 50, r: 140, t: 28, b: 42, w: s2.w, h: s2.h };
+    top.pw = top.w - top.l - top.r; top.ph = top.h - top.t - top.b;
+    bot.pw = bot.w - bot.l - bot.r; bot.ph = bot.h - bot.t - bot.b;
+  }
+
+  function mapTop(y, L) { return [top.l + (y - yMinP)/(yMaxP - yMinP)*top.pw, top.t + top.ph - (L - LMin)/(LMax - LMin)*top.ph]; }
+  function mapBot(y, n) { return [bot.l + (y - yMinP)/(yMaxP - yMinP)*bot.pw, bot.t + bot.ph - (n - nMin)/(nMax - nMin)*bot.ph]; }
+
+  function drawArrow(ctx, x, y, v) {
+    ctx.beginPath();
+    if (v) { ctx.moveTo(x-6,y+9); ctx.lineTo(x,y); ctx.lineTo(x+6,y+9); }
+    else { ctx.moveTo(x-9,y-6); ctx.lineTo(x,y); ctx.lineTo(x-9,y+6); }
+    ctx.stroke();
+  }
+
+  function drawTechCurve(ctx, A, color, dashed, alpha) {
+    ctx.save();
+    ctx.globalAlpha = alpha !== undefined ? alpha : 1;
+    ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.setLineDash(dashed ? [8,5] : []);
+    ctx.beginPath(); let s = false;
+    for (let y = yMinP+0.1; y <= yMaxP; y += 0.05) {
+      let L = LFromY(A, y); if (L > LMax || L < LMin) continue;
+      let [px,py] = mapTop(y, L);
+      if (!s) { ctx.moveTo(px,py); s=true; } else ctx.lineTo(px,py);
+    }
+    ctx.stroke(); ctx.setLineDash([]);
+    ctx.restore();
+  }
+
+  function drawNcurve(ctx, nFunc, color, dashed) {
+    ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.setLineDash(dashed ? [8,5] : []);
+    ctx.beginPath(); let s = false;
+    for (let y = yMinP; y <= yMaxP; y += 0.05) {
+      let n = nFunc(y);
+      if (n > nMax || n < nMin) continue;
+      let [px,py] = mapBot(y, n);
+      if (!s) { ctx.moveTo(px,py); s=true; } else ctx.lineTo(px,py);
+    }
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+
+  function drawDash(ctx, x, y, p) {
+    let pan = p === 'top' ? top : bot;
+    ctx.setLineDash([6,5]); ctx.strokeStyle = dashColor; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(pan.l,y); ctx.lineTo(x,y); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x,pan.t+pan.ph); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  function styleButtons() {
+    btns.forEach((b, i) => {
+      b.className = 'me-btn';
+      if (i === phase) {
+        b.classList.add('active');
+      } else if (i < phase) {
+        b.classList.add('done');
+      }
+    });
+  }
+
+  function getNFunc() { return useDemographic ? nDemographic : nMalthus; }
+
+  function drawTopPanel() {
+    ctx1.clearRect(0,0,top.w,top.h);
+    ctx1.strokeStyle = axisColor; ctx1.lineWidth = 2;
+    ctx1.beginPath(); ctx1.moveTo(top.l,top.t); ctx1.lineTo(top.l,top.t+top.ph); ctx1.lineTo(top.l+top.pw,top.t+top.ph); ctx1.stroke();
+    drawArrow(ctx1,top.l,top.t,true); drawArrow(ctx1,top.l+top.pw,top.t+top.ph,false);
+
+    ctx1.font = '500 18px system-ui, sans-serif'; ctx1.fillStyle = axisLabelColor; ctx1.textAlign = 'left';
+    ctx1.fillText('Population (L)',top.l, top.t - 10);
+    ctx1.font = '18px system-ui, sans-serif'; ctx1.fillStyle = axisLabelColor; ctx1.textAlign = 'right';
+    ctx1.fillText('Income per capita (y)',top.l+top.pw,top.t+top.ph+30);
+
+    if (useKremer) {
+      // Draw fan of technology curves showing acceleration
+      drawTechCurve(ctx1, A0, curveColor, true, 1);
+      for (let i = 1; i < kremerLevels.length; i++) {
+        // Fade: earlier curves lighter, latest curve fully opaque
+        let a = 0.15 + 0.85 * (i / (kremerLevels.length - 1));
+        drawTechCurve(ctx1, kremerLevels[i], newCurveColor, false, a);
+      }
+      // During animation, also draw the current tech curve on top
+      if (phase === 3 && currentA > kremerLevels[kremerLevels.length-1]) {
+        drawTechCurve(ctx1, currentA, newCurveColor, false, 1);
+      }
+    } else {
+      drawTechCurve(ctx1, A0, curveColor, false, 1);
+    }
+
+    // Equilibrium dashes for A0
+    let Ls0 = LFromY(A0, yBar);
+    let [eqX0,eqY0] = mapTop(yBar, Ls0);
+    drawDash(ctx1, eqX0, eqY0, 'top');
+    ctx1.font = '500 20px system-ui, sans-serif'; ctx1.fillStyle = mutedColor; ctx1.textAlign = 'right';
+    ctx1.fillText('L*',top.l-10,eqY0+6);
+
+    // Trail
+    if (trail.length > 1) {
+      ctx1.strokeStyle = trailColor; ctx1.lineWidth = 2.5; ctx1.beginPath();
+      let [tx,ty] = mapTop(trail[0][0],trail[0][1]); ctx1.moveTo(tx,ty);
+      for (let i=1;i<trail.length;i++) { [tx,ty] = mapTop(trail[i][0],trail[i][1]); ctx1.lineTo(tx,ty); }
+      ctx1.stroke();
+    }
+
+    // Dot
+    let curY = yFromL(currentA, currentL);
+    let [dotX,dotY] = mapTop(curY, currentL);
+    ctx1.fillStyle = dotColor; ctx1.beginPath(); ctx1.arc(dotX,dotY,7,0,Math.PI*2); ctx1.fill();
+
+    // Dashed lines from dot to axes (for alignment with bottom panel)
+    if (phase >= 2) {
+      ctx1.setLineDash([6,5]); ctx1.strokeStyle = dashColor; ctx1.lineWidth = 2;
+      // Vertical: dot to x-axis
+      ctx1.beginPath(); ctx1.moveTo(dotX, dotY + 7); ctx1.lineTo(dotX, top.t + top.ph); ctx1.stroke();
+      ctx1.setLineDash([]);
+    }
+    if (phase === 3) {
+      // Horizontal: y-axis to dot
+      ctx1.setLineDash([6,5]); ctx1.strokeStyle = dashColor; ctx1.lineWidth = 2;
+      ctx1.beginPath(); ctx1.moveTo(top.l, dotY); ctx1.lineTo(dotX - 7, dotY); ctx1.stroke();
+      ctx1.setLineDash([]);
+      // Label on y-axis
+      ctx1.font = '500 20px system-ui, sans-serif'; ctx1.fillStyle = newCurveColor; ctx1.textAlign = 'right';
+      ctx1.fillText("L**", top.l - 10, dotY + 6);
+    }
+
+    // Labels
+    ctx1.font = '500 18px system-ui, sans-serif';
+    if (useKremer) {
+      // Label to the right of plot, aligned with last fan curve
+      let lastA = kremerLevels[kremerLevels.length-1];
+      if (phase === 3 && currentA > lastA) lastA = currentA;
+      let exitL = Math.min(Math.max(LFromY(lastA, yMaxP), 0), LMax * 0.9);
+      let [,py1] = mapTop(yMaxP, exitL);
+      ctx1.fillStyle = newCurveColor; ctx1.textAlign = 'left';
+      ctx1.fillText('More people,', top.l + top.pw + 10, py1 + 2);
+      ctx1.fillText('more ideas', top.l + top.pw + 10, py1 + 20);
+    } else {
+      ctx1.textAlign = 'right';
+      let labelX = top.l + top.pw - 8;
+      let labelY0 = top.t + top.ph - 10;
+      ctx1.fillStyle = curveColor; ctx1.fillText('Technology', labelX, labelY0);
+    }
+  }
+
+  function drawBotPanel() {
+    ctx2.clearRect(0,0,bot.w,bot.h);
+    ctx2.strokeStyle = axisColor; ctx2.lineWidth = 2;
+    ctx2.beginPath(); ctx2.moveTo(bot.l,bot.t); ctx2.lineTo(bot.l,bot.t+bot.ph); ctx2.lineTo(bot.l+bot.pw,bot.t+bot.ph); ctx2.stroke();
+    drawArrow(ctx2,bot.l,bot.t,true); drawArrow(ctx2,bot.l+bot.pw,bot.t+bot.ph,false);
+
+    ctx2.font = '500 18px system-ui, sans-serif'; ctx2.fillStyle = axisLabelColor; ctx2.textAlign = 'left';
+    ctx2.fillText('Population growth (n)',bot.l, bot.t - 8);
+    ctx2.font = '18px system-ui, sans-serif'; ctx2.fillStyle = axisLabelColor; ctx2.textAlign = 'right';
+    ctx2.fillText('Income per capita (y)',bot.l+bot.pw,bot.t+bot.ph+35);
+
+    // Zero line
+    let [,zeroY] = mapBot(yMinP,0);
+    ctx2.setLineDash([6,5]); ctx2.strokeStyle = dashColor; ctx2.lineWidth = 2;
+    ctx2.beginPath(); ctx2.moveTo(bot.l,zeroY); ctx2.lineTo(bot.l+bot.pw,zeroY); ctx2.stroke(); ctx2.setLineDash([]);
+    ctx2.font = '500 20px system-ui, sans-serif'; ctx2.fillStyle = mutedColor; ctx2.textAlign = 'right';
+    ctx2.fillText('0',bot.l-10,zeroY+6);
+
+    // y* dashed line
+    let [ysX] = mapBot(yBar,0);
+    ctx2.setLineDash([6,5]); ctx2.strokeStyle = dashColor; ctx2.lineWidth = 2;
+    ctx2.beginPath(); ctx2.moveTo(ysX,bot.t); ctx2.lineTo(ysX,bot.t+bot.ph); ctx2.stroke(); ctx2.setLineDash([]);
+    ctx2.font = '500 20px system-ui, sans-serif'; ctx2.fillStyle = mutedColor; ctx2.textAlign = 'center';
+    ctx2.fillText('y*',ysX,bot.t+bot.ph+22);
+
+    if (useDemographic) {
+      drawNcurve(ctx2, nMalthus, curveColor, true);
+      drawNcurve(ctx2, nDemographic, newCurveColor, false);
+
+      // Labels
+      ctx2.font = '500 18px system-ui, sans-serif'; ctx2.textAlign = 'left';
+      let nEnd1 = nMalthus(yMaxP);
+      if (nEnd1 <= nMax) { let [,py1] = mapBot(yMaxP, nEnd1); ctx2.fillStyle = curveColor; ctx2.fillText('Malthus', bot.l+bot.pw+10, py1+5); }
+      let nEnd2 = nDemographic(yMaxP);
+      let [,py2] = mapBot(yMaxP, nEnd2);
+      ctx2.fillStyle = newCurveColor; ctx2.fillText('With dem.', bot.l+bot.pw+10, py2+5);
+      ctx2.fillText('transition', bot.l+bot.pw+10, py2+20);
+    } else {
+      drawNcurve(ctx2, nMalthus, curveColor, false);
+      let nEnd = nMalthus(yMaxP);
+      if (nEnd > nMax) nEnd = nMax;
+      let [,pyN] = mapBot(yMaxP, Math.min(nEnd, nMax));
+    }
+
+    // Dot
+    let curY = yFromL(currentA, currentL);
+    let curN = getNFunc()(curY);
+    let [dotX,dotY] = mapBot(curY, curN);
+    ctx2.fillStyle = dotColor; ctx2.beginPath(); ctx2.arc(dotX,dotY,7,0,Math.PI*2); ctx2.fill();
+
+    // Vertical dashed line from top of panel to dot (for alignment with top panel)
+    if (phase >= 2) {
+      ctx2.setLineDash([6,5]); ctx2.strokeStyle = dashColor; ctx2.lineWidth = 2;
+      ctx2.beginPath(); ctx2.moveTo(dotX, bot.t); ctx2.lineTo(dotX, dotY - 7); ctx2.stroke();
+      ctx2.setLineDash([]);
+    }
+  }
+
+  function draw() {
+    recalcLayout();
+    drawTopPanel(); drawBotPanel();
+  }
+
+  function reset() {
+    if (animFrame) { cancelAnimationFrame(animFrame); animFrame = null; }
+    currentL = LFromY(A0, yBar);
+    currentA = A0;
+    trail = [];
+  }
+
+  btn0.addEventListener('click', function() {
+    reset(); phase = 0; useKremer = false; useDemographic = false;
+    styleButtons(); draw();
+  });
+
+  btn1.addEventListener('click', function() {
+    reset(); phase = 1; useKremer = true; useDemographic = false;
+    styleButtons(); draw();
+  });
+
+  btn2.addEventListener('click', function() {
+    reset(); phase = 2; useKremer = true; useDemographic = true;
+    styleButtons(); draw();
+  });
+
+  btn3.addEventListener('click', function() {
+    if (animFrame) { cancelAnimationFrame(animFrame); animFrame = null; }
+    phase = 3; useKremer = true; useDemographic = true;
+    currentL = escapeL;
+    currentA = escapeA;
+    trail = [];
+    styleButtons(); draw();
+  });
+
+  styleButtons(); draw();
+})();
+</script>
