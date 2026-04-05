@@ -1,0 +1,129 @@
+
+<style>
+  .legend { display:flex; gap:18px; flex-wrap:wrap; margin-bottom:8px; }
+  .leg-i { display:flex; align-items:center; gap:6px; font-size:20px; color:#374151; }
+  .leg-d { width:12px; height:3px; border-radius:1.5px; }
+  .readout { display:flex; gap:16px; flex-wrap:wrap; margin:8px 0 0; min-height:22px; }
+  .ro-i { font-size:20px; color:#6B7280; }
+  .ro-v { font-weight:600; color:#1A3A68; }
+</style>
+
+<div class="legend">
+  <div class="leg-i"><div class="leg-d" style="background:#EF9F27"></div>Eccentricity</div>
+  <div class="leg-i"><div class="leg-d" style="background:#1D9E75"></div>Obliquity</div>
+  <div class="leg-i"><div class="leg-d" style="background:#378ADD"></div>Precession</div>
+  <div class="leg-i"><div class="leg-d" style="background:#D85A30;height:2px"></div>Combined 65°N</div>
+</div>
+<div style="max-width:900px;margin:0 auto;">
+<canvas id="mc" style="width:100%;height:420px;cursor:crosshair;border-radius:6px;"></canvas>
+</div>
+<div class="readout" id="readout"></div>
+
+<script>
+const txtC = '#374151';
+const grid = 'rgba(0,0,0,0.06)';
+const bgF = 'rgba(26,58,104,0.03)';
+const eccCol='#EF9F27', oblCol='#1D9E75', preCol='#378ADD', combCol='#D85A30';
+
+const C = document.getElementById('mc');
+const dpr = window.devicePixelRatio || 1;
+const cRect = C.parentElement.getBoundingClientRect();
+const W = Math.round(cRect.width) || 680, H = 420;
+C.width = W*dpr; C.height = H*dpr;
+C.style.width = W+'px'; C.style.height = H+'px';
+const ctx = C.getContext('2d');
+ctx.scale(dpr, dpr);
+
+const L=130, R=W-30, maxK=150;
+const P = [
+  {lab:'Eccentricity', y:26, h:75},
+  {lab:'Obliquity', y:110, h:75},
+  {lab:'Precession', y:194, h:75},
+  {lab:'Combined', y:282, h:90},
+];
+
+function ecc(t){return 0.028+0.015*Math.sin(2*Math.PI*t/96+2.8)+0.006*Math.sin(2*Math.PI*t/125+1.2)+0.004*Math.sin(2*Math.PI*t/413+0.5);}
+function obl(t){return 23.3+1.1*Math.sin(2*Math.PI*t/41+1.4)+0.15*Math.sin(2*Math.PI*t/54+0.6);}
+function pre(t){return ecc(t)*Math.sin(2*Math.PI*t/23+0.8);}
+function comb(t){const eN=(ecc(t)-0.013)/0.036,oN=(obl(t)-22.1)/2.4,pN=pre(t)/0.05;return 0.3*eN+0.35*oN+0.35*pN;}
+
+function rng(fn){let mn=Infinity,mx=-Infinity;for(let t=0;t<=maxK;t+=0.5){const v=fn(t);if(v<mn)mn=v;if(v>mx)mx=v;}return[mn,mx];}
+const eR=rng(ecc),oR=rng(obl),pR=rng(pre),cR=rng(comb);
+
+function x(t){return R-(t/maxK)*(R-L);}
+function y(v,mn,mx,py,ph){const pad=8;return py+pad+(1-(v-mn)/(mx-mn))*(ph-2*pad);}
+
+function curve(fn,mn,mx,py,ph,col,lw){
+  ctx.beginPath();
+  for(let t=0;t<=maxK;t+=0.3){const px=x(t),py2=y(fn(t),mn,mx,py,ph);t===0?ctx.moveTo(px,py2):ctx.lineTo(px,py2);}
+  ctx.strokeStyle=col;ctx.lineWidth=lw||1.5;ctx.stroke();
+}
+function fill(fn,mn,mx,py,ph,col){
+  const mid=y((mn+mx)/2,mn,mx,py,ph);
+  ctx.beginPath();ctx.moveTo(x(0),mid);
+  for(let t=0;t<=maxK;t+=0.3)ctx.lineTo(x(t),y(fn(t),mn,mx,py,ph));
+  ctx.lineTo(x(maxK),mid);ctx.closePath();ctx.fillStyle=col;ctx.fill();
+}
+
+let hover=null;
+
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  P.forEach(p=>{
+    ctx.fillStyle=bgF;ctx.fillRect(L,p.y,R-L,p.h);
+    ctx.strokeStyle=grid;ctx.lineWidth=0.5;ctx.strokeRect(L,p.y,R-L,p.h);
+  });
+  for(let k=0;k<=maxK;k+=25){
+    const px=x(k);ctx.strokeStyle=grid;ctx.lineWidth=0.5;
+    ctx.beginPath();ctx.moveTo(px,P[0].y);ctx.lineTo(px,P[3].y+P[3].h);ctx.stroke();
+    ctx.fillStyle=txtC;ctx.font='18px sans-serif';ctx.textAlign='center';
+    ctx.fillText(k===0?'now':k+' kya',px,P[3].y+P[3].h+20);
+  }
+  P.forEach(p=>{
+    ctx.fillStyle=txtC;ctx.font='16px sans-serif';ctx.textAlign='right';
+    ctx.fillText(p.lab,L-10,p.y+p.h/2+6);
+  });
+  const ef='rgba(239,159,39,0.08)';
+  const of2='rgba(29,158,117,0.08)';
+  const pf='rgba(55,138,221,0.08)';
+  const cf='rgba(216,90,48,0.08)';
+  fill(ecc,eR[0],eR[1],P[0].y,P[0].h,ef);curve(ecc,eR[0],eR[1],P[0].y,P[0].h,eccCol);
+  fill(obl,oR[0],oR[1],P[1].y,P[1].h,of2);curve(obl,oR[0],oR[1],P[1].y,P[1].h,oblCol);
+  fill(pre,pR[0],pR[1],P[2].y,P[2].h,pf);curve(pre,pR[0],pR[1],P[2].y,P[2].h,preCol);
+  fill(comb,cR[0],cR[1],P[3].y,P[3].h,cf);curve(comb,cR[0],cR[1],P[3].y,P[3].h,combCol,1.8);
+
+  const nx=x(10);
+  ctx.setLineDash([3,3]);ctx.strokeStyle='rgba(0,0,0,0.2)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(nx,P[0].y);ctx.lineTo(nx,P[3].y+P[3].h);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle=txtC;ctx.font='600 16px sans-serif';ctx.textAlign='center';
+  ctx.fillText('Neolithic Rev.',nx,P[0].y-6);
+
+  if(hover!==null){
+    const hx=x(hover);
+    ctx.strokeStyle='rgba(0,0,0,0.2)';ctx.lineWidth=0.5;
+    ctx.beginPath();ctx.moveTo(hx,P[0].y);ctx.lineTo(hx,P[3].y+P[3].h);ctx.stroke();
+    [{fn:ecc,mn:eR[0],mx:eR[1],p:P[0],c:eccCol},{fn:obl,mn:oR[0],mx:oR[1],p:P[1],c:oblCol},{fn:pre,mn:pR[0],mx:pR[1],p:P[2],c:preCol},{fn:comb,mn:cR[0],mx:cR[1],p:P[3],c:combCol}].forEach(d=>{
+      const dy=y(d.fn(hover),d.mn,d.mx,d.p.y,d.p.h);
+      ctx.beginPath();ctx.arc(hx,dy,3.5,0,2*Math.PI);ctx.fillStyle=d.c;ctx.fill();
+    });
+    document.getElementById('readout').innerHTML=
+      `<span class="ro-i"><span class="ro-v">${Math.round(hover)} kya</span></span>`+
+      `<span class="ro-i">e = <span class="ro-v">${ecc(hover).toFixed(3)}</span></span>`+
+      `<span class="ro-i">\u03b5 = <span class="ro-v">${obl(hover).toFixed(1)}\u00b0</span></span>`+
+      `<span class="ro-i">precession = <span class="ro-v">${pre(hover).toFixed(3)}</span></span>`;
+  }
+}
+draw();
+
+function getK(e){
+  const r=C.getBoundingClientRect();
+  const sx=(e.clientX-r.left)/r.width;
+  const px=sx*W;
+  if(px<L||px>R)return null;
+  return Math.round(maxK*(1-(px-L)/(R-L)));
+}
+C.addEventListener('mousemove',e=>{hover=getK(e);draw();});
+C.addEventListener('mouseleave',()=>{hover=null;document.getElementById('readout').innerHTML='';draw();});
+C.addEventListener('touchmove',e=>{e.preventDefault();hover=getK(e.touches[0]);draw();},{passive:false});
+C.addEventListener('touchend',()=>{hover=null;document.getElementById('readout').innerHTML='';draw();});
+</script>

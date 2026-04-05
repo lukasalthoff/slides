@@ -231,6 +231,9 @@
 }
 
 /* Size classes */
+.small-text {
+  font-size: 90%;
+}
 .bigger {
   font-size: 125%;
 }
@@ -513,21 +516,32 @@
   margin-top: -1em;
 }
 
-/* Tables */
+/* Tables - clean academic style */
 table {
   color: #374151;
   font-size: 16pt;
+  border-collapse: collapse;
+  border-top: 2px solid #1A3A68;
+  border-bottom: 2px solid #1A3A68;
 }
 th {
-  background-color: #F5F7FA;
+  background-color: transparent;
   color: #1A3A68;
   font-weight: bold;
+  border-bottom: 1px solid #1A3A68;
+  padding: 6px 16px;
 }
 td {
-  background-color: #ffffff;
+  background-color: transparent;
+  padding: 4px 16px;
 }
 tr:nth-child(even) td {
-  background-color: #F5F7FA;
+  background-color: transparent !important;
+}
+.remark-slide thead,
+.remark-slide tfoot,
+.remark-slide tr:nth-child(even) {
+  background: transparent !important;
 }
 
 /* Question and answer */
