@@ -607,7 +607,7 @@ class: agenda
 .center-content[
 - **Challenge:** Institutions are endogenous
     - Rich countries may adopt better institutions
-    - Omitted variables (geography, culture) may drive both
+    - Other factors like geography, culture, disease, etc. may drive both
 
 - **Strategy:** Use colonial history as a natural experiment
     - Where Europeans faced high disease mortality, they set up extractive institutions
@@ -667,6 +667,140 @@ class: agenda
   - Extractive institutions where they didn't
   - Colonialism created a reversal of fortunes that persists today
 ]
+
+---
+class: bg-blurry, middle, center, timer-10min-civilization
+
+&lt;div class="timer-quote"&gt;Humanity experienced little growth from 200,000 BC to 10,000 BC, then slow but steady growth until the 1700s. But the growth was not shared equally. What determined societies' fate?&lt;/div&gt;
+&lt;div class="timer-sep"&gt;&lt;/div&gt;
+
+&lt;div style="text-align: left; max-width: 700px; margin: 0 auto 24px; font-size: 22px; line-height: 1.6;"&gt;
+1. &lt;strong&gt;Think&lt;/strong&gt; (2 min): Reflect individually — draw on what we covered today.&lt;br&gt;
+2. &lt;strong&gt;Discuss&lt;/strong&gt; (8 min): Share your explanations with group.
+&lt;/div&gt;
+
+&lt;div class="timer-countdown" id="timer-10min-civilization"&gt;10:00&lt;/div&gt;
+&lt;div class="timer-controls"&gt;
+  &lt;button class="timer-toggle is-play" id="timer-10min-civilization-toggle" type="button" aria-label="Start timer"&gt;&amp;#9654;&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+(function() {
+  var totalSeconds = 10 * 60;
+  var remaining = totalSeconds;
+  var intervalId = null;
+  var isRunning = false;
+  var display = document.getElementById('timer-10min-civilization');
+  var toggle = document.getElementById('timer-10min-civilization-toggle');
+  var playLabel = '&amp;#9654;';
+  var resetLabel = 'reset';
+  var buttonState = 'play';
+
+  if (!display || !toggle) {
+    return;
+  }
+
+  function formatTime(seconds) {
+    var minutes = Math.floor(seconds / 60);
+    var secs = seconds % 60;
+    return String(minutes).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+  }
+
+  function render() {
+    display.textContent = formatTime(remaining);
+  }
+
+  function setButtonState(state) {
+    buttonState = state;
+    toggle.innerHTML = state === 'reset' ? resetLabel : playLabel;
+    toggle.setAttribute('aria-label', state === 'reset' ? 'Reset timer' : 'Start timer');
+    toggle.classList.toggle('is-reset', state === 'reset');
+    toggle.classList.toggle('is-play', state === 'play');
+  }
+
+  function stopTimer() {
+    if (intervalId) {
+      clearInterval(intervalId);
+      intervalId = null;
+    }
+    isRunning = false;
+  }
+
+  function resetTimer() {
+    stopTimer();
+    remaining = totalSeconds;
+    render();
+    setButtonState('play');
+  }
+
+  function startTimer() {
+    if (isRunning) {
+      return;
+    }
+    if (remaining &lt;= 0) {
+      remaining = totalSeconds;
+    }
+    stopTimer();
+    isRunning = true;
+    setButtonState('reset');
+    intervalId = setInterval(function() {
+      remaining -= 1;
+      if (remaining &lt;= 0) {
+        remaining = 0;
+        render();
+        stopTimer();
+        return;
+      }
+      render();
+    }, 1000);
+  }
+
+  function hasTimerClass(slide) {
+    if (!slide || !slide.properties || !slide.properties.class) {
+      return false;
+    }
+    var classes = slide.properties.class.split(/[,\\s]+/).filter(Boolean);
+    return classes.indexOf('timer-10min-civilization') !== -1;
+  }
+
+  toggle.addEventListener('click', function() {
+    if (buttonState === 'play') {
+      startTimer();
+    } else {
+      resetTimer();
+    }
+  });
+
+  if (window.slideshow &amp;&amp; window.slideshow.on) {
+    var lastWasTimer = false;
+
+    window.slideshow.on('afterShowSlide', function(slide) {
+      var isTimerSlide = hasTimerClass(slide);
+      if (isTimerSlide &amp;&amp; !lastWasTimer) {
+        resetTimer();
+      }
+      if (!isTimerSlide &amp;&amp; lastWasTimer) {
+        resetTimer();
+      }
+      lastWasTimer = isTimerSlide;
+    });
+
+    if (window.slideshow.getSlides) {
+      var slides = window.slideshow.getSlides();
+      var index = typeof window.slideshow.getCurrentSlideIndex === 'function'
+        ? window.slideshow.getCurrentSlideIndex()
+        : null;
+      if (index !== null &amp;&amp; slides[index] &amp;&amp; hasTimerClass(slides[index])) {
+        lastWasTimer = true;
+        resetTimer();
+      }
+    }
+  } else {
+    resetTimer();
+  }
+})();
+&lt;/script&gt;
+
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="../../shared/remark-latest.min.js"></script>
