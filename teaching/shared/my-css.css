@@ -127,7 +127,7 @@
   color: #374151 !important;
 }
 .gray {
-  color: #6B7280 !important;
+  color: rgba(26, 58, 104, 0.5) !important;
 }
 .lightgray {
   color: #F5F7FA !important;
@@ -424,10 +424,7 @@
 /* Math styling */
 .mjx-chtml {
   font-size: 103% !important;
-<<<<<<< HEAD
-=======
   color: #1A3A68;
->>>>>>> 2ff8d1f (Add Econ 226 lectures on civilization and growth)
 }
 
 /* Mono-spaced font, smaller */
@@ -579,11 +576,7 @@ tr:nth-child(even) td {
 /* Source footnote styling */
 .source {
   font-size: 60%;
-<<<<<<< HEAD
-  color: #6B7280;
-=======
   color: rgba(26, 58, 104, 0.5);
->>>>>>> 2ff8d1f (Add Econ 226 lectures on civilization and growth)
   position: absolute;
   bottom: 1em;
 }
@@ -719,15 +712,12 @@ a:hover {
   margin-bottom: 0.5em;
 }
 
-<<<<<<< HEAD
-=======
 /* Bold text inside slide titles inherits the navy title color */
 .remark-slide-content h1 strong,
 .remark-slide-content h1 b {
   color: inherit;
 }
 
->>>>>>> 2ff8d1f (Add Econ 226 lectures on civilization and growth)
 /* Override metropolis h1 specifically */
 .remark-slide-content:not(.inverse):not(.title-slide):not(.agenda) h1 {
   color: #1A3A68;
@@ -786,11 +776,7 @@ a:hover {
    =========================================== */
 
 /* Agenda slide styling - blue background, vertically centered */
-<<<<<<< HEAD
-.agenda {
-=======
 .agenda, .student-presentation {
->>>>>>> 2ff8d1f (Add Econ 226 lectures on civilization and growth)
   display: flex !important;
   flex-direction: column !important;
   justify-content: center !important;
@@ -798,8 +784,6 @@ a:hover {
   min-height: 100% !important;
 }
 
-<<<<<<< HEAD
-=======
 .student-presentation {
   background-color: #F0F0F0;
   text-align: center;
@@ -818,7 +802,6 @@ a:hover {
   color: rgba(26, 58, 104, 0.5);
 }
 
->>>>>>> 2ff8d1f (Add Econ 226 lectures on civilization and growth)
 .agenda h1 {
   font-size: 1.6em !important;
   font-weight: 700 !important;
