@@ -115,4 +115,14 @@ function toggleLog(){
 }
 
 makeChart();
+if (new URLSearchParams(location.search).get('hidetabs') === '1') {
+  var _buttonRow = document.querySelector('[style*="display: flex"][style*="flex-wrap: wrap"]');
+  if (_buttonRow) _buttonRow.style.display = 'none';
+}
+var _initMetric = location.hash.replace('#','');
+if (['pop','gdp','life','urban','lit'].indexOf(_initMetric) >= 0) {
+  setMetric(_initMetric);
+} else {
+  makeChart();
+}
 </script>

@@ -1,0 +1,410 @@
+<style>
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #fff;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #2c2c2a;
+}
+
+.wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem 0.75rem;
+}
+
+.controls {
+  flex: 0 0 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.solow-btn {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  border: 1.5px solid #1a3a68;
+  border-radius: 6px;
+  background: transparent;
+  color: #1a3a68;
+  font-size: 17px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.solow-btn:hover,
+.solow-btn.active {
+  background: #1a3a68;
+  color: #fff;
+}
+
+.figure {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-shell {
+  flex: 1;
+  min-height: 0;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.caption {
+  min-height: 96px;
+  padding: 8px 6px 0;
+  line-height: 1.35;
+}
+
+.caption-text {
+  font-size: 17px;
+  color: #2c2c2a;
+}
+
+.caption-note {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #666;
+  white-space: pre-line;
+}
+
+@media (max-width: 800px) {
+  .wrap {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .controls {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+
+  .figure {
+    min-height: 340px;
+  }
+}
+</style>
+
+<div class="wrap">
+  <div class="controls">
+    <button class="solow-btn active" data-scene="0">0: Baseline</button>
+    <button class="solow-btn" data-scene="1">1: More saving</button>
+    <button class="solow-btn" data-scene="2">2: Faster n + delta</button>
+    <button class="solow-btn" data-scene="3">3: Better technology</button>
+  </div>
+
+  <div class="figure">
+    <div class="chart-shell">
+      <canvas id="chart"></canvas>
+    </div>
+    <div class="caption">
+      <div class="caption-text" id="caption"></div>
+      <div class="caption-note" id="note"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const NAVY = "#1A3A68";
+  const BLUE = "#397FDB";
+  const ORANGE = "#C56A1A";
+  const TEXT = "#2C2C2A";
+  const AXIS = "rgba(0,0,0,0.55)";
+  const DASH = "rgba(0,0,0,0.24)";
+  const alpha = 0.35;
+
+  const base = { s: 0.24, nd: 0.08, A: 1.00 };
+  const scenes = [
+    {
+      s: 0.24,
+      nd: 0.08,
+      A: 1.00,
+      caption: "Steady state k* is where investment just covers break-even needs.",
+      note: "Break-even investment covers depreciation and population growth, so capital per worker stops changing at k*."
+    },
+    {
+      s: 0.34,
+      nd: 0.08,
+      A: 1.00,
+      caption: "Higher saving shifts s f(k) up and raises k*.",
+      note: "This raises the level of output per worker, but once the economy reaches the new steady state, growth stops again.\nExample: households become more patient and save more."
+    },
+    {
+      s: 0.24,
+      nd: 0.11,
+      A: 1.00,
+      caption: "Faster population growth or depreciation steepens (n + delta) k and lowers k*.",
+      note: "More investment is needed just to keep capital per worker from falling.\nExamples: population growth rises through higher fertility or immigration; depreciation rises after war, natural disaster, or faster obsolescence."
+    },
+    {
+      s: 0.24,
+      nd: 0.08,
+      A: 1.25,
+      caption: "Better technology shifts s f(k) up and raises k*.",
+      note: "A one-time improvement raises the level of output per worker. Sustained growth needs A to keep rising over time."
+    }
+  ];
+
+  const canvas = document.getElementById("chart");
+  const ctx = canvas.getContext("2d");
+  const caption = document.getElementById("caption");
+  const note = document.getElementById("note");
+  const buttons = Array.from(document.querySelectorAll(".solow-btn"));
+  let sceneIndex = 0;
+  let layout = null;
+
+  function investment(k, params) {
+    return params.s * params.A * Math.pow(Math.max(k, 1e-6), alpha);
+  }
+
+  function breakeven(k, params) {
+    return params.nd * k;
+  }
+
+  function kStar(params) {
+    return Math.pow((params.s * params.A) / params.nd, 1 / (1 - alpha));
+  }
+
+  const xMax = Math.max.apply(null, scenes.map(kStar)) * 1.45;
+  const yMax = Math.max.apply(
+    null,
+    scenes.flatMap(function (params) {
+      return [investment(xMax, params), breakeven(xMax, params)];
+    })
+  ) * 1.15;
+
+  function setupHiDPI() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
+    return { w: rect.width, h: rect.height };
+  }
+
+  function recalcLayout() {
+    const size = setupHiDPI();
+    layout = { l: 64, r: 230, t: 28, b: 64, w: size.w, h: size.h };
+    layout.pw = layout.w - layout.l - layout.r;
+    layout.ph = layout.h - layout.t - layout.b;
+  }
+
+  function mapX(x) {
+    return layout.l + (x / xMax) * layout.pw;
+  }
+
+  function mapY(y) {
+    return layout.t + layout.ph - (y / yMax) * layout.ph;
+  }
+
+  function drawArrow(x1, y1, x2, y2) {
+    const angle = Math.atan2(y2 - y1, x2 - x1);
+    const head = 8;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x2, y2);
+    ctx.lineTo(
+      x2 - head * Math.cos(angle - Math.PI / 6),
+      y2 - head * Math.sin(angle - Math.PI / 6)
+    );
+    ctx.lineTo(
+      x2 - head * Math.cos(angle + Math.PI / 6),
+      y2 - head * Math.sin(angle + Math.PI / 6)
+    );
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  function drawAxes() {
+    const x0 = layout.l;
+    const y0 = layout.t + layout.ph;
+    ctx.strokeStyle = AXIS;
+    ctx.fillStyle = AXIS;
+    ctx.lineWidth = 1.8;
+    drawArrow(x0, y0, layout.l + layout.pw, y0);
+    drawArrow(x0, y0, x0, layout.t);
+
+    ctx.font = "16px system-ui, sans-serif";
+    ctx.fillStyle = "#555";
+    ctx.textAlign = "right";
+    ctx.fillText("capital per worker, k", layout.l + layout.pw, layout.h - 18);
+
+    ctx.save();
+    ctx.translate(21, layout.t + layout.ph / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.textAlign = "center";
+    ctx.fillText("investment per worker", 0, 0);
+    ctx.restore();
+
+    ctx.textAlign = "left";
+    ctx.fillText("0", layout.l - 14, layout.t + layout.ph + 22);
+  }
+
+  function drawCurve(fn, params, color, options) {
+    const opts = options || {};
+    ctx.strokeStyle = color;
+    ctx.lineWidth = opts.lineWidth || 3;
+    ctx.setLineDash(opts.dashed ? [7, 6] : []);
+    ctx.beginPath();
+    for (let i = 0; i <= 240; i += 1) {
+      const k = (i / 240) * xMax;
+      const x = mapX(k);
+      const y = mapY(fn(k, params));
+      if (i === 0) {
+        ctx.moveTo(x, y);
+      } else {
+        ctx.lineTo(x, y);
+      }
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    if (opts.label || opts.labelTitle || opts.labelEquation) {
+      const labelK = opts.alignK !== undefined ? opts.alignK : xMax;
+      const labelY = fn(labelK, params);
+      const labelX = layout.l + layout.pw + 12;
+      const baseY = mapY(labelY) + (opts.labelDy || 0);
+      ctx.fillStyle = color;
+      ctx.textAlign = "left";
+      ctx.textBaseline = "middle";
+
+      if (opts.labelTitle) {
+        ctx.font = "15px system-ui, sans-serif";
+        ctx.fillText(
+          opts.labelTitle,
+          labelX,
+          baseY + (opts.labelEquation ? -8 : 0)
+        );
+      }
+
+      if (opts.labelEquation) {
+        ctx.font = "14px system-ui, sans-serif";
+        ctx.fillText(
+          opts.labelEquation,
+          labelX,
+          baseY + (opts.labelTitle ? 10 : 0)
+        );
+      }
+
+      if (opts.label) {
+        ctx.font = "15px system-ui, sans-serif";
+        ctx.fillText(opts.label, labelX, baseY);
+      }
+
+      ctx.textBaseline = "alphabetic";
+    }
+  }
+
+  function drawSteadyState(params, label, color) {
+    const ks = kStar(params);
+    const x = mapX(ks);
+    const y = mapY(breakeven(ks, params));
+
+    ctx.strokeStyle = DASH;
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([3, 5]);
+    ctx.beginPath();
+    ctx.moveTo(x, layout.t + layout.ph);
+    ctx.lineTo(x, y);
+    ctx.lineTo(layout.l, y);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.fillStyle = color;
+    ctx.font = "16px system-ui, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(label, x, layout.t + layout.ph + 24);
+  }
+
+  function styleButtons() {
+    buttons.forEach(function (button, index) {
+      button.classList.toggle("active", index === sceneIndex);
+    });
+  }
+
+  function draw() {
+    const current = scenes[sceneIndex];
+    const showBaseline = sceneIndex !== 0;
+    const showBaselineInvestment =
+      showBaseline && (current.s !== base.s || current.A !== base.A);
+    const showBaselineBreakeven =
+      showBaseline && current.nd !== base.nd;
+    recalcLayout();
+    ctx.clearRect(0, 0, layout.w, layout.h);
+
+    drawAxes();
+
+    if (showBaselineInvestment) {
+      drawCurve(investment, base, "#AEB7C2", {
+        dashed: true,
+        lineWidth: 2.5
+      });
+    }
+
+    if (showBaselineBreakeven) {
+      drawCurve(breakeven, base, "#C7B6A5", {
+        dashed: true,
+        lineWidth: 2.5,
+        labelTitle: "baseline break-even",
+        labelEquation: "(n + \u03b4) k",
+        labelDy: 18
+      });
+    }
+
+    if (showBaselineInvestment || showBaselineBreakeven) {
+      drawSteadyState(base, "k*", "#7F8A99");
+    }
+
+    drawCurve(investment, current, BLUE, {
+      labelTitle: "actual investment",
+      labelEquation: "s f(k)",
+      labelDy: sceneIndex === 2 ? -18 : -8
+    });
+    drawCurve(breakeven, current, ORANGE, {
+      labelTitle: "break-even investment",
+      labelEquation: "(n + \u03b4) k",
+      labelDy: sceneIndex === 1 ? -10 : sceneIndex === 3 ? 6 : 12
+    });
+    drawSteadyState(current, showBaselineInvestment || showBaselineBreakeven ? "k*'" : "k*", TEXT);
+
+    caption.textContent = current.caption;
+    note.textContent = current.note;
+    styleButtons();
+  }
+
+  buttons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      sceneIndex = Number(button.dataset.scene);
+      draw();
+    });
+  });
+
+  window.addEventListener("resize", draw);
+  draw();
+}());
+</script>
