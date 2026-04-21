@@ -1,0 +1,406 @@
+<style>
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #fff;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #2c2c2a;
+}
+
+.wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem 0.75rem;
+}
+
+.controls {
+  flex: 0 0 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dtc-btn {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  border: 1.5px solid #1a3a68;
+  border-radius: 6px;
+  background: transparent;
+  color: #1a3a68;
+  font-size: 17px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.dtc-btn:hover,
+.dtc-btn.active {
+  background: #1a3a68;
+  color: #fff;
+}
+
+.figure {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-shell {
+  flex: 1;
+  min-height: 0;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.caption {
+  min-height: 96px;
+  padding: 8px 6px 0;
+  line-height: 1.35;
+}
+
+.caption-text {
+  font-size: 17px;
+  color: #2c2c2a;
+}
+
+.caption-note {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #666;
+  white-space: pre-line;
+}
+
+@media (max-width: 800px) {
+  .wrap {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .controls {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+
+  .figure {
+    min-height: 340px;
+  }
+}
+</style>
+
+<div class="wrap">
+  <div class="controls">
+    <button class="dtc-btn active" data-scene="0">0: Baseline</button>
+    <button class="dtc-btn" data-scene="1">1: Skill supply rises (short run)</button>
+    <button class="dtc-btn" data-scene="2">2: Tech responds (weak bias)</button>
+    <button class="dtc-btn" data-scene="3">3: Strong induced bias</button>
+  </div>
+
+  <div class="figure">
+    <div class="chart-shell">
+      <canvas id="chart"></canvas>
+    </div>
+    <div class="caption">
+      <div class="caption-text" id="caption"></div>
+      <div class="caption-note" id="note"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const NAVY = "#1A3A68";
+  const BLUE = "#397FDB";
+  const ORANGE = "#C56A1A";
+  const GREEN = "#2A8C5F";
+  const TEXT = "#2C2C2A";
+  const AXIS = "rgba(0,0,0,0.55)";
+  const DASH = "rgba(0,0,0,0.24)";
+  const FADE = "#B8C0CB";
+
+  const sigma = 1.5;
+  const invSig = 1 / sigma;
+  const H0 = 1.0;
+  const H1 = 1.6;
+  const A0 = 1.0;
+  const A1 = 1.2;
+  const A2 = 1.5;
+
+  function demand(hl, A) {
+    return A * Math.pow(Math.max(hl, 1e-6), -invSig);
+  }
+
+  const scenes = [
+    {
+      caption: "Baseline: supply S\u2080 meets demand D\u2080 at skill premium \u03c9\u2080.",
+      note: "Relative demand for skill slopes down with elasticity 1/\u03c3. The skill premium is determined where supply meets demand."
+    },
+    {
+      caption: "Short-run: supply of skill rises to S\u2081; move along D\u2080; premium falls to \u03c9\u2081.",
+      note: "Technology is held fixed. More skilled workers compete for the same mix of tasks, so the skill premium falls."
+    },
+    {
+      caption: "Long-run, weak bias: innovation shifts demand to D\u2081; premium recovers to \u03c9\u2082 (but \u03c9\u2082 < \u03c9\u2080).",
+      note: "Rising skill supply induces skill-complementary innovation (A_H / A_L rises). Demand shifts out, but not enough to overturn the substitution effect."
+    },
+    {
+      caption: "Strong induced bias: demand shifts further to D\u2082; premium rises to \u03c9\u2083 > \u03c9\u2080.",
+      note: "When \u03c3 is large enough, induced tech change overturns the usual substitution effect. The long-run envelope slopes upward: rising skill supply raises the skill premium."
+    }
+  ];
+
+  const canvas = document.getElementById("chart");
+  const ctx = canvas.getContext("2d");
+  const caption = document.getElementById("caption");
+  const note = document.getElementById("note");
+  const buttons = Array.from(document.querySelectorAll(".dtc-btn"));
+  let sceneIndex = 0;
+  let layout = null;
+
+  const xMin = 0.5;
+  const xMax = 2.4;
+  const yMax = demand(xMin, A2) * 1.05;
+
+  function setupHiDPI() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
+    return { w: rect.width, h: rect.height };
+  }
+
+  function recalcLayout() {
+    const size = setupHiDPI();
+    layout = { l: 72, r: 220, t: 32, b: 64, w: size.w, h: size.h };
+    layout.pw = layout.w - layout.l - layout.r;
+    layout.ph = layout.h - layout.t - layout.b;
+  }
+
+  function mapX(x) {
+    return layout.l + ((x - xMin) / (xMax - xMin)) * layout.pw;
+  }
+
+  function mapY(y) {
+    return layout.t + layout.ph - (y / yMax) * layout.ph;
+  }
+
+  function drawArrow(x1, y1, x2, y2) {
+    const angle = Math.atan2(y2 - y1, x2 - x1);
+    const head = 8;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x2, y2);
+    ctx.lineTo(
+      x2 - head * Math.cos(angle - Math.PI / 6),
+      y2 - head * Math.sin(angle - Math.PI / 6)
+    );
+    ctx.lineTo(
+      x2 - head * Math.cos(angle + Math.PI / 6),
+      y2 - head * Math.sin(angle + Math.PI / 6)
+    );
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  function drawAxes() {
+    const x0 = layout.l;
+    const y0 = layout.t + layout.ph;
+    ctx.strokeStyle = AXIS;
+    ctx.fillStyle = AXIS;
+    ctx.lineWidth = 1.8;
+    drawArrow(x0, y0, layout.l + layout.pw, y0);
+    drawArrow(x0, y0, x0, layout.t);
+
+    ctx.font = "16px system-ui, sans-serif";
+    ctx.fillStyle = "#555";
+    ctx.textAlign = "right";
+    ctx.fillText("H / L", layout.l + layout.pw, layout.h - 18);
+
+    ctx.save();
+    ctx.translate(24, layout.t + layout.ph / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.textAlign = "center";
+    ctx.fillText("skill premium, \u03c9 = w_H / w_L", 0, 0);
+    ctx.restore();
+
+    ctx.textAlign = "left";
+    ctx.fillText("0", layout.l - 14, layout.t + layout.ph + 22);
+  }
+
+  function drawDemand(A, color, options) {
+    const opts = options || {};
+    ctx.strokeStyle = color;
+    ctx.lineWidth = opts.lineWidth || 3;
+    ctx.setLineDash(opts.dashed ? [7, 6] : []);
+    ctx.beginPath();
+    for (let i = 0; i <= 240; i += 1) {
+      const hl = xMin + (i / 240) * (xMax - xMin);
+      const x = mapX(hl);
+      const y = mapY(demand(hl, A));
+      if (i === 0) {
+        ctx.moveTo(x, y);
+      } else {
+        ctx.lineTo(x, y);
+      }
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    if (opts.label) {
+      const labelHl = opts.labelHl !== undefined ? opts.labelHl : xMax - 0.03;
+      const labelX = mapX(labelHl) + 10;
+      const labelY = mapY(demand(labelHl, A)) + (opts.labelDy || 0);
+      ctx.fillStyle = color;
+      ctx.font = "15px system-ui, sans-serif";
+      ctx.textAlign = "left";
+      ctx.textBaseline = "middle";
+      ctx.fillText(opts.label, labelX, labelY);
+      ctx.textBaseline = "alphabetic";
+    }
+  }
+
+  function drawSupply(hl, color, label) {
+    const x = mapX(hl);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(x, layout.t + layout.ph);
+    ctx.lineTo(x, layout.t);
+    ctx.stroke();
+
+    ctx.fillStyle = color;
+    ctx.font = "15px system-ui, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(label, x, layout.t - 10);
+  }
+
+  function drawEquilibrium(hl, A, color, label) {
+    const omega = demand(hl, A);
+    const x = mapX(hl);
+    const y = mapY(omega);
+
+    ctx.strokeStyle = DASH;
+    ctx.lineWidth = 1.3;
+    ctx.setLineDash([3, 5]);
+    ctx.beginPath();
+    ctx.moveTo(layout.l, y);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(x, y, 6, 0, 2 * Math.PI);
+    ctx.fill();
+
+    ctx.font = "15px system-ui, sans-serif";
+    ctx.textAlign = "right";
+    ctx.textBaseline = "middle";
+    ctx.fillText(label, layout.l - 10, y);
+    ctx.textBaseline = "alphabetic";
+  }
+
+  function drawEnvelope() {
+    const x1 = H0;
+    const y1 = demand(H0, A0);
+    const x2 = H1;
+    const y2 = demand(H1, A2);
+    const slope = (y2 - y1) / (x2 - x1);
+
+    const leftY = y1 + slope * (xMin - x1);
+    const rightY = y1 + slope * (xMax - x1);
+
+    ctx.strokeStyle = GREEN;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(mapX(xMin), mapY(leftY));
+    ctx.lineTo(mapX(xMax), mapY(rightY));
+    ctx.stroke();
+
+    ctx.fillStyle = GREEN;
+    ctx.font = "15px system-ui, sans-serif";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "middle";
+    const labelX = mapX(xMax) + 10;
+    const labelY = mapY(rightY);
+    ctx.fillText("long-run relative", labelX, labelY - 9);
+    ctx.fillText("demand for skills", labelX, labelY + 9);
+    ctx.textBaseline = "alphabetic";
+  }
+
+  function styleButtons() {
+    buttons.forEach(function (button, index) {
+      button.classList.toggle("active", index === sceneIndex);
+    });
+  }
+
+  function draw() {
+    recalcLayout();
+    ctx.clearRect(0, 0, layout.w, layout.h);
+
+    drawAxes();
+
+    if (sceneIndex === 0) {
+      drawDemand(A0, BLUE, { label: "D\u2080", labelDy: -6 });
+      drawSupply(H0, NAVY, "S\u2080");
+      drawEquilibrium(H0, A0, TEXT, "\u03c9\u2080");
+    } else if (sceneIndex === 1) {
+      drawDemand(A0, BLUE, { label: "D\u2080", labelDy: -6 });
+      drawSupply(H0, FADE, "S\u2080");
+      drawSupply(H1, NAVY, "S\u2081");
+      drawEquilibrium(H0, A0, FADE, "\u03c9\u2080");
+      drawEquilibrium(H1, A0, TEXT, "\u03c9\u2081");
+    } else if (sceneIndex === 2) {
+      drawDemand(A0, FADE, { label: "D\u2080", labelDy: -6, dashed: true, lineWidth: 2.2 });
+      drawDemand(A1, BLUE, { label: "D\u2081", labelDy: -6 });
+      drawSupply(H1, NAVY, "S\u2081");
+      drawEquilibrium(H0, A0, FADE, "\u03c9\u2080");
+      drawEquilibrium(H1, A1, TEXT, "\u03c9\u2082");
+    } else {
+      drawDemand(A0, FADE, { label: "D\u2080", labelDy: -6, dashed: true, lineWidth: 2.2 });
+      drawDemand(A1, FADE, { label: "D\u2081", labelDy: -6, dashed: true, lineWidth: 2.2 });
+      drawDemand(A2, BLUE, { label: "D\u2082", labelDy: -6 });
+      drawSupply(H1, NAVY, "S\u2081");
+      drawEquilibrium(H0, A0, FADE, "\u03c9\u2080");
+      drawEquilibrium(H1, A2, TEXT, "\u03c9\u2083");
+      drawEnvelope();
+    }
+
+    caption.textContent = scenes[sceneIndex].caption;
+    note.textContent = scenes[sceneIndex].note;
+    styleButtons();
+  }
+
+  buttons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      sceneIndex = Number(button.dataset.scene);
+      draw();
+    });
+  });
+
+  window.addEventListener("resize", draw);
+  draw();
+}());
+</script>
