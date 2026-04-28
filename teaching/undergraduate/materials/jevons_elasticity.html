@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Jevons elasticity</title>
+<style>
+html, body { margin: 0; padding: 0; overflow: hidden; height: 100%; background: #fff; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #2c2c2a; }
+.jv-wrap { display: flex; align-items: center; height: 100%; box-sizing: border-box; padding: 0.5rem 1rem; gap: 16px; }
+.jv-controls { flex: 0 0 230px; display: flex; flex-direction: column; gap: 10px; }
+.jv-btn {
+  font-size: 17px; padding: 10px 14px; border-radius: 6px;
+  border: 1.5px solid #1A3A68; background: transparent; color: #1A3A68;
+  cursor: pointer; transition: all 0.18s ease; font-weight: 500;
+  text-align: left; width: 100%; box-sizing: border-box;
+}
+.jv-btn:hover { background: #1A3A68; color: #fff; }
+.jv-btn.active { background: #1A3A68; color: #fff; }
+.jv-figure { flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; }
+.jv-chart { flex: 1; min-height: 0; }
+.jv-caption { min-height: 70px; padding: 8px 4px 0; line-height: 1.4; font-size: 15px; color: #3a3a38; }
+.jv-caption b { color: #1A3A68; }
+.jv-caption sub { font-size: 0.75em; }
+.jv-caption .up { color: #C94A4A; font-weight: 700; }
+.jv-caption .down { color: #2E7D5B; font-weight: 700; }
+canvas { display: block; width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+
+<div class="jv-wrap">
+  <div class="jv-controls">
+    <button id="jv-btn0" class="jv-btn active">Elastic demand</button>
+    <button id="jv-btn1" class="jv-btn">Inelastic demand</button>
+  </div>
+  <div class="jv-figure">
+    <div class="jv-chart"><canvas id="jvChart"></canvas></div>
+    <div class="jv-caption" id="jvCaption"></div>
+  </div>
+</div>
+
+<script>
+(function() {
+  var NAVY = '#1A3A68';
+  var CRIMSON = '#C94A4A';
+  var GOLD = '#D9A14A';
+  var GREEN = '#2E7D5B';
+  var axisColor = 'rgba(0,0,0,0.45)';
+  var dashColor = 'rgba(0,0,0,0.3)';
+  var axisLabelColor = '#555';
+  var mutedColor = '#888';
+
+  var canvas = document.getElementById('jvChart');
+  var ctx = canvas.getContext('2d');
+  var caption = document.getElementById('jvCaption');
+
+  // Resource market.
+  // Efficiency improvement halves the effective price of the resource per unit
+  // of useful service: P drops from 20 to 10, along the same demand curve.
+  // Demand: Q = A * P^(-eps), anchored at (P = 20, Q = 40).
+  var P1 = 20;       // before efficiency
+  var P2 = 10;       // after efficiency
+  var Qanchor = 40;
+
+  var epsElastic = 1.5;
+  var epsInelastic = 0.5;
+
+  function makeDemand(eps) {
+    var A = Qanchor * Math.pow(P1, eps);
+    return function(P) { return A * Math.pow(P, -eps); };
+  }
+  var D_elastic = makeDemand(epsElastic);
+  var D_inelastic = makeDemand(epsInelastic);
+
+  var Q1e = D_elastic(P1);    // 40
+  var Q2e = D_elastic(P2);    // ~113.1
+  var Q1i = D_inelastic(P1);  // 40
+  var Q2i = D_inelastic(P2);  // ~56.6
+
+  var Qmin = 0, Qmax = 130, Pmin = 0, Pmax = 32;
+
+  var mode = 0;
+  var plot;
+
+  function setupHiDPI() {
+    var dpr = window.devicePixelRatio || 1;
+    var rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.scale(dpr, dpr);
+    return { w: rect.width, h: rect.height };
+  }
+
+  function recalcLayout() {
+    var s = setupHiDPI();
+    plot = { l: 64, r: 160, t: 28, b: 46, w: s.w, h: s.h };
+    plot.pw = plot.w - plot.l - plot.r;
+    plot.ph = plot.h - plot.t - plot.b;
+  }
+
+  function mapX(Q) { return plot.l + (Q - Qmin) / (Qmax - Qmin) * plot.pw; }
+  function mapY(P) { return plot.t + plot.ph - (P - Pmin) / (Pmax - Pmin) * plot.ph; }
+
+  function drawArrowHead(x, y, up) {
+    ctx.beginPath();
+    if (up) { ctx.moveTo(x - 6, y + 9); ctx.lineTo(x, y); ctx.lineTo(x + 6, y + 9); }
+    else    { ctx.moveTo(x - 9, y - 6); ctx.lineTo(x, y); ctx.lineTo(x - 9, y + 6); }
+    ctx.stroke();
+  }
+
+  function drawAxes() {
+    ctx.strokeStyle = axisColor; ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(plot.l, plot.t);
+    ctx.lineTo(plot.l, plot.t + plot.ph);
+    ctx.lineTo(plot.l + plot.pw, plot.t + plot.ph);
+    ctx.stroke();
+    drawArrowHead(plot.l, plot.t, true);
+    drawArrowHead(plot.l + plot.pw, plot.t + plot.ph, false);
+
+    ctx.font = '500 16px system-ui, sans-serif';
+    ctx.fillStyle = axisLabelColor;
+    ctx.textAlign = 'left';
+    ctx.fillText('Price of resource', plot.l - 14, plot.t - 10);
+    ctx.textAlign = 'left';
+    ctx.fillText('Quantity', plot.l + plot.pw + 12, plot.t + plot.ph + 5);
+  }
+
+  function drawDemandCurve(D, color) {
+    ctx.strokeStyle = color; ctx.lineWidth = 3;
+    ctx.beginPath();
+    var started = false;
+    for (var P = Pmax; P >= 1; P -= 0.25) {
+      var Q = D(P);
+      if (Q < Qmin || Q > Qmax) { started = false; continue; }
+      var px = mapX(Q), py = mapY(P);
+      if (!started) { ctx.moveTo(px, py); started = true; }
+      else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+  }
+
+  function drawPriceLine(P, color, dashed, labelText) {
+    ctx.strokeStyle = color; ctx.lineWidth = 2.5;
+    ctx.setLineDash(dashed ? [6, 4] : []);
+    ctx.beginPath();
+    ctx.moveTo(plot.l, mapY(P));
+    ctx.lineTo(plot.l + plot.pw, mapY(P));
+    ctx.stroke();
+    ctx.setLineDash([]);
+    // Right-side label
+    ctx.fillStyle = color;
+    ctx.font = '600 14px system-ui, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(labelText, plot.l + plot.pw + 8, mapY(P) + 5);
+    // Y-axis tick label
+    ctx.fillStyle = mutedColor;
+    ctx.textAlign = 'right';
+    ctx.fillText(String(P), plot.l - 8, mapY(P) + 5);
+  }
+
+  function drawDash(x1, y1, x2, y2) {
+    ctx.setLineDash([6, 5]);
+    ctx.strokeStyle = dashColor;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  function markEq(Q, P, color, qLabel) {
+    var x = mapX(Q), y = mapY(P);
+    drawDash(x, y, x, plot.t + plot.ph);
+    ctx.fillStyle = color;
+    ctx.beginPath(); ctx.arc(x, y, 6, 0, Math.PI * 2); ctx.fill();
+    ctx.font = '600 15px system-ui, sans-serif';
+    ctx.fillStyle = mutedColor;
+    ctx.textAlign = 'center';
+    if (qLabel) ctx.fillText(qLabel, x, plot.t + plot.ph + 22);
+  }
+
+  function curveLabel(D, color, text, anchorP) {
+    var Q = D(anchorP);
+    if (Q < Qmin || Q > Qmax) return;
+    ctx.fillStyle = color;
+    ctx.font = '600 15px system-ui, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(text, mapX(Q) + 10, mapY(anchorP) + 4);
+  }
+
+  function fmt(x) { return (Math.round(x * 10) / 10).toString(); }
+
+  function captionFor(modeIdx) {
+    var Q1, Q2, eps;
+    if (modeIdx === 0) { Q1 = Q1e; Q2 = Q2e; eps = epsElastic; }
+    else               { Q1 = Q1i; Q2 = Q2i; eps = epsInelastic; }
+    var E1 = P1 * Q1;
+    var E2 = P2 * Q2;
+    var dE = ((E2 - E1) / E1) * 100;
+    var sign = dE > 0 ? '+' : '';
+    var cls = dE > 0 ? 'up' : 'down';
+    if (modeIdx === 0) {
+      return '<b>Elastic demand (&epsilon; = 1.5).</b> Price falls from ' + P1 + ' to ' + P2 +
+        '. Total expenditure on the resource: P<sub>1</sub>&middot;Q<sub>1</sub> = ' + fmt(E1) +
+        ' &rarr; P<sub>2</sub>&middot;Q<sub>2</sub> = ' + fmt(E2) +
+        ' <span class="' + cls + '">(' + sign + fmt(dE) + '%)</span>. ' +
+        'The quantity response more than offsets the price cut &mdash; <b>Jevons&rsquo; paradox applies</b>.';
+    } else {
+      return '<b>Inelastic demand (&epsilon; = 0.5).</b> Price falls from ' + P1 + ' to ' + P2 +
+        '. Total expenditure on the resource: P<sub>1</sub>&middot;Q<sub>1</sub> = ' + fmt(E1) +
+        ' &rarr; P<sub>2</sub>&middot;Q<sub>2</sub> = ' + fmt(E2) +
+        ' <span class="' + cls + '">(' + sign + fmt(dE) + '%)</span>. ' +
+        'The price cut dominates the quantity response &mdash; <b>no Jevons</b>.';
+    }
+  }
+
+  function styleButtons() {
+    for (var i = 0; i < 2; i++) {
+      var b = document.getElementById('jv-btn' + i);
+      b.className = 'jv-btn';
+      if (i === mode) b.classList.add('active');
+    }
+  }
+
+  function draw() {
+    recalcLayout();
+    ctx.clearRect(0, 0, plot.w, plot.h);
+    drawAxes();
+
+    drawPriceLine(P1, GOLD, true, 'P1 = ' + P1 + ' (before)');
+    drawPriceLine(P2, GOLD, false, 'P2 = ' + P2 + ' (after)');
+
+    var D, Q1, Q2, afterColor;
+    if (mode === 0) {
+      D = D_elastic; Q1 = Q1e; Q2 = Q2e; afterColor = CRIMSON;
+    } else {
+      D = D_inelastic; Q1 = Q1i; Q2 = Q2i; afterColor = GREEN;
+    }
+
+    drawDemandCurve(D, NAVY);
+    curveLabel(D, NAVY, 'Demand', 6);
+
+    markEq(Q1, P1, NAVY, 'Q1 = ' + fmt(Q1));
+    markEq(Q2, P2, afterColor, 'Q2 = ' + fmt(Q2));
+
+    caption.innerHTML = captionFor(mode);
+  }
+
+  for (var i = 0; i < 2; i++) {
+    document.getElementById('jv-btn' + i).addEventListener('click', (function(j) {
+      return function() { mode = j; styleButtons(); draw(); };
+    })(i));
+  }
+
+  window.addEventListener('resize', draw);
+  styleButtons();
+  draw();
+})();
+</script>
+</body>
+</html>

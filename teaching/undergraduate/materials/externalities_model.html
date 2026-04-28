@@ -1,0 +1,321 @@
+<style>
+html, body { margin: 0; padding: 0; overflow: hidden; height: 100%; background: #fff; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #2c2c2a; }
+.ext-wrap { display: flex; align-items: center; height: 100%; box-sizing: border-box; padding: 0.5rem 1rem; gap: 16px; }
+.ext-controls { flex: 0 0 230px; display: flex; flex-direction: column; gap: 10px; }
+.ext-btn {
+  font-size: 17px; padding: 10px 14px; border-radius: 6px;
+  border: 1.5px solid #1A3A68; background: transparent; color: #1A3A68;
+  cursor: pointer; transition: all 0.18s ease; font-weight: 500;
+  text-align: left; width: 100%; box-sizing: border-box;
+}
+.ext-btn:hover { background: #1A3A68; color: #fff; }
+.ext-btn.active { background: #1A3A68; color: #fff; }
+.ext-btn.done { opacity: 0.55; }
+.ext-figure { flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; }
+.ext-chart { flex: 1; min-height: 0; }
+.ext-caption { min-height: 60px; padding: 8px 4px 0; line-height: 1.4; font-size: 15px; color: #3a3a38; }
+.ext-caption b { color: #1A3A68; }
+canvas { display: block; width: 100%; height: 100%; }
+</style>
+
+<div class="ext-wrap">
+  <div class="ext-controls">
+    <button id="ext-btn0" class="ext-btn active">0: Private market</button>
+    <button id="ext-btn1" class="ext-btn">1: Add social cost</button>
+    <button id="ext-btn2" class="ext-btn">2: Deadweight loss</button>
+    <button id="ext-btn3" class="ext-btn">3: Pigouvian tax</button>
+  </div>
+  <div class="ext-figure">
+    <div class="ext-chart"><canvas id="extChart"></canvas></div>
+    <div class="ext-caption" id="extCaption"></div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const NAVY = '#1A3A68';
+  const LIGHTBLUE = '#397FDB';
+  const CRIMSON = '#C94A4A';
+  const GOLD = '#D9A14A';
+  const axisColor = 'rgba(0,0,0,0.45)';
+  const dashColor = 'rgba(0,0,0,0.3)';
+  const axisLabelColor = '#555';
+  const mutedColor = '#888';
+
+  const canvas = document.getElementById('extChart');
+  const ctx = canvas.getContext('2d');
+  const caption = document.getElementById('extCaption');
+
+  // Model
+  // Demand (MSB): P = a - Q,  Private MC: P = c + Q,  Social MC: P = c + MED + Q
+  const a = 100, c = 20, MED = 30;
+  function D(Q) { return a - Q; }
+  function PMC(Q) { return c + Q; }
+  function SMC(Q) { return c + MED + Q; }
+  // Equilibria
+  const Qstar = (a - c) / 2;                // Private: 40
+  const Pstar = D(Qstar);                   // 60
+  const Qopt  = (a - c - MED) / 2;          // Social optimum: 25
+  const PoptSoc = SMC(Qopt);                // 75 (price w/ tax)
+  const PoptPriv = PMC(Qopt);               // 45 (private producer net of tax)
+
+  // Plot ranges
+  const Qmin = 0, Qmax = 80, Pmin = 0, Pmax = 100;
+
+  let phase = 0;
+  let plot;
+
+  function setupHiDPI() {
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.scale(dpr, dpr);
+    return { w: rect.width, h: rect.height };
+  }
+
+  function recalcLayout() {
+    const s = setupHiDPI();
+    plot = { l: 58, r: 150, t: 28, b: 46, w: s.w, h: s.h };
+    plot.pw = plot.w - plot.l - plot.r;
+    plot.ph = plot.h - plot.t - plot.b;
+  }
+
+  function mapX(Q) { return plot.l + (Q - Qmin) / (Qmax - Qmin) * plot.pw; }
+  function mapY(P) { return plot.t + plot.ph - (P - Pmin) / (Pmax - Pmin) * plot.ph; }
+
+  function drawArrow(x, y, up) {
+    ctx.beginPath();
+    if (up) { ctx.moveTo(x - 6, y + 9); ctx.lineTo(x, y); ctx.lineTo(x + 6, y + 9); }
+    else    { ctx.moveTo(x - 9, y - 6); ctx.lineTo(x, y); ctx.lineTo(x - 9, y + 6); }
+    ctx.stroke();
+  }
+
+  function drawAxes() {
+    ctx.strokeStyle = axisColor; ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(plot.l, plot.t);
+    ctx.lineTo(plot.l, plot.t + plot.ph);
+    ctx.lineTo(plot.l + plot.pw, plot.t + plot.ph);
+    ctx.stroke();
+    drawArrow(plot.l, plot.t, true);
+    drawArrow(plot.l + plot.pw, plot.t + plot.ph, false);
+
+    ctx.font = '500 16px system-ui, sans-serif';
+    ctx.fillStyle = axisLabelColor;
+    ctx.textAlign = 'left';
+    ctx.fillText('Price (P)', plot.l - 8, plot.t - 10);
+    ctx.textAlign = 'right';
+    ctx.fillText('Quantity (Q)', plot.l + plot.pw, plot.t + plot.ph + 32);
+  }
+
+  function drawLine(fn, color, dashed, label, labelPos) {
+    ctx.strokeStyle = color; ctx.lineWidth = 3;
+    ctx.setLineDash(dashed ? [8, 5] : []);
+    ctx.beginPath();
+    // Clip to plot window
+    let started = false;
+    for (let Q = Qmin; Q <= Qmax + 0.001; Q += 0.5) {
+      const P = fn(Q);
+      if (P < Pmin || P > Pmax) { started = false; continue; }
+      const px = mapX(Q), py = mapY(P);
+      if (!started) { ctx.moveTo(px, py); started = true; }
+      else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+    if (label && labelPos) {
+      ctx.fillStyle = color;
+      ctx.font = '600 16px system-ui, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(label, labelPos.x, labelPos.y);
+    }
+  }
+
+  function drawDash(x1, y1, x2, y2) {
+    ctx.setLineDash([6, 5]);
+    ctx.strokeStyle = dashColor;
+    ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  function markEq(Q, P, color, labelQ, labelP) {
+    const x = mapX(Q), y = mapY(P);
+    drawDash(plot.l, y, x, y);
+    drawDash(x, y, x, plot.t + plot.ph);
+    ctx.fillStyle = color;
+    ctx.beginPath(); ctx.arc(x, y, 6, 0, Math.PI * 2); ctx.fill();
+    // Axis labels
+    ctx.font = '600 16px system-ui, sans-serif';
+    ctx.fillStyle = mutedColor;
+    ctx.textAlign = 'right';
+    if (labelP) ctx.fillText(labelP, plot.l - 8, y + 5);
+    ctx.textAlign = 'center';
+    if (labelQ) ctx.fillText(labelQ, x, plot.t + plot.ph + 22);
+  }
+
+  function drawDWLTriangle() {
+    // Triangle bounded by: Social MC above, Demand below, between Qopt and Qstar
+    // Vertices: (Qopt, SMC(Qopt)=75), (Qstar, D(Qstar)=60), (Qstar, PMC(Qstar)=60... no wait)
+    // At Qopt: D = 75, SMC = 75 — curves meet here.
+    // Between Qopt and Qstar: SMC > D; this wedge is DWL for overproduction.
+    // So vertices: (Qopt, 75), trace SMC to (Qstar, SMC(Qstar)=80)... wait that's not right either.
+    // Standard DWL for neg externality: triangle between SMC and D from Qopt to Qstar.
+    //   Top edge: SMC from (Qopt, 75) to (Qstar, c+MED+Qstar=90)
+    //   Bottom edge: D from (Qopt, 75) to (Qstar, 60)
+    //   Left apex: (Qopt, 75) — curves meet
+    // Actually SMC(Qstar) = 20+30+40 = 90, D(Qstar)=60. So right edge is vertical from 60→90 at Q*.
+    ctx.fillStyle = 'rgba(201,74,74,0.22)';
+    ctx.strokeStyle = CRIMSON;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(mapX(Qopt), mapY(SMC(Qopt)));
+    // Top: along SMC from Qopt to Qstar
+    for (let Q = Qopt; Q <= Qstar; Q += 0.5) {
+      ctx.lineTo(mapX(Q), mapY(SMC(Q)));
+    }
+    // Right: down along Q=Qstar from SMC(Qstar) to D(Qstar)
+    ctx.lineTo(mapX(Qstar), mapY(D(Qstar)));
+    // Bottom: along Demand back from Qstar to Qopt
+    for (let Q = Qstar; Q >= Qopt; Q -= 0.5) {
+      ctx.lineTo(mapX(Q), mapY(D(Q)));
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Label
+    const lx = mapX((Qopt + Qstar) / 2 + 2);
+    const ly = mapY((SMC((Qopt + Qstar) / 2) + D((Qopt + Qstar) / 2)) / 2);
+    ctx.fillStyle = CRIMSON;
+    ctx.font = '600 14px system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('DWL', lx, ly + 4);
+  }
+
+  function drawTaxWedge() {
+    // Rectangle of tax revenue at Qopt: height MED, width Qopt
+    ctx.fillStyle = 'rgba(217,161,74,0.28)';
+    ctx.strokeStyle = GOLD;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.rect(mapX(0), mapY(PoptSoc),
+             mapX(Qopt) - mapX(0),
+             mapY(PoptPriv) - mapY(PoptSoc));
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = GOLD;
+    ctx.font = '600 14px system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Tax revenue', mapX(Qopt / 2), mapY((PoptSoc + PoptPriv) / 2) + 4);
+
+    // Vertical arrow on the right side of wedge showing tax = MED
+    const ax = mapX(Qopt) + 8;
+    ctx.strokeStyle = GOLD; ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(ax, mapY(PoptSoc));
+    ctx.lineTo(ax, mapY(PoptPriv));
+    ctx.stroke();
+    // Arrowheads
+    ctx.beginPath();
+    ctx.moveTo(ax - 4, mapY(PoptSoc) + 6); ctx.lineTo(ax, mapY(PoptSoc)); ctx.lineTo(ax + 4, mapY(PoptSoc) + 6);
+    ctx.moveTo(ax - 4, mapY(PoptPriv) - 6); ctx.lineTo(ax, mapY(PoptPriv)); ctx.lineTo(ax + 4, mapY(PoptPriv) - 6);
+    ctx.stroke();
+    ctx.fillStyle = GOLD;
+    ctx.font = '600 14px system-ui, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('τ = MED', ax + 8, mapY((PoptSoc + PoptPriv) / 2) + 4);
+  }
+
+  function curveLabels() {
+    ctx.font = '600 15px system-ui, sans-serif';
+    ctx.textAlign = 'left';
+
+    // Demand: right end of line (exits at right edge of plot)
+    ctx.fillStyle = NAVY;
+    ctx.fillText('Demand = MSB', mapX(Qmax) + 8, mapY(D(Qmax)) + 5);
+
+    // Private MC: right end of line (exits at top-right corner)
+    ctx.fillStyle = LIGHTBLUE;
+    ctx.fillText('Private MC', mapX(Qmax) + 8, mapY(PMC(Qmax)) + 15);
+
+    // Social MC: line exits through the top edge (at Q where SMC = Pmax).
+    // Anchor the label just below that exit point so it stays in-plot.
+    if (phase >= 1) {
+      const sExitQ = Pmax - c - MED;
+      ctx.fillStyle = CRIMSON;
+      ctx.textAlign = 'left';
+      ctx.fillText('Social MC', mapX(sExitQ) + 6, mapY(Pmax) + 16);
+    }
+  }
+
+  const captions = [
+    "<b>Private market:</b> Demand (marginal social benefit) meets Private MC at (Q*, P*). The producer only prices costs they bear themselves.",
+    "<b>Social cost exists:</b> Each unit also imposes a marginal external damage (MED), so true Social MC lies above Private MC. The socially optimal quantity is Q**.",
+    "<b>Deadweight loss:</b> Between Q** and Q*, each unit costs society more than buyers value it. The red triangle is the welfare loss from overproduction — the price we pay for ignoring the externality.",
+    "<b>Pigouvian fix:</b> A per-unit tax τ equal to the marginal external damage raises the producer's price to Social MC. The market now clears at Q**; deadweight loss disappears and the gold rectangle is tax revenue (Pigou 1920)."
+  ];
+
+  function styleButtons() {
+    for (let i = 0; i < 4; i++) {
+      const b = document.getElementById('ext-btn' + i);
+      b.className = 'ext-btn';
+      if (i === phase) b.classList.add('active');
+      else if (i < phase) b.classList.add('done');
+    }
+  }
+
+  function draw() {
+    recalcLayout();
+    ctx.clearRect(0, 0, plot.w, plot.h);
+    drawAxes();
+
+    // Always show demand and private MC
+    drawLine(D, NAVY, false);
+    drawLine(PMC, LIGHTBLUE, false);
+
+    // Social MC appears from phase 1
+    if (phase >= 1) drawLine(SMC, CRIMSON, false);
+
+    // DWL at phase 2 (before the fix)
+    if (phase === 2) drawDWLTriangle();
+
+    // Tax wedge at phase 3
+    if (phase === 3) drawTaxWedge();
+
+    // Private equilibrium is shown when markets overshoot (phases 0, 1, 2)
+    if (phase <= 2) {
+      markEq(Qstar, Pstar, NAVY, 'Q*', 'P*');
+    }
+
+    // Social optimum marker
+    if (phase >= 1) {
+      if (phase === 3) {
+        // Market clears at Q** at Social MC price (with tax)
+        markEq(Qopt, PoptSoc, CRIMSON, 'Q**', 'P**');
+      } else {
+        // Just mark the social optimum on Demand/SMC intersection
+        markEq(Qopt, PoptSoc, CRIMSON, 'Q**', null);
+      }
+    }
+
+    curveLabels();
+
+    caption.innerHTML = captions[phase];
+  }
+
+  for (let i = 0; i < 4; i++) {
+    document.getElementById('ext-btn' + i).addEventListener('click', () => {
+      phase = i; styleButtons(); draw();
+    });
+  }
+
+  window.addEventListener('resize', draw);
+  styleButtons();
+  draw();
+})();
+</script>
