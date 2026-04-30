@@ -11,5 +11,5 @@ Current decks:
 - `teaching/graduate/slides/4_incentives.html`: "Incentives, Diffusion, and the Direction of Innovation"
 - `teaching/graduate/slides/5_tech_inequality.html`: "Technology and Inequality"
 - `teaching/undergraduate/slides/4_resources_climate.html`: "Resources and Climate"
-- `teaching/undergraduate/slides/7_institutions.html`: "Institutions"
+- `teaching/undergraduate/slides/5_institutions.html`: "Institutions"
 - `wef`: "How AI Reshapes Manufacturing Work"
