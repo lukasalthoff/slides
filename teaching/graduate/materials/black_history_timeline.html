@@ -1,0 +1,1054 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Black History Timeline</title>
+<style>
+  :root{
+    --bg:#fff;
+    --fg:#111;
+    --muted:#888;
+    --grid:#f2f2f2;
+    --ink:#000;
+    --band:#f5f5f5;
+    --accent:#000;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--fg);
+    font:14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+  header{ display:none }
+  header .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-left:auto;justify-content:flex-end}
+  button, input:not([type=checkbox]){
+    appearance:none;border:1px solid #ddd;background:#fff;color:#111;border-radius:6px;
+    padding:6px 10px;font:inherit;line-height:1;outline:none;
+  }
+  button:hover{border-color:#bbb;cursor:pointer}
+  button:active{transform:translateY(1px)}
+  input[type=number]{width:96px}
+  main{padding:0}
+  #wrap{
+    max-width:1200px;margin:0 auto;border:none;border-radius:0;
+    padding:4px 8px;background:#fff;
+  }
+  #timeline{width:100%;height:440px;display:block;cursor:grab}
+  /* reserve space for the detail panel so it doesn't reflow on click */
+  .detail{ min-height:120px }
+  #timeline.dragging{cursor:grabbing}
+  .note{
+    color:var(--muted);font-size:12px;margin:6px 0 0 0;
+  }
+  /* SVG styling (via classes on elements we create) */
+  .axis path, .axis line { stroke: var(--muted); stroke-width:1; shape-rendering:crispEdges }
+  .axis .tick text { fill: #555; font-size:12px }
+  .baseline { stroke: var(--ink); stroke-width:1 }
+  .grid line { stroke: var(--grid); stroke-width:.75; }
+  .event-dot { fill: var(--ink) }
+  .event-stem { stroke: var(--ink); stroke-width:1 }
+  .event-label { fill:#000; font-size:12px; user-select:none }
+  .event-label.small { font-size:11px; fill:#333 }
+  .band { fill: var(--ink); opacity:.10 }
+  .band-outline { stroke:none; fill:none }
+  .band-label { fill:#444; font-size:12px }
+  .handle { fill:#fff; stroke:#000; stroke-width:1; cursor:ew-resize }
+  .handle-hit { fill:transparent; cursor:ew-resize }
+  .handle-connector { stroke:#000; stroke-width:1 }
+  .detail{ margin:10px 8px 0 8px; color:#333; font-size:13px }
+  .clickable{ cursor:pointer }
+  .selected .event-label, .selected .band-label{ font-weight:700 }
+  .actions{ display:flex; align-items:center; gap:10px; margin-top:6px }
+  .button-link{ display:inline-flex; align-items:center; gap:6px; padding:4px 8px; border:1px solid #ddd; border-radius:6px; text-decoration:none; color:#111; background:#fff }
+  .button-link:hover{ border-color:#bbb }
+  .btn-small{ font-size:12px }
+  .wiki-icon{ width:14px; height:14px; display:inline-block }
+  .dim{ opacity:0.25 }
+  .war-band{ fill:#8b0000; opacity:0.12 }
+  .war-label{ fill:#b22222 }
+  .life-band{ fill:#cfe8ff }
+  .life-label{ fill:#1e3a8a }
+  .selected .war-label, .selected .life-label{ font-weight:700 }
+  input[type=checkbox]{
+    appearance:auto; width:16px; height:16px; margin:0;
+    accent-color:#000; cursor:pointer;
+  }
+  .hud{ display:none }
+  .pill{
+    border:1px solid #eee;border-radius:999px;padding:2px 8px;white-space:nowrap;
+    color:#666;background:#fafafa;
+  }
+  a.minilink { color:inherit }
+
+  /* Mobile tweaks */
+  .mobile-only{ display:none }
+  @media (max-width: 640px){
+    #timeline{ height:400px }
+    header{ flex-wrap:wrap; gap:6px }
+    header .controls{ width:100%; gap:6px }
+    .hud .pill:nth-child(2){ display:none }
+    .axis .tick text{ font-size:11px }
+    .event-label{ font-size:11px }
+    .band-label{ font-size:11px }
+    .mobile-only{ display:inline-flex }
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div style="font-weight:600">Black History Timeline <span class="mobile-only" style="font-weight:400;color:#666">(mobile)</span></div>
+    <div class="controls" aria-label="timeline controls">
+      <label>Start&nbsp;<input id="startInput" type="number" step="1"></label>
+      <label>End&nbsp;<input id="endInput" type="number" step="1"></label>
+      <button id="resetBtn" title="Reset to 1619–2025">Reset</button>
+      <label style="display:flex;align-items:center;gap:6px">
+        <input id="toggleLives" type="checkbox" /> People
+      </label>
+      <label style="display:flex;align-items:center;gap:6px">
+        <input id="toggleWars" type="checkbox" /> Wars
+      </label>
+      <input id="searchInput" type="search" placeholder="Search…" aria-label="Search" />
+      <span class="spacer"></span>
+      <button id="helpBtn" title="About (h)">?</button>
+    </div>
+  </header>
+
+  <main>
+    <div id="wrap">
+      <div class="hud">
+        <div class="pill" id="rangeReadout">—</div>
+        <div class="pill">Drag to pan • Scroll to zoom • Drag edges to extend/shorten</div>
+      </div>
+      <svg id="timeline" role="img" aria-label="Interactive timeline of Black American history"></svg>
+      <div id="detail" class="detail" aria-live="polite"></div>
+      <p class="note" id="helpText" hidden>
+        This interactive visualization presents a curated overview of Black American history.
+        Pan by dragging and zoom with your mouse or trackpad. Use the left/right handles to
+        adjust the time span. Search to highlight matching events and eras. Click any item to
+        read a concise description and open its Wikipedia page. This selection of events, eras,
+        and people is far from exhaustive and will continue to evolve. Created by Lukas Althoff
+        (lalthoff@stanford.edu) with the help of OpenAI GPT-5. 
+      </p>
+    </div>
+  </main>
+
+<script>
+/* ========= Data (curated, not exhaustive) ========= */
+const EVENTS = [
+  // level: 1=anchor, 2=major, 3=detail. 'date' optional; 'year' required.
+  {year:1619, date:"1619-08-01", level:1, title:"First Africans in English North America",
+   desc:"A ship carrying about 20 Africans arrives at Point Comfort (Virginia).", wiki:"https://en.wikipedia.org/wiki/Slavery_in_the_United_States#Origins"},
+  {year:1739, date:"1739-09-09", level:2, title:"Stono Rebellion", desc:"South Carolina slave rebellion."},
+  {year:1808, date:"1808-01-01", level:2, title:"Slave importation banned", desc:"US outlaws transatlantic slave trade.", wiki:"https://en.wikipedia.org/wiki/Act_Prohibiting_Importation_of_Slaves"},
+  {year:1770, date:"1770-03-05", level:3, title:"Crispus Attucks killed", desc:"Boston Massacre.", wiki:"https://en.wikipedia.org/wiki/Crispus_Attucks"},
+  {year:1777, date:"1777-07-08", level:2, title:"Vermont abolishes slavery", desc:"Vermont’s constitution bans slavery.", wiki:"https://en.wikipedia.org/wiki/Slavery_in_Vermont"},
+  {year:1780, date:"1780-03-01", level:2, title:"Pennsylvania Gradual Abolition Act", desc:"First legislative abolition of slavery in the U.S.", wiki:"https://en.wikipedia.org/wiki/An_Act_for_the_Gradual_Abolition_of_Slavery"},
+  {year:1783, date:"1783-07-08", level:2, title:"Massachusetts abolishes slavery", desc:"Quock Walker decisions interpret state constitution to end slavery.", wiki:"https://en.wikipedia.org/wiki/Quock_Walker_cases"},
+  {year:1784, date:"1784-03-01", level:3, title:"Connecticut gradual emancipation", desc:"Gradual emancipation law begins end of slavery.", wiki:"https://en.wikipedia.org/wiki/Slavery_in_Connecticut"},
+  {year:1784, date:"1784-03-01", level:3, title:"Rhode Island gradual emancipation", desc:"Gradual emancipation law phases out slavery.", wiki:"https://en.wikipedia.org/wiki/History_of_slavery_in_Rhode_Island#Abolition"},
+  {year:1799, date:"1799-07-04", level:2, title:"New York gradual emancipation", desc:"NY enacts gradual abolition of slavery.", wiki:"https://en.wikipedia.org/wiki/Act_for_the_Gradual_Abolition_of_Slavery_(New_York)"},
+  {year:1827, date:"1827-07-04", level:2, title:"Slavery abolished in New York", desc:"Final emancipation takes effect statewide.", wiki:"https://en.wikipedia.org/wiki/Slavery_in_New_York#Abolition"},
+  {year:1842, date:"1842-11-05", level:3, title:"Rhode Island constitution bans slavery", desc:"New constitution outlaws slavery outright.", wiki:"https://en.wikipedia.org/wiki/History_of_slavery_in_Rhode_Island#Abolition"},
+  {year:1848, date:"1848-06-24", level:3, title:"Connecticut abolishes slavery", desc:"Connecticut ends slavery in law.", wiki:"https://en.wikipedia.org/wiki/Slavery_in_Connecticut"},
+  {year:1857, date:"1857-01-01", level:3, title:"New Hampshire abolishes slavery", desc:"State formally outlaws slavery.", wiki:"https://en.wikipedia.org/wiki/Slavery_in_New_Hampshire"},
+  {year:1804, date:"1804-02-15", level:3, title:"New Jersey gradual emancipation", desc:"NJ enacts gradual abolition; slavery persists for decades.", wiki:"https://en.wikipedia.org/wiki/Slavery_in_New_Jersey"},
+  {year:1865, date:"1865-12-06", level:3, title:"New Jersey ends slavery (13th Amendment)", desc:"NJ’s remaining enslaved people freed with the 13th Amendment.", wiki:"https://en.wikipedia.org/wiki/Slavery_in_New_Jersey#Abolition"},
+  {year:1831, date:"1831-08-21", level:2, title:"Nat Turner's Rebellion", desc:"Southampton County, Virginia.", wiki:"https://en.wikipedia.org/wiki/Nat_Turner%27s_slave_rebellion"},
+  {year:1850, date:"1850-09-18", level:2, title:"Fugitive Slave Act", desc:"Strengthens capture of escaped enslaved people.", wiki:"https://en.wikipedia.org/wiki/Fugitive_Slave_Act_of_1850"},
+  {year:1857, date:"1857-03-06", level:1, title:"Dred Scott v. Sandford", desc:"Supreme Court denies Black citizenship.", wiki:"https://en.wikipedia.org/wiki/Dred_Scott_v._Sandford"},
+  {year:1863, date:"1863-01-01", level:1, title:"Emancipation Proclamation", desc:"Lincoln declares freedom for enslaved people in rebelling states.", wiki:"https://en.wikipedia.org/wiki/Emancipation_Proclamation"},
+  {year:1865, date:"1865-06-19", level:1, title:"Juneteenth", desc:"General Order No. 3 announced in Galveston, Texas.", wiki:"https://en.wikipedia.org/wiki/Juneteenth"},
+  {year:1865, date:"1865-12-06", level:1, title:"13th Amendment", desc:"Abolishes slavery (except as punishment for crime).", wiki:"https://en.wikipedia.org/wiki/Thirteenth_Amendment_to_the_United_States_Constitution"},
+  {year:1868, date:"1868-07-09", level:1, title:"14th Amendment", desc:"Birthright citizenship and equal protection.", wiki:"https://en.wikipedia.org/wiki/Fourteenth_Amendment_to_the_United_States_Constitution"},
+  {year:1870, date:"1870-02-03", level:1, title:"15th Amendment", desc:"Protects voting rights regardless of race (men).", wiki:"https://en.wikipedia.org/wiki/Fifteenth_Amendment_to_the_United_States_Constitution"},
+  {year:1877, level:1, title:"End of Reconstruction", desc:"Compromise of 1877; federal troops withdraw.", wiki:"https://en.wikipedia.org/wiki/Compromise_of_1877"},
+  {year:1896, date:"1896-05-18", level:1, title:"Plessy v. Ferguson", desc:"Supreme Court upholds 'separate but equal'.", wiki:"https://en.wikipedia.org/wiki/Plessy_v._Ferguson"},
+  {year:1909, date:"1909-02-12", level:2, title:"NAACP founded", desc:"National Association for the Advancement of Colored People.", wiki:"https://en.wikipedia.org/wiki/NAACP"},
+  {year:1919, level:2, title:"Red Summer", desc:"Widespread white supremacist violence.", wiki:"https://en.wikipedia.org/wiki/Red_Summer"},
+  {year:1921, date:"1921-05-31", level:2, title:"Tulsa Race Massacre", desc:"Greenwood ('Black Wall Street') destroyed.", wiki:"https://en.wikipedia.org/wiki/Tulsa_race_massacre"},
+  {year:1948, date:"1948-07-26", level:2, title:"EO 9981", desc:"Truman desegregates the US military.", wiki:"https://en.wikipedia.org/wiki/Executive_Order_9981"},
+  {year:1954, date:"1954-05-17", level:1, title:"Brown v. Board of Education", desc:"School segregation unconstitutional.", wiki:"https://en.wikipedia.org/wiki/Brown_v._Board_of_Education"},
+  {year:1955, date:"1955-12-01", level:1, title:"Montgomery Bus Boycott", desc:"Rosa Parks' arrest; year-long boycott begins.", wiki:"https://en.wikipedia.org/wiki/Montgomery_bus_boycott"},
+  {year:1957, date:"1957-09-04", level:2, title:"Little Rock Nine", desc:"Integration of Central High School.", wiki:"https://en.wikipedia.org/wiki/Little_Rock_Nine"},
+  {year:1960, date:"1960-02-01", level:2, title:"Greensboro sit-ins", desc:"Lunch-counter protests spark nationwide movement.", wiki:"https://en.wikipedia.org/wiki/Greensboro_sit-ins"},
+  {year:1963, date:"1963-08-28", level:1, title:"March on Washington", desc:"'I Have a Dream' speech.", wiki:"https://en.wikipedia.org/wiki/March_on_Washington_for_Jobs_and_Freedom"},
+  {year:1963, date:"1963-09-15", level:2, title:"16th St. Baptist Church bombing", desc:"Birmingham; four girls killed.", wiki:"https://en.wikipedia.org/wiki/16th_Street_Baptist_Church_bombing"},
+  {year:1964, date:"1964-07-02", level:1, title:"Civil Rights Act", desc:"Outlaws segregation in public accommodations & employment.", wiki:"https://en.wikipedia.org/wiki/Civil_Rights_Act_of_1964"},
+  {year:1965, date:"1965-03-07", level:2, title:"Bloody Sunday (Selma)", desc:"Voting rights marches met with violence.", wiki:"https://en.wikipedia.org/wiki/Selma_to_Montgomery_marches#Bloody_Sunday"},
+  {year:1965, date:"1965-08-06", level:1, title:"Voting Rights Act", desc:"Protects voting access; federal oversight.", wiki:"https://en.wikipedia.org/wiki/Voting_Rights_Act_of_1965"},
+  {year:1966, date:"1966-10-15", level:2, title:"Black Panther Party", desc:"Founded in Oakland, CA.", wiki:"https://en.wikipedia.org/wiki/Black_Panther_Party"},
+  {year:1967, date:"1967-06-12", level:2, title:"Loving v. Virginia", desc:"Interracial marriage bans unconstitutional.", wiki:"https://en.wikipedia.org/wiki/Loving_v._Virginia"},
+  {year:1968, date:"1968-04-04", level:1, title:"MLK assassinated", desc:"Memphis, Tennessee.", wiki:"https://en.wikipedia.org/wiki/Assassination_of_Martin_Luther_King_Jr."},
+  {year:1968, date:"1968-04-11", level:2, title:"Fair Housing Act", desc:"Prohibits housing discrimination.", wiki:"https://en.wikipedia.org/wiki/Fair_Housing_Act"},
+  {year:1978, date:"1978-06-28", level:2, title:"Regents v. Bakke", desc:"Affirmative action limits (no quotas).", wiki:"https://en.wikipedia.org/wiki/Regents_of_the_University_of_California_v._Bakke"},
+  {year:1986, date:"1986-10-27", level:2, title:"Anti-Drug Abuse Act", desc:"Sentencing disparities escalate incarceration.", wiki:"https://en.wikipedia.org/wiki/Anti-Drug_Abuse_Act_of_1986"},
+  {year:1992, date:"1992-04-29", level:2, title:"Los Angeles Uprising", desc:"Rodney King verdict unrest.", wiki:"https://en.wikipedia.org/wiki/1992_Los_Angeles_riots"},
+  {year:2008, date:"2008-11-04", level:1, title:"Barack Obama elected", desc:"First Black US President.", wiki:"https://en.wikipedia.org/wiki/Barack_Obama"},
+  {year:2013, date:"2013-07-13", level:2, title:"Black Lives Matter begins", desc:"Hashtag and movement coalesce.", wiki:"https://en.wikipedia.org/wiki/Black_Lives_Matter"},
+  {year:2020, date:"2020-05-25", level:1, title:"George Floyd murder", desc:"Mass protests against police brutality.", wiki:"https://en.wikipedia.org/wiki/Murder_of_George_Floyd"},
+  {year:2021, date:"2021-06-17", level:2, title:"Juneteenth becomes a federal holiday", desc:"Law signed recognizing Juneteenth.", wiki:"https://en.wikipedia.org/wiki/Juneteenth#Federal_holiday"},
+  {year:2023, date:"2023-06-29", level:2, title:"SFFA v. Harvard/UNC", desc:"Supreme Court limits race-conscious admissions.", wiki:"https://en.wikipedia.org/wiki/Students_for_Fair_Admissions_v._Harvard"},
+  // Additional core events (expanded coverage)
+  {year:1662, date:"1662-01-01", level:3, title:"Partus sequitur ventrem in Virginia", desc:"Child’s status follows that of the enslaved mother, entrenching hereditary slavery.", wiki:"https://en.wikipedia.org/wiki/Partus_sequitur_ventrem"},
+  {year:1705, date:"1705-01-01", level:3, title:"Virginia Slave Codes of 1705", desc:"Comprehensive laws codifying chattel slavery and racial hierarchy.", wiki:"https://en.wikipedia.org/wiki/Virginia_Slave_Codes_of_1705"},
+  {year:1787, date:"1787-07-12", level:2, title:"Three-Fifths Compromise", desc:"Constitution counts enslaved people as three-fifths for representation and taxation.", wiki:"https://en.wikipedia.org/wiki/Three-Fifths_Compromise"},
+  {year:1793, date:"1793-02-12", level:2, title:"Fugitive Slave Act (1793)", desc:"Federal law facilitates the capture of escaped enslaved people.", wiki:"https://en.wikipedia.org/wiki/Fugitive_Slave_Act_of_1793"},
+  {year:1820, date:"1820-03-06", level:2, title:"Missouri Compromise", desc:"Admits Missouri as slave state and Maine as free, drawing a line on slavery’s expansion.", wiki:"https://en.wikipedia.org/wiki/Missouri_Compromise"},
+  {year:1839, date:"1839-07-02", level:3, title:"Amistad revolt", desc:"Enslaved Africans seize La Amistad; landmark case challenges the slave trade.", wiki:"https://en.wikipedia.org/wiki/La_Amistad"},
+  {year:1849, date:"1849-09-17", level:3, title:"Harriet Tubman escapes", desc:"Tubman escapes slavery and later returns repeatedly to lead others to freedom.", wiki:"https://en.wikipedia.org/wiki/Harriet_Tubman"},
+  {year:1852, date:"1852-03-20", level:3, title:"Uncle Tom’s Cabin published", desc:"Harriet Beecher Stowe’s novel galvanizes anti-slavery sentiment.", wiki:"https://en.wikipedia.org/wiki/Uncle_Tom%27s_Cabin"},
+  {year:1854, date:"1854-05-30", level:2, title:"Kansas–Nebraska Act", desc:"Repeals Missouri Compromise; ‘popular sovereignty’ triggers Bleeding Kansas.", wiki:"https://en.wikipedia.org/wiki/Kansas%E2%80%93Nebraska_Act"},
+  {year:1859, date:"1859-10-16", level:2, title:"John Brown’s raid on Harpers Ferry", desc:"Abolitionist insurrection attempts to spark a slave revolt.", wiki:"https://en.wikipedia.org/wiki/John_Brown%27s_raid_on_Harpers_Ferry"},
+  {year:1866, date:"1866-04-09", level:2, title:"Civil Rights Act of 1866", desc:"Establishes birthright citizenship and equal civil rights.", wiki:"https://en.wikipedia.org/wiki/Civil_Rights_Act_of_1866"},
+  {year:1875, date:"1875-03-01", level:3, title:"Civil Rights Act of 1875", desc:"Prohibits racial discrimination in public accommodations (later struck down).", wiki:"https://en.wikipedia.org/wiki/Civil_Rights_Act_of_1875"},
+  {year:1890, date:"1890-11-01", level:3, title:"Mississippi Constitution of 1890", desc:"Poll taxes, literacy tests institutionalize Black disenfranchisement.", wiki:"https://en.wikipedia.org/wiki/Mississippi_Constitution_of_1890"},
+  {year:1905, date:"1905-07-11", level:3, title:"Niagara Movement", desc:"Du Bois and allies demand full civil rights; precursor to NAACP.", wiki:"https://en.wikipedia.org/wiki/Niagara_Movement"},
+  {year:1837, date:"1837-04-12", level:2, title:"Cheyney University founded", desc:"Oldest HBCU (as the Institute for Colored Youth).", wiki:"https://en.wikipedia.org/wiki/Cheyney_University_of_Pennsylvania"},
+  {year:1854, date:"1854-02-25", level:2, title:"Lincoln University founded", desc:"First degree-granting HBCU (PA).", wiki:"https://en.wikipedia.org/wiki/Lincoln_University_(Pennsylvania)"},
+  {year:1865, date:"1865-07-01", level:2, title:"Fisk University founded", desc:"HBCU in Nashville; home of the Jubilee Singers.", wiki:"https://en.wikipedia.org/wiki/Fisk_University"},
+  {year:1865, date:"1865-07-10", level:2, title:"Shaw University founded", desc:"Oldest HBCU in the South (Raleigh).", wiki:"https://en.wikipedia.org/wiki/Shaw_University"},
+  {year:1867, date:"1867-03-02", level:1, title:"Howard University founded", desc:"Flagship HBCU in Washington, D.C.", wiki:"https://en.wikipedia.org/wiki/Howard_University"},
+  {year:1867, date:"1867-04-14", level:2, title:"Morehouse College founded", desc:"Atlanta HBCU; notable alumni include MLK Jr.", wiki:"https://en.wikipedia.org/wiki/Morehouse_College"},
+  {year:1867, date:"1867-10-12", level:2, title:"Johnson C. Smith University founded", desc:"HBCU in Charlotte, NC.", wiki:"https://en.wikipedia.org/wiki/Johnson_C._Smith_University"},
+  {year:1867, date:"1867-12-01", level:2, title:"Morgan State University founded", desc:"Baltimore HBCU (then Centenary Biblical Institute).", wiki:"https://en.wikipedia.org/wiki/Morgan_State_University"},
+  {year:1881, date:"1881-07-04", level:1, title:"Tuskegee Institute founded", desc:"Booker T. Washington’s HBCU (now Tuskegee University).", wiki:"https://en.wikipedia.org/wiki/Tuskegee_University"},
+  {year:1882, date:"1882-03-19", level:2, title:"Spelman College founded", desc:"HBCU for women in Atlanta.", wiki:"https://en.wikipedia.org/wiki/Spelman_College"},
+  {year:1891, date:"1891-03-03", level:2, title:"North Carolina A&T founded", desc:"Land-grant HBCU in Greensboro.", wiki:"https://en.wikipedia.org/wiki/North_Carolina_A%26T_State_University"},
+  {year:1895, date:"1895-01-01", level:2, title:"Atlanta University Center forms", desc:"Consortium of Atlanta HBCUs.", wiki:"https://en.wikipedia.org/wiki/Atlanta_University_Center"},
+  {year:1896, date:"1896-04-11", level:2, title:"Florida A&M founded", desc:"Public HBCU in Tallahassee.", wiki:"https://en.wikipedia.org/wiki/Florida_A%26M_University"},
+  {year:1900, date:"1900-01-01", level:2, title:"UNCF forerunners begin", desc:"Precursor efforts toward united HBCU funding.", wiki:"https://en.wikipedia.org/wiki/United_Negro_College_Fund"},
+  {year:1944, date:"1944-04-25", level:2, title:"United Negro College Fund founded", desc:"Funds scholarships and support for HBCUs.", wiki:"https://en.wikipedia.org/wiki/United_Negro_College_Fund"},
+  {year:1965, date:"1965-11-08", level:2, title:"Higher Education Act (Title III)", desc:"Federal support for HBCUs is established.", wiki:"https://en.wikipedia.org/wiki/Higher_Education_Act_of_1965#Title_III:_Strengthening_Developing_Institutions"},
+  {year:1915, date:"1915-02-08", level:3, title:"The Birth of a Nation released", desc:"Film glorifies the Klan; fuels resurgence of white supremacist terror.", wiki:"https://en.wikipedia.org/wiki/The_Birth_of_a_Nation"},
+  {year:1917, date:"1917-07-02", level:3, title:"East St. Louis riots", desc:"Deadly anti-Black violence underscores Great Migration push factors.", wiki:"https://en.wikipedia.org/wiki/East_St._Louis_massacre"},
+  {year:1931, date:"1931-03-25", level:3, title:"Scottsboro Boys", desc:"Nine Black youths falsely accused; landmark cases on due process and juries.", wiki:"https://en.wikipedia.org/wiki/Scottsboro_Boys"},
+  {year:1941, date:"1941-06-25", level:3, title:"EO 8802 (FEPC)", desc:"Bans discrimination in defense industry after A. Philip Randolph’s pressure.", wiki:"https://en.wikipedia.org/wiki/Executive_Order_8802"},
+  {year:1947, date:"1947-04-15", level:2, title:"Jackie Robinson debuts in MLB", desc:"Breaks baseball’s color line with the Brooklyn Dodgers.", wiki:"https://en.wikipedia.org/wiki/Jackie_Robinson"},
+  {year:1957, date:"1957-09-09", level:3, title:"Civil Rights Act of 1957", desc:"First civil rights law since Reconstruction; creates Civil Rights Division.", wiki:"https://en.wikipedia.org/wiki/Civil_Rights_Act_of_1957"},
+  {year:1961, date:"1961-05-04", level:2, title:"Freedom Rides", desc:"Interracial bus rides challenge segregation; draw national attention.", wiki:"https://en.wikipedia.org/wiki/Freedom_Riders"},
+  {year:1962, date:"1962-10-01", level:3, title:"James Meredith integrates Ole Miss", desc:"Federal troops escort the first Black student at the University of Mississippi.", wiki:"https://en.wikipedia.org/wiki/University_of_Mississippi_integration_riot_of_1962"},
+  {year:1963, date:"1963-04-03", level:3, title:"Birmingham campaign", desc:"Sustained direct action against segregation; ‘Letter from Birmingham Jail’.", wiki:"https://en.wikipedia.org/wiki/Birmingham_campaign"},
+  {year:1964, date:"1964-06-15", level:3, title:"Freedom Summer", desc:"Voter registration drive in Mississippi; murders of Chaney, Goodman, Schwerner.", wiki:"https://en.wikipedia.org/wiki/Freedom_Summer"},
+  {year:1966, date:"1966-06-16", level:3, title:"‘Black Power’ popularized", desc:"Stokely Carmichael’s call during the Meredith March signals a shift.", wiki:"https://en.wikipedia.org/wiki/Black_Power"},
+  {year:1967, date:"1967-07-23", level:2, title:"Detroit Uprising", desc:"Major urban rebellion against police brutality and inequality.", wiki:"https://en.wikipedia.org/wiki/1967_Detroit_riot"},
+  {year:1971, date:"1971-09-09", level:3, title:"Attica Prison Uprising", desc:"Prisoners protest conditions; deadly state response highlights reform needs.", wiki:"https://en.wikipedia.org/wiki/Attica_Prison_riot"},
+  {year:1991, date:"1991-03-03", level:3, title:"Rodney King beating filmed", desc:"Police brutality captured on video; key precursor to 1992 LA uprising.", wiki:"https://en.wikipedia.org/wiki/Rodney_King"},
+  {year:1994, date:"1994-09-13", level:2, title:"1994 Crime Bill", desc:"Violent Crime Control and Law Enforcement Act expands policing and prisons.", wiki:"https://en.wikipedia.org/wiki/Violent_Crime_Control_and_Law_Enforcement_Act"},
+  {year:2005, date:"2005-08-29", level:3, title:"Hurricane Katrina disparities", desc:"Disaster response reveals racial inequities; mass displacement.", wiki:"https://en.wikipedia.org/wiki/Effects_of_Hurricane_Katrina_in_New_Orleans#Race_and_class_disparities"},
+  {year:2012, date:"2012-02-26", level:2, title:"Trayvon Martin killed", desc:"Catalyst for modern movement organizing and Black Lives Matter.", wiki:"https://en.wikipedia.org/wiki/Death_of_Trayvon_Martin"},
+  {year:2014, date:"2014-08-09", level:2, title:"Ferguson unrest", desc:"Protests after Michael Brown’s killing ignite national debate.", wiki:"https://en.wikipedia.org/wiki/Unrest_in_Ferguson,_Missouri"},
+  {year:2015, date:"2015-06-17", level:2, title:"Charleston church shooting", desc:"White supremacist murders nine at Emanuel AME Church.", wiki:"https://en.wikipedia.org/wiki/Charleston_church_shooting"},
+  {year:2016, date:"2016-08-26", level:3, title:"Colin Kaepernick kneels", desc:"Silent protest against police brutality and racial injustice in the NFL.", wiki:"https://en.wikipedia.org/wiki/Colin_Kaepernick#National_anthem_protest"},
+  {year:2020, date:"2020-03-13", level:2, title:"Breonna Taylor killed", desc:"Police shooting in Louisville fuels nationwide protests.", wiki:"https://en.wikipedia.org/wiki/Killing_of_Breonna_Taylor"}
+];
+
+const RANGES = [
+  {start:1619, end:1865, level:1, name:"Slavery", wiki:"https://en.wikipedia.org/wiki/Slavery_in_the_United_States"},
+  {start:1865, end:1877, level:1, name:"Reconstruction", wiki:"https://en.wikipedia.org/wiki/Reconstruction_Era"},
+  {start:1877, end:1954, level:1, name:"Jim Crow era", wiki:"https://en.wikipedia.org/wiki/Jim_Crow_laws"},
+  {start:1916, end:1970, level:1, name:"Great Migration", wiki:"https://en.wikipedia.org/wiki/Great_Migration_(African_American)"},
+  {start:1954, end:1968, level:1, name:"Civil Rights Movement", wiki:"https://en.wikipedia.org/wiki/Civil_rights_movement"},
+  {start:2013, end:2025, level:2, name:"Black Lives Matter era", wiki:"https://en.wikipedia.org/wiki/Black_Lives_Matter"},
+];
+
+// Major wars to optionally overlay as eras (below baseline)
+const WARS = [
+  {start:1775, end:1783, name:'American Revolutionary War', wiki:'https://en.wikipedia.org/wiki/American_Revolutionary_War'},
+  {start:1812, end:1815, name:'War of 1812', wiki:'https://en.wikipedia.org/wiki/War_of_1812'},
+  {start:1846, end:1848, name:'Mexican–American War', wiki:'https://en.wikipedia.org/wiki/Mexican%E2%80%93American_War'},
+  {start:1861, end:1865, name:'American Civil War', wiki:'https://en.wikipedia.org/wiki/American_Civil_War'},
+  {start:1898, end:1898, name:'Spanish–American War', wiki:'https://en.wikipedia.org/wiki/Spanish%E2%80%93American_War'},
+  {start:1914, end:1918, name:'World War I', wiki:'https://en.wikipedia.org/wiki/World_War_I'},
+  {start:1939, end:1945, name:'World War II', wiki:'https://en.wikipedia.org/wiki/World_War_II'},
+  {start:1950, end:1953, name:'Korean War', wiki:'https://en.wikipedia.org/wiki/Korean_War'},
+  {start:1955, end:1975, name:'Vietnam War', wiki:'https://en.wikipedia.org/wiki/Vietnam_War'}
+];
+
+// Notable lives (birth/death years approximate; use ISO when known)
+const LIVES = [
+  {name:'Harriet Tubman', start:1822, end:1913, wiki:'https://en.wikipedia.org/wiki/Harriet_Tubman', desc:'Abolitionist and Underground Railroad conductor who led many enslaved people to freedom.'},
+  {name:'Frederick Douglass', start:1818, end:1895, wiki:'https://en.wikipedia.org/wiki/Frederick_Douglass', desc:'Abolitionist orator and writer whose autobiography galvanized anti-slavery movements.'},
+  {name:'W. E. B. Du Bois', start:1868, end:1963, wiki:'https://en.wikipedia.org/wiki/W._E._B._Du_Bois', desc:'Scholar and activist; co-founded the NAACP; articulated the “color line” of the 20th century.'},
+  {name:'Ida B. Wells', start:1862, end:1931, wiki:'https://en.wikipedia.org/wiki/Ida_B._Wells', desc:'Journalist and anti-lynching crusader; co-founder of civil rights organizations.'},
+  {name:'Zora Neale Hurston', start:1891, end:1960, wiki:'https://en.wikipedia.org/wiki/Zora_Neale_Hurston', desc:'Harlem Renaissance author and anthropologist of Black life and folklore.'},
+  {name:'Martin Luther King Jr.', start:1929, end:1968, wiki:'https://en.wikipedia.org/wiki/Martin_Luther_King_Jr.', desc:'Civil rights leader for nonviolent protest; led Montgomery Bus Boycott and March on Washington.'},
+  {name:'Malcolm X', start:1925, end:1965, wiki:'https://en.wikipedia.org/wiki/Malcolm_X', desc:'Minister and activist advocating Black empowerment and self-determination.'},
+  {name:'John Lewis', start:1940, end:2020, wiki:'https://en.wikipedia.org/wiki/John_Lewis_(civil_rights_leader)', desc:'SNCC leader and long-serving congressman; key figure of Selma’s Bloody Sunday.'},
+  {name:'Barack Obama', start:1961, end:2025, wiki:'https://en.wikipedia.org/wiki/Barack_Obama', desc:'44th U.S. President; first Black president; Affordable Care Act and Great Recession recovery.'},
+  {name:'George Floyd', start:1973, end:2020, wiki:'https://en.wikipedia.org/wiki/Murder_of_George_Floyd', desc:'His murder sparked worldwide protests against police brutality and systemic racism.'},
+  {name:'Toni Morrison', start:1931, end:2019, wiki:'https://en.wikipedia.org/wiki/Toni_Morrison', desc:'Nobel laureate novelist exploring Black identity, memory, and history.'},
+  {name:'Booker T. Washington', start:1856, end:1915, wiki:'https://en.wikipedia.org/wiki/Booker_T._Washington', desc:'Educator; Tuskegee Institute.'},
+  {name:'Rosa Parks', start:1913, end:2005, wiki:'https://en.wikipedia.org/wiki/Rosa_Parks', desc:'Montgomery Bus Boycott catalyst.'},
+  {name:'Colin Powell', start:1937, end:2021, wiki:'https://en.wikipedia.org/wiki/Colin_Powell', desc:'First Black U.S. Secretary of State.'},
+  {name:'Katherine Johnson', start:1918, end:2020, wiki:'https://en.wikipedia.org/wiki/Katherine_Johnson', desc:'NASA mathematician.'},
+  {name:'Muhammad Ali', start:1942, end:2016, wiki:'https://en.wikipedia.org/wiki/Muhammad_Ali', desc:'Boxer; antiwar and civil rights figure.'},
+  {name:'Serena Williams', start:1981, end:2025, wiki:'https://en.wikipedia.org/wiki/Serena_Williams', desc:'Tennis; gender/race equity advocate.'},
+  {name:'Oprah Winfrey', start:1954, end:2025, wiki:'https://en.wikipedia.org/wiki/Oprah_Winfrey', desc:'Media and philanthropy.'}
+];
+
+// Concise descriptions for eras (used in detail panel)
+const ERA_INFO = {
+  'Slavery': 'Institutionalized enslavement of Africans and their descendants in what became the United States, from early colonial times through the Civil War, ending with the 13th Amendment in 1865.',
+  'Southern Slavery': 'Chattel slavery concentrated in the American South, shaping its economy, society, and politics until Emancipation in 1865.',
+  'Reconstruction': 'Period of rebuilding and expansion of civil rights following the Civil War, including the 13th–15th Amendments.',
+  'Jim Crow era': 'System of legalized segregation and disenfranchisement across the South after Reconstruction.',
+  'Great Migration': 'Mass movement of Black Americans from the rural South to Northern and Western cities seeking opportunity and safety.',
+  'Civil Rights Movement': 'Broad social and political movement securing landmark civil rights legislation and protections.',
+  'Black Lives Matter era': 'Contemporary movement challenging systemic racism and police violence, shaping policy and public discourse.'
+};
+
+/* ========= Utilities ========= */
+const clamp = (x,a,b)=>Math.max(a,Math.min(b,x));
+const GLOBAL_MIN = 1590;
+const GLOBAL_MAX = 2025;
+const INITIAL = {start: 1590, end: 2025};
+const MIN_SPAN = 0.5; // years
+const PAD = {left:64, right:64, top:28, bottom:60};
+  const PAD_MOBILE = {left:40, right:24, top:24, bottom:56};
+
+function yFloatFromEvent(e){
+  if (e.date){
+    const [Y,M="01",D="01"] = e.date.split("-").map(Number);
+    return Y + (Math.max(0,M-1))/12 + (Math.max(0,D-1))/365;
+  }
+  return e.year;
+}
+function extentFromData(){
+  const evMin = Math.min(...EVENTS.map(yFloatFromEvent));
+  const evMax = Math.max(...EVENTS.map(yFloatFromEvent));
+  const rgMin = Math.min(...RANGES.map(r=>r.start), evMin);
+  const rgMax = Math.max(...RANGES.map(r=>r.end), evMax);
+  return [Math.floor(rgMin), Math.ceil(rgMax)];
+}
+function niceStep(span, targetTicks){
+  // 1-2-5 stepping (minimum 1 year ticks)
+  const rough = span/targetTicks;
+  const pow10 = Math.pow(10, Math.floor(Math.log10(rough||1)));
+  const r = rough/pow10;
+  let step = (r>=5?5:r>=2?2:1)*pow10;
+  return Math.max(1, step);
+}
+function fmtYear(y){
+  // If close to integer, show as int; else one decimal
+  const isInt = Math.abs(y - Math.round(y)) < 1e-6;
+  return isInt ? String(Math.round(y)) : y.toFixed(1);
+}
+
+function formatLongDate(e){
+  // Prefer ISO date if present, else fallback to year-only
+  if (!e.date){ return String(e.year); }
+  const [Y,M,D] = e.date.split('-').map(Number);
+  const date = new Date(Date.UTC(Y, (M||1)-1, D||1));
+  return date.toLocaleDateString(undefined, {year:'numeric', month:'long', day:'numeric'});
+}
+
+function formatLifeSpan(start, end){
+  // Treat end >= GLOBAL_MAX as living (open-ended)
+  if (end >= GLOBAL_MAX) return `${start}–`;
+  return `${start}–${end}`;
+}
+
+function eventMatchesQuery(e){
+  if (!searchQuery) return true;
+  const q = searchQuery;
+  const t = (e.title||'').toLowerCase();
+  const d = (e.desc||'').toLowerCase();
+  return t.includes(q) || d.includes(q);
+}
+
+function rangeMatchesQuery(r){
+  if (!searchQuery) return true;
+  const q = searchQuery;
+  const n = (r.name||'').toLowerCase();
+  return n.includes(q);
+}
+
+function lifeMatchesQuery(p){
+  if (!searchQuery) return true;
+  const q = searchQuery;
+  const n = (p.name||'').toLowerCase();
+  const d = (p.desc||'').toLowerCase();
+  return n.includes(q) || d.includes(q);
+}
+
+function anyLifeMatchesInView(){
+  if (!searchQuery) return true;
+  const matches = LIVES.filter(lifeMatchesQuery);
+  if (matches.length === 0) return true;
+  return matches.some(p => p.end >= startY && p.start <= endY);
+}
+
+function fitLivesToMatches(){
+  const matches = LIVES.filter(lifeMatchesQuery);
+  if (matches.length === 0) return;
+  const minY = Math.min(...matches.map(p=>p.start));
+  const maxY = Math.max(...matches.map(p=>p.end));
+  const padYears = 2;
+  let newStart = Math.max(GLOBAL_MIN, Math.floor(minY) - padYears);
+  let newEnd = Math.min(GLOBAL_MAX, Math.ceil(maxY) + padYears);
+  if (newEnd - newStart < MIN_SPAN){ newEnd = newStart + MIN_SPAN; }
+  startY = newStart; endY = newEnd;
+}
+
+/* ========= Layout state ========= */
+const svg = document.getElementById('timeline');
+const startInput = document.getElementById('startInput');
+const endInput = document.getElementById('endInput');
+const resetBtn = document.getElementById('resetBtn');
+const helpBtn = document.getElementById('helpBtn');
+const helpText = document.getElementById('helpText');
+const rangeReadout = document.getElementById('rangeReadout');
+const detail = document.getElementById('detail');
+const searchInput = document.getElementById('searchInput');
+const toggleLives = document.getElementById('toggleLives');
+const toggleWars = document.getElementById('toggleWars');
+
+let W=0,H=0, innerW=0, innerH=0, cy=0;
+let startY = INITIAL.start, endY = INITIAL.end;
+const [dataMin, dataMax] = extentFromData();
+
+// selection and search state
+let selected = null; // {type:'event'|'range', id:string}
+let searchQuery = '';
+let showLives = true;
+let showWars = true;
+
+  function isMobile(){ return window.matchMedia && window.matchMedia('(max-width: 640px)').matches; }
+function measure(){
+  const r = svg.getBoundingClientRect();
+  W = Math.max(300, r.width|0);
+  H = Math.max(280, r.height|0);
+    const P = isMobile() ? PAD_MOBILE : PAD;
+    innerW = Math.max(10, W - P.left - P.right);
+    innerH = Math.max(10, H - P.top - P.bottom);
+    cy = Math.round(P.top + innerH/2);
+}
+  function yearToX(y){ const P = isMobile() ? PAD_MOBILE : PAD; return P.left + ( (y - startY) / (endY - startY) ) * innerW; }
+  function xToYear(x){ const P = isMobile() ? PAD_MOBILE : PAD; return startY + ((x - P.left) / innerW) * (endY - startY); }
+  function pad(){ return isMobile() ? PAD_MOBILE : PAD; }
+function pxPerYear(){ return innerW / (endY - startY); }
+
+/* ========= Rendering ========= */
+function updateInputs(){
+  startInput.value = Math.round(startY);
+  endInput.value = Math.round(endY);
+  rangeReadout.textContent = `${Math.round(startY)} — ${Math.round(endY)}  (${Math.round(endY-startY)} yrs)`;
+}
+
+function setDetail(html){
+  detail.innerHTML = html || '';
+}
+
+function selectItem(newSel){
+  // Toggle off if clicking the same selection again
+  if (newSel && selected && selected.type === newSel.type && (
+    (newSel.type === 'event' && selected.index === newSel.index) ||
+    (newSel.type !== 'event' && selected.id === newSel.id)
+  )){
+    selected = null;
+    draw();
+    setDetail('');
+    return;
+  }
+  selected = newSel;
+  draw();
+  if (!selected) { setDetail(''); return; }
+  if (selected.type === 'event'){
+    const e = EVENTS[selected.index];
+    const dateText = formatLongDate(e);
+    const wiki = e.wiki || '';
+    const more = e.more || '';
+    const moreHtml = more ? `<div style="margin-top:6px" id="more">${more}</div>` : '';
+    const actions = wiki ? `
+      <div class="actions">
+        <a class="button-link btn-small" target="_blank" rel="noopener noreferrer" href="${wiki}" title="Wikipedia">
+          <svg class="wiki-icon" viewBox="0 0 64 64" aria-hidden="true">
+            <text x="16" y="44" font-size="36" font-family="serif">W</text>
+          </svg>
+          Wikipedia
+        </a>
+        ${more ? '<button id="toggleMore" class="button-link btn-small" type="button">More</button>' : ''}
+      </div>` : (more ? `
+      <div class="actions">
+        <button id="toggleMore" class="button-link btn-small" type="button">More</button>
+      </div>` : '');
+    setDetail(`<strong>${e.title}</strong> — ${dateText}${e.desc?`: ${e.desc}`:''}${actions}${moreHtml}`);
+    const toggle = document.getElementById('toggleMore');
+    if (toggle){
+      toggle.onclick = ()=>{
+        const moreEl = document.getElementById('more');
+        if (!moreEl) return;
+        const hidden = moreEl.hasAttribute('hidden');
+        if (hidden) moreEl.removeAttribute('hidden'); else moreEl.setAttribute('hidden','');
+      };
+    }
+  } else if (selected.type === 'range'){
+    const [name, start, end] = selected.id.split('-');
+    const info = ERA_INFO[name] || '';
+    const rg = RANGES.find(r=>r.name===name && String(r.start)===start && String(r.end)===end);
+    const wiki = rg && rg.wiki ? rg.wiki : '';
+    const wikiBtn = wiki ? `
+      <div class="actions">
+        <a class="button-link btn-small" target="_blank" rel="noopener noreferrer" href="${wiki}" title="Wikipedia">
+          <svg class="wiki-icon" viewBox="0 0 64 64" aria-hidden="true">
+            <text x="16" y="44" font-size="36" font-family="serif">W</text>
+          </svg>
+          Wikipedia
+        </a>
+      </div>` : '';
+    setDetail(`<strong>${name}</strong> — ${start}–${end}${info?`: ${info}`:''}${wikiBtn}`);
+  } else if (selected.type === 'war'){
+    const w = WARS.find(x=>x.name===selected.id);
+    if (w){
+      const wiki = w.wiki || '';
+      const wikiBtn = wiki ? `
+        <div class="actions">
+          <a class="button-link btn-small" target="_blank" rel="noopener noreferrer" href="${wiki}" title="Wikipedia">
+            <svg class="wiki-icon" viewBox="0 0 64 64" aria-hidden="true">
+              <text x="16" y="44" font-size="36" font-family="serif">W</text>
+            </svg>
+            Wikipedia
+          </a>
+        </div>` : '';
+      setDetail(`<strong>${w.name}</strong> — ${w.start}–${w.end}${wikiBtn}`);
+    }
+  } else if (selected.type === 'life'){
+    const p = LIVES.find(x=>x.name===selected.id);
+    if (p){
+      const wiki = p.wiki || '';
+      const actions = wiki ? `
+        <div class="actions">
+          <a class="button-link btn-small" target="_blank" rel="noopener noreferrer" href="${wiki}" title="Wikipedia">
+            <svg class="wiki-icon" viewBox="0 0 64 64" aria-hidden="true">
+              <text x="16" y="44" font-size="36" font-family="serif">W</text>
+            </svg>
+            Wikipedia
+          </a>
+        </div>` : '';
+      const summary = p.desc ? `: ${p.desc}` : '';
+      setDetail(`<strong>${p.name}</strong> — ${formatLifeSpan(p.start, p.end)}${summary}${actions}`);
+    }
+  }
+}
+
+function draw(){
+  measure();
+  svg.innerHTML = '';
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+  // Axis labels (no background grid)
+  const gAxis = elt('g', {class:'axis'});
+  const P = pad();
+  const baseline = elt('line', {class:'baseline', x1:P.left, y1:cy, x2:W-P.right, y2:cy});
+  const ticksTarget = Math.max(4, Math.floor(innerW/100));
+  const span = endY - startY;
+  const step = niceStep(span, ticksTarget);
+  let t = Math.ceil(startY/step)*step;
+  while (t <= endY + 1e-9){
+    const x = Math.round(yearToX(t));
+    const label = elt('text', {x, y:cy+22, 'text-anchor':'middle'});
+    label.textContent = fmtYear(t);
+    gAxis.appendChild(label);
+    t += step;
+  }
+
+  // Bands (historical ranges)
+  const gBands = elt('g');
+  const gWars = elt('g');
+  const gLives = elt('g');
+  const bandH = 16;
+  const bandGap = 14; // horizontal separation to improve clarity
+  const bandBaseOffset = 36; // more distance from baseline to first band row (below)
+  // Prepare visible ranges
+  const rangesPrepared = [];
+  for (const r of RANGES){
+    const matches = rangeMatchesQuery(r);
+    if (r.level === 2 && pxPerYear() < 1.4 && !(searchQuery && matches)) continue;
+    const rawX1 = yearToX(r.start);
+    const rawX2 = yearToX(r.end);
+    const x1 = Math.max(P.left, Math.min(W-P.right, Math.min(rawX1, rawX2)));
+    const x2 = Math.max(P.left, Math.min(W-P.right, Math.max(rawX1, rawX2)));
+    if (x2 <= P.left || x1 >= W-P.right) continue;
+    // derive a stable id for selection
+    const id = `${r.name}-${r.start}-${r.end}`;
+    rangesPrepared.push({r, x1, x2, id, matches});
+  }
+  rangesPrepared.sort((a,b)=>a.x1 - b.x1);
+  // Greedy stack rows below baseline (eras)
+  const bandRowEnds = [];
+  for (const item of rangesPrepared){
+    const {r, x1, x2, id, matches} = item;
+    let row = 0;
+    while (true){
+      if (bandRowEnds[row] === undefined || x1 - bandGap >= bandRowEnds[row]){
+        // place here
+        bandRowEnds[row] = x2 + bandGap;
+        const yTop = cy + bandBaseOffset + row * (bandH + 28); // vertical stacking for eras
+        const classes = ['clickable'];
+        if (selected && selected.type==='range' && selected.id===id) classes.push('selected');
+        if (searchQuery && !matches) classes.push('dim');
+        const g = elt('g', {class: classes.join(' '), 'data-id': id, 'data-type': 'range'});
+        const rect = elt('rect', {class:'band', x:x1, y:yTop, width:Math.max(0, x2-x1), height:bandH, rx:2, ry:2});
+        const tx = clamp((x1+x2)/2, P.left+40, W-P.right-40);
+        const label = elt('text', {class:'band-label', x:tx, y:yTop + bandH/2, 'text-anchor':'middle', 'dominant-baseline':'middle'});
+    label.textContent = r.name;
+        g.appendChild(rect);
+        g.appendChild(label);
+    gBands.appendChild(g);
+        break;
+      }
+      row += 1;
+    }
+  }
+
+  // Wars (optional) as semi-transparent dark red bands below baseline, stacked below eras
+  if (showWars){
+    const warH = bandH; // match eras bar height
+    const warGap = 8;
+    const bandRowsUsed = bandRowEnds.length; // number of era rows placed
+    const warBaseOffset = bandBaseOffset + bandRowsUsed * (bandH + 28) + 14; // start below eras
+    // measure labels to de-conflict by label width, not just bar width
+    const warMeas = elt('text', {x:-9999, y:-9999, opacity:0, class:'war-label'});
+    svg.appendChild(warMeas);
+    const measureWar = (s)=>{ warMeas.textContent = s; return warMeas.getBBox().width || 0; };
+    const shortName = (name)=>{
+      if (name==="World War I") return "WWI";
+      if (name==="World War II") return "WWII";
+      if (name.includes("Korean War")) return "Korean";
+      if (name.includes("Vietnam War")) return "Vietnam";
+      if (name.includes("American Civil War")) return "Civil War";
+      if (name.includes("American Revolutionary War")) return "Revolutionary";
+      if (name.includes("Mexican")) return "Mex.–American";
+      if (name.includes("Spanish")) return "Span.–American";
+      return name;
+    };
+    // Prepare with label width and center
+    const warsPrepared = [];
+    for (const w of WARS){
+      const rawX1 = yearToX(w.start);
+      const rawX2 = yearToX(w.end);
+      const x1 = Math.max(P.left, Math.min(W-P.right, Math.min(rawX1, rawX2)));
+      const x2 = Math.max(P.left, Math.min(W-P.right, Math.max(rawX1, rawX2)));
+      if (x2 <= P.left || x1 >= W-P.right) continue;
+      const tx = clamp((x1+x2)/2, P.left+40, W-P.right-40);
+      const text = shortName(w.name);
+      const width = measureWar(text);
+      const left = tx - width/2;
+      const right = tx + width/2;
+      warsPrepared.push({w, x1, x2, tx, text, left, right});
+    }
+    warsPrepared.sort((a,b)=>a.left-b.left);
+    const warRowEnds = [];
+    for (const item of warsPrepared){
+      const {w, x1, x2, tx, text, left, right} = item;
+      let row = 0;
+      while (true){
+        if (warRowEnds[row] === undefined || left - warGap >= warRowEnds[row]){
+          warRowEnds[row] = right + warGap;
+          const yTop = cy + warBaseOffset + row * (warH + 18);
+          const g = elt('g', {class:'clickable', 'data-type':'war', 'data-id': w.name});
+          const rect = elt('rect', {class:'war-band', x:x1, y:yTop, width:Math.max(0, x2-x1), height:warH, rx:2, ry:2});
+          const label = elt('text', {class:'war-label', x:tx, y:yTop + warH/2, 'text-anchor':'middle', 'dominant-baseline':'middle'});
+          label.textContent = text;
+          const title = document.createElementNS('http://www.w3.org/2000/svg','title');
+          title.textContent = `${w.name} — ${w.start}–${w.end}`;
+          g.appendChild(title);
+          g.appendChild(rect);
+          g.appendChild(label);
+          gWars.appendChild(g);
+          break;
+        }
+        row += 1;
+      }
+    }
+    svg.removeChild(warMeas);
+  }
+
+  // Lives (historical figures) above baseline (hidden by default)
+  if (showLives){
+    const lifeH = 12;
+    const lifeGap = 10;
+    const lifeBaseOffset = 130; // more space above baseline to avoid overlap with events
+    const lifeRowGap = 8; // tighter stacking between individuals
+    const livesPrepared = [];
+    for (const p of LIVES){
+      const matches = lifeMatchesQuery(p);
+      const rawX1 = yearToX(p.start);
+      const rawX2 = yearToX(p.end);
+      const x1 = Math.max(P.left, Math.min(W-P.right, Math.min(rawX1, rawX2)));
+      const x2 = Math.max(P.left, Math.min(W-P.right, Math.max(rawX1, rawX2)));
+      if (x2 <= P.left || x1 >= W-P.right) continue;
+      livesPrepared.push({p, x1, x2, matches});
+    }
+    // Prioritize matching lives when searching, then sort by x
+    livesPrepared.sort((a,b)=>{
+      const ma = a.matches ? 1 : 0;
+      const mb = b.matches ? 1 : 0;
+      if (ma !== mb) return mb - ma; // matches first
+      return a.x1 - b.x1;
+    });
+    const MAX_LIFE_ROWS = 4;
+    const lifeRowEnds = [];
+    for (const item of livesPrepared){
+      const {p, x1, x2, matches} = item;
+      let row = 0;
+      let placed = false;
+      while (row < MAX_LIFE_ROWS){
+        if (lifeRowEnds[row] === undefined || x1 - lifeGap >= lifeRowEnds[row]){
+          lifeRowEnds[row] = x2 + lifeGap;
+          const yTop = cy - lifeBaseOffset - row * (lifeH + lifeRowGap);
+          const classes = ['clickable'];
+          if (selected && selected.type==='life' && selected.id===p.name) classes.push('selected');
+          if (searchQuery && !matches) classes.push('dim');
+          const g = elt('g', {class: classes.join(' '), 'data-type':'life', 'data-id': p.name});
+          const rect = elt('rect', {class:'life-band', x:x1, y:yTop, width:Math.max(0, x2-x1), height:lifeH, rx:2, ry:2});
+          const tx = clamp((x1+x2)/2, P.left+40, W-P.right-40);
+          const label = elt('text', {class:'life-label', x:tx, y:yTop + lifeH/2, 'text-anchor':'middle', 'dominant-baseline':'middle'});
+          label.textContent = p.name;
+          const title = document.createElementNS('http://www.w3.org/2000/svg','title');
+          title.textContent = `${p.name} — ${formatLifeSpan(p.start, p.end)}`;
+          g.appendChild(title);
+          g.appendChild(rect);
+          g.appendChild(label);
+          gLives.appendChild(g);
+          placed = true;
+          break;
+        }
+        row += 1;
+      }
+      // skip lives that don't fit within MAX_LIFE_ROWS
+    }
+  }
+
+  // Events (non-overlapping labels; only above baseline)
+  const gEvents = elt('g');
+  const showLvl2 = true; // always render dots; label visibility handled separately
+  const showLvl3 = true; // always render dots; label visibility handled separately
+  const labelLvl1 = pxPerYear() >= 0.8;
+  const labelLvl2 = pxPerYear() >= 3.5;
+  const labelLvl3 = pxPerYear() >= 10;
+
+  // Text measurer for accurate width
+  const measurer = elt('text', {x:-9999, y:-9999, opacity:0});
+  svg.appendChild(measurer);
+  function measureTextWidth(text, isSmall){
+    measurer.setAttribute('class', 'event-label' + (isSmall ? ' small' : ''));
+    measurer.textContent = text;
+    const w = measurer.getBBox().width || 0;
+    return w;
+  }
+
+  // Prepare visible events with x positions and label strings
+  const prepared = [];
+  for (let evIdx = 0; evIdx < EVENTS.length; evIdx++){
+    const e = EVENTS[evIdx];
+    const y = yFloatFromEvent(e);
+    if (y < startY || y > endY) continue;
+    // Determine search match
+    const matches = eventMatchesQuery(e);
+    const x = yearToX(y);
+    // Base label visibility by zoom thresholds; search can force label visibility
+    const baseShowLabel = (e.level===1 && labelLvl1) || (e.level===2 && labelLvl2) || (e.level===3 && labelLvl3);
+    const showLabel = baseShowLabel || (!!searchQuery && matches);
+    const isSmall = e.level >= 2;
+    const labelText = showLabel ? `${e.title} ${e.date?`(${new Date(e.date).getUTCFullYear()})`:''}` : '';
+    const labelW = showLabel ? measureTextWidth(labelText, isSmall) : 0;
+    prepared.push({evIdx, e, x, showLabel, isSmall, labelText, labelW, matches});
+  }
+
+  // Sort: matching search results first, then by x for greedy placement
+  prepared.sort((a,b)=>{
+    const ma = a.matches ? 1 : 0;
+    const mb = b.matches ? 1 : 0;
+    if (ma !== mb) return mb - ma; // matches first
+    return a.x - b.x;
+  });
+
+  // Row layout config
+  const baseOffset = 28; // distance from baseline to first label row (above)
+  const rowGap = 18;     // vertical gap between rows
+  const minGap = 8;      // horizontal gap between labels
+  const baseMaxRows = pxPerYear() >= 12 ? 4 : pxPerYear() >= 6 ? 3 : pxPerYear() >= 3.5 ? 2 : 1;
+  const topEnds = Array(baseMaxRows).fill(-Infinity);
+
+  for (let i=0; i<prepared.length; i++){
+    const item = prepared[i];
+    const {evIdx, e, x, showLabel, isSmall, labelText, labelW, matches} = item;
+    let placedRow = null; // row index on top side
+
+    function canPlaceTop(row){
+      const leftX = x - labelW/2;
+      const rightX = x + labelW/2;
+      const used = (row < topEnds.length ? topEnds[row] : -Infinity);
+      return (leftX - minGap) >= used;
+    }
+    function occupyTop(row){
+      const rightX = x + labelW/2;
+      if (row >= topEnds.length){
+        topEnds[row] = -Infinity;
+      }
+      topEnds[row] = rightX + minGap;
+      placedRow = row;
+    }
+
+    if (showLabel && labelW > 0){
+      let placed = false;
+      for (let r=0; r<topEnds.length; r++){
+        if (canPlaceTop(r)) { occupyTop(r); placed = true; break; }
+      }
+      // If searching and this item matches, force a new row if needed
+      if (!placed && searchQuery && item.matches){
+        const r = topEnds.length; // next new row
+        occupyTop(r);
+      }
+    }
+
+    // Draw
+    const isSelected = selected && selected.type==='event' && selected.index===evIdx;
+    const classes = ['clickable'];
+    if (isSelected) classes.push('selected');
+    if (searchQuery && !matches) classes.push('dim');
+    const g = elt('g', {class: classes.join(' '), 'data-type':'event', 'data-index': String(evIdx)});
+    const dot = elt('circle', {class:'event-dot', cx:x, cy:cy, r:2});
+
+    // Determine stem/label positions (only when label is placed)
+    let yLabel = cy;
+    let yStem = cy;
+    const hasPlacedLabel = placedRow !== null;
+    if (hasPlacedLabel){
+      yStem = cy - (baseOffset + placedRow*rowGap);
+      yLabel = yStem - 6;
+    }
+
+    // Tooltip
+    const title = document.createElementNS('http://www.w3.org/2000/svg','title');
+    title.textContent = `${e.title}${e.date?` — ${formatLongDate(e)}`:''}\n${e.desc||''}`;
+    g.appendChild(title);
+
+    g.appendChild(dot);
+    if (hasPlacedLabel){
+      const stem = elt('line', {class:'event-stem', x1:x, y1:cy, x2:x, y2:yStem});
+      g.appendChild(stem);
+      const label = elt('text', {
+        class: 'event-label ' + (isSmall?'small':''),
+        x: x,
+        y: yLabel,
+        'text-anchor': 'middle'
+      });
+      label.textContent = labelText;
+      g.appendChild(label);
+    }
+
+    gEvents.appendChild(g);
+  }
+
+  // remove measurer
+  svg.removeChild(measurer);
+
+  // Edge handles (drag to extend/shorten)
+  const gHandles = elt('g');
+  const handleY = cy - 18;
+  const handleW = 12, handleH = 36;
+
+  // Left
+  // position handles farther outside so they don't overlap end-year labels
+  const leftX = pad().left - handleW - 36;
+  const leftConnector = elt('line', {class:'handle-connector', x1:leftX+handleW, y1:cy, x2:pad().left, y2:cy});
+  const left = elt('rect', {x:leftX, y:handleY, width:handleW, height:handleH, class:'handle', id:'leftHandle', rx:3, ry:3});
+  const leftHit = elt('rect', {x:leftX-8, y:handleY-8, width:handleW+16, height:handleH+16, class:'handle-hit', id:'leftHandleHit'});
+  gHandles.appendChild(leftConnector);
+  gHandles.appendChild(left); gHandles.appendChild(leftHit);
+
+  // Right
+  const rightX = W - pad().right + 36;
+  const rightConnector = elt('line', {class:'handle-connector', x1:W - pad().right, y1:cy, x2:rightX, y2:cy});
+  const right = elt('rect', {x:rightX, y:handleY, width:handleW, height:handleH, class:'handle', id:'rightHandle', rx:3, ry:3});
+  const rightHit = elt('rect', {x:rightX-8, y:handleY-8, width:handleW+16, height:handleH+16, class:'handle-hit', id:'rightHandleHit'});
+  gHandles.appendChild(rightConnector);
+  gHandles.appendChild(right); gHandles.appendChild(rightHit);
+
+  svg.appendChild(gBands);
+  if (showWars) svg.appendChild(gWars);
+  if (showLives) svg.appendChild(gLives);
+  svg.appendChild(baseline);
+  svg.appendChild(gAxis);
+  svg.appendChild(gEvents);
+  svg.appendChild(gHandles);
+
+  // attach click handling (event delegation on svg)
+  svg.onclick = (ev)=>{
+    const target = ev.target;
+    if (!(target instanceof SVGElement)) return;
+    const group = target.closest('[data-type]');
+    if (!group) return;
+    const type = group.getAttribute('data-type');
+    if (type === 'range'){
+      const id = group.getAttribute('data-id');
+      selectItem({type:'range', id});
+    } else if (type === 'event'){
+      const indexStr = group.getAttribute('data-index');
+      const index = indexStr ? Number(indexStr) : -1;
+      selectItem({type:'event', index});
+    } else if (type === 'war'){
+      const id = group.getAttribute('data-id');
+      selectItem({type:'war', id});
+    } else if (type === 'life'){
+      const id = group.getAttribute('data-id');
+      selectItem({type:'life', id});
+    }
+  };
+
+  updateInputs();
+}
+
+/* ========= Interaction ========= */
+let dragging = null; // 'pan' | 'left' | 'right' | null
+let dragStart = {x:0, startY:0, endY:0};
+
+function startDrag(mode, clientX){
+  dragging = mode;
+  dragStart.x = clientX;
+  dragStart.startY = startY;
+  dragStart.endY = endY;
+  svg.classList.add('dragging');
+}
+function onDrag(clientX){
+  if (!dragging) return;
+  const dx = clientX - dragStart.x;
+  const dYears = dx / pxPerYear();
+
+  if (dragging === 'pan'){
+    startY = clamp(dragStart.startY - dYears, GLOBAL_MIN, GLOBAL_MAX - MIN_SPAN);
+    endY   = clamp(dragStart.endY   - dYears, startY + MIN_SPAN, GLOBAL_MAX);
+  } else if (dragging === 'left'){
+    // dragging left handle: adjust start year opposite dx (drag left => decrease start)
+    const candidate = clamp(dragStart.startY + dYears, GLOBAL_MIN, endY - MIN_SPAN);
+    startY = candidate;
+  } else if (dragging === 'right'){
+    const candidate = clamp(dragStart.endY + dYears, startY + MIN_SPAN, GLOBAL_MAX);
+    endY = candidate;
+  }
+  draw();
+}
+function endDrag(){ dragging=null; svg.classList.remove('dragging'); }
+
+svg.addEventListener('mousedown', (ev)=>{
+  const id = ev.target.id;
+  if (id === 'leftHandle' || id === 'leftHandleHit') startDrag('left', ev.clientX);
+  else if (id === 'rightHandle' || id === 'rightHandleHit') startDrag('right', ev.clientX);
+  else startDrag('pan', ev.clientX);
+});
+window.addEventListener('mousemove', ev => onDrag(ev.clientX));
+window.addEventListener('mouseup', endDrag);
+window.addEventListener('mouseleave', endDrag);
+
+// Wheel zoom (focus around pointer)
+svg.addEventListener('wheel', (ev)=>{
+  ev.preventDefault();
+  const mouse = ev.clientX - svg.getBoundingClientRect().left;
+  const focusYear = xToYear(mouse);
+  const k = Math.exp(-ev.deltaY * 0.0012); // >1 zoom in, <1 out
+  const span = clamp((endY - startY) / k, MIN_SPAN, GLOBAL_MAX - GLOBAL_MIN);
+  const t = (focusYear - startY) / (endY - startY);
+  let newStart = focusYear - t * span;
+  let newEnd = newStart + span;
+
+  // Clamp to globals
+  if (newStart < GLOBAL_MIN){ newStart = GLOBAL_MIN; newEnd = GLOBAL_MIN + span; }
+  if (newEnd > GLOBAL_MAX){ newEnd = GLOBAL_MAX; newStart = GLOBAL_MAX - span; }
+
+  startY = newStart; endY = newEnd;
+  draw();
+}, {passive:false});
+
+// Inputs & buttons
+startInput.addEventListener('change', ()=>{
+  const v = Number(startInput.value);
+  if (!isFinite(v)) return;
+  startY = clamp(v, GLOBAL_MIN, endY - MIN_SPAN);
+  draw();
+});
+endInput.addEventListener('change', ()=>{
+  const v = Number(endInput.value);
+  if (!isFinite(v)) return;
+  endY = clamp(v, startY + MIN_SPAN, GLOBAL_MAX);
+  draw();
+});
+resetBtn.addEventListener('click', reset);
+helpBtn.addEventListener('click', ()=>toggleHelp());
+  // search
+  searchInput.addEventListener('input', ()=>{
+    const v = (searchInput.value||'').trim().toLowerCase();
+    searchQuery = v;
+    // Do not change year span; just re-render with priority placement
+    draw();
+  });
+  // lives toggle (shown by default)
+  toggleLives.checked = true;
+  toggleLives.addEventListener('change', ()=>{
+    showLives = !!toggleLives.checked;
+    draw();
+  });
+  // wars toggle (shown by default)
+  toggleWars.checked = true;
+  toggleWars.addEventListener('change', ()=>{
+    showWars = !!toggleWars.checked;
+    draw();
+  });
+
+window.addEventListener('keydown', (e)=>{
+  if (e.key==='f' || e.key==='F'){ fitToData(); }
+  else if (e.key==='r' || e.key==='R'){ reset(); }
+  else if (e.key==='h' || e.key==='H'){ toggleHelp(); }
+  else if (e.key==='ArrowLeft'){ nudge(-1); }
+  else if (e.key==='ArrowRight'){ nudge(+1); }
+});
+
+function nudge(dir){
+  // pan by 5% of span
+  const shift = (endY - startY)*0.05*dir;
+  startY = clamp(startY + shift, GLOBAL_MIN, GLOBAL_MAX - (endY - startY));
+  endY   = clamp(endY + shift, startY + MIN_SPAN, GLOBAL_MAX);
+  draw();
+}
+
+function fitToData(){
+  const padYears = 2;
+  startY = Math.max(GLOBAL_MIN, Math.floor(dataMin) - padYears);
+  endY = Math.min(GLOBAL_MAX, Math.ceil(dataMax) + padYears);
+  draw();
+}
+function reset(){
+  startY = INITIAL.start;
+  endY = INITIAL.end;
+  draw();
+}
+function toggleHelp(){
+  helpText.hidden = !helpText.hidden;
+}
+
+/* ========= Helpers ========= */
+function elt(name, attrs={}){
+  const el = document.createElementNS('http://www.w3.org/2000/svg', name);
+  for (const [k,v] of Object.entries(attrs)){ el.setAttribute(k, v); }
+  return el;
+}
+
+/* ========= Boot ========= */
+(function init(){
+  // ensure inputs initialized to domain
+  // start with reset view
+  reset();
+  updateInputs();
+  // resize observer to keep SVG crisp
+  const ro = new ResizeObserver(()=>draw());
+  ro.observe(document.getElementById('wrap'));
+})();
+</script>
+</body>
+</html>
