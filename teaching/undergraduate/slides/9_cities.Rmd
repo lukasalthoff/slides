@@ -577,8 +577,8 @@ knitr::include_graphics("files/berlin_wall2.png")
 # London: where people live vs. where they work
 
 .pull-left[
-<div style="margin-top: 40px;">
-```{r, echo = F, out.width = '100%'}
+<div style="margin-top: 267px;">
+```{r, echo = F, out.width = '50%'}
 knitr::include_graphics("files/london_residential.png")
 ```
 </div>
@@ -586,7 +586,7 @@ knitr::include_graphics("files/london_residential.png")
 ]
 
 .pull-right[
-```{r, echo = F, out.width = '100%'}
+```{r, echo = F, out.width = '50%'}
 knitr::include_graphics("files/london_employment.png")
 ```
 .center[**Employment** density]
@@ -619,35 +619,11 @@ Heblich, Redding & Sturm (QJE 2020) build a quantitative spatial model and use s
 
 .footnote[.small[Source: Heblich, Redding & Sturm, "The Making of the Modern Metropolis: Evidence from London" (QJE 2020)]]
 
----
-
-# Why must agglomeration exist?
-
-.center-content[
-**Starrett's Spatial Impossibility Theorem (1978):**
-
-Without agglomeration economies, there is no advantage to large-scale production over small-scale — and transportation is costly.
-
-→ If agglomeration didn't exist, there should be **no trade and no travel**.
-
-There clearly is. Therefore agglomeration economies must exist.
-]
-
---
-
-.center-content[
-Cronon (1991): many sites on Lake Michigan are physically equal to Chicago's — yet Chicago dominates.
-
-<span class="gray">The spatial concentration of cities far exceeds what geography alone can explain.</span>
-]
 
 ---
 
 # The three micro-foundations of agglomeration
 
-.center-content[
-<span class="gray">Duranton & Puga (2004)</span> identify three mechanisms:
-]
 
 | Mechanism | How it works | Example |
 |-----------|-------------|---------|
@@ -707,82 +683,6 @@ Cities facilitate **face-to-face knowledge transfer**:
 
 ---
 
-# Why are cities too big?
-
-.center-content[
-Individuals choose where to live based on their **own** costs and benefits.
-
-They don't account for the **crowding costs** they impose on everyone else:
-- Longer commutes, higher rents, more pollution
-
-→ Cities grow beyond the socially optimal size (Henderson & Venables 2009)
-
-<span class="gray">This is why urban policy — congestion pricing, housing supply, public transit — matters so much.</span>
-]
-
----
-
-# How cities grow: The Standard Urban Model
-
-.center-content[
-The **Alonso-Muth-Mills model** (1960s): cities form concentric rings around a central business district (CBD).
-
-- Housing costs and density **decline** with distance from the CBD
-- Transportation costs **rise** with distance
-- In equilibrium: housing cost + transport cost = constant
-- City size is set where land value for housing = land value for agriculture
-]
-
---
-
-.center-content[
-**Liotta, Viguié & Lepetit (2022)**: tested on **192 cities globally** — largely confirmed.
-
-Rents decline with distance from CBD in 167 of 192 cities. Density declines in all 192.
-]
-
----
-
-# Cities are sprawling
-
-.center-content[
-**<span class="gray">Angel et al. (2010)</span>**: urban density has been **falling worldwide**.
-
-- Global sample: density fell ~2% per year from 1990–2000
-- U.S. cities: density fell by a **factor of 5** from 1910–2000
-
-Drivers: transportation technology (streetcar → automobile) and rising incomes → more demand for space.
-]
-
---
-
-.center-content[
-<span class="gray">If density generates agglomeration benefits, then sprawl may be undermining the very forces that make cities productive.</span>
-]
-
----
-
-# The pace of urban life
-
-.pull-left[
-Classic finding (Bornstein & Bornstein 1976): people **walk faster** in larger cities.
-
-Levine & Norenzayan (1999) broadened this to "pace of life" across 31 countries:
-- Faster pace correlates with higher GDP, colder climates, individualistic cultures
-- Positively correlated with **subjective well-being**
-]
-
-.pull-right[
-**But pedestrians are speeding up:**
-
-Ratti et al. (PNAS 2025) compared 1980s video footage with 2010 footage at the same locations in Boston, NYC, and Philadelphia:
-- Walking speed **up 15%**
-- Lingering in public spaces **down 14%**
-
-**Public spaces are becoming thoroughfares, not places of encounter.**
-]
-
----
 class: agenda
 
 # Agenda
