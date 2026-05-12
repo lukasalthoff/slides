@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Lecture 9: Triumph of the City</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Progress and Inequality" />
+    <script src="9_cities_files/header-attrs-2.29/header-attrs.js"></script>
+    <link href="9_cities_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="9_cities_files/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="9_cities_files/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../shared/my-css.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Lecture 9: Triumph of the City
+]
+.author[
+### Progress and Inequality
+]
+.date[
+### Lukas Althoff
+]
+
+---
+
+
+
+
+class: agenda
+
+# Agenda
+
+&lt;ul class="agenda-list"&gt;
+&lt;li class="current"&gt;The long arc of cities&lt;/li&gt;
+&lt;li class="upcoming"&gt;Why do cities exist?&lt;/li&gt;
+&lt;li class="upcoming"&gt;Cities as engines of innovation&lt;/li&gt;
+&lt;li class="upcoming"&gt;The dark side: cities and inequality&lt;/li&gt;
+&lt;li class="upcoming"&gt;The future of cities&lt;/li&gt;
+&lt;/ul&gt;
+
+---
+
+# The Neolithic revolution made cities possible
+
+.center-content[
+- For most of our species' history, *Homo sapiens* was nomadic
+
+- ~10,000 BCE: agriculture and storage → people settle down
+
+- Surplus food supports people who *aren't* farmers — priests, scribes, artisans, soldiers, traders
+
+- Cities are the physical infrastructure of the division of labor
+]
+
+---
+
+# From village to city
+
+.pull-left[
+&lt;img src="files/catalhoyuk.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+**Çatalhöyük (~7000 BCE):**
+- *Proto*-city, ~8,000 people in Anatolia
+- Houses entered through the roof
+- No streets, no central plaza
+]
+
+.pull-right[
+&lt;img src="files/uruk.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+**Uruk (~3500 BCE):**
+- First true city, ~40,000 people in Sumer
+- Writing invented to track grain
+- Specialized occupations, full-time priests
+]
+
+---
+
+# Urbanization in the very long run
+
+.center-content[
+  &lt;div style="display: flex; justify-content: center; align-items: center; height: 490px; width: 100%; text-align: center;"&gt;
+    &lt;iframe src="../materials/urbanization_long_run.html" width="100%" height="100%" style="border: none; display: block; margin: 0 auto;"&gt;&lt;/iframe&gt;
+  &lt;/div&gt;
+]
+
+---
+
+# The majority of humans live in cities
+
+.center-content[
+&lt;img src="files/share-urban-and-rural-population.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+class: bg-blurry, middle, center, timer-5min-cities
+
+&lt;div class="timer-quote"&gt;What are the major benefits vs. costs of cities?&lt;/div&gt;
+&lt;div class="timer-sep"&gt;&lt;/div&gt;
+
+&lt;div style="text-align: left; max-width: 700px; margin: 0 auto 24px; font-size: 22px; line-height: 1.6;"&gt;
+1. &lt;strong&gt;Brainstorm&lt;/strong&gt; (2 min): In pairs, list benefits and costs of cities.&lt;br&gt;
+2. &lt;strong&gt;Debate&lt;/strong&gt; (3 min): Pair up with another pair (4 students) and compare your lists.
+&lt;/div&gt;
+
+&lt;div class="timer-countdown" id="timer-5min-cities"&gt;05:00&lt;/div&gt;
+&lt;div class="timer-controls"&gt;
+  &lt;button class="timer-toggle is-play" id="timer-5min-cities-toggle" type="button" aria-label="Start timer"&gt;&amp;#9654;&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+(function() {
+  var totalSeconds = 5 * 60;
+  var remaining = totalSeconds;
+  var intervalId = null;
+  var isRunning = false;
+  var display = document.getElementById('timer-5min-cities');
+  var toggle = document.getElementById('timer-5min-cities-toggle');
+  var playLabel = '&amp;#9654;';
+  var resetLabel = 'reset';
+  var buttonState = 'play';
+
+  if (!display || !toggle) {
+    return;
+  }
+
+  function formatTime(seconds) {
+    var minutes = Math.floor(seconds / 60);
+    var secs = seconds % 60;
+    return String(minutes).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+  }
+
+  function render() {
+    display.textContent = formatTime(remaining);
+  }
+
+  function setButtonState(state) {
+    buttonState = state;
+    toggle.innerHTML = state === 'reset' ? resetLabel : playLabel;
+    toggle.setAttribute('aria-label', state === 'reset' ? 'Reset timer' : 'Start timer');
+    toggle.classList.toggle('is-reset', state === 'reset');
+    toggle.classList.toggle('is-play', state === 'play');
+  }
+
+  function stopTimer() {
+    if (intervalId) {
+      clearInterval(intervalId);
+      intervalId = null;
+    }
+    isRunning = false;
+  }
+
+  function resetTimer() {
+    stopTimer();
+    remaining = totalSeconds;
+    render();
+    setButtonState('play');
+  }
+
+  function startTimer() {
+    if (isRunning) {
+      return;
+    }
+    if (remaining &lt;= 0) {
+      remaining = totalSeconds;
+    }
+    stopTimer();
+    isRunning = true;
+    setButtonState('reset');
+    intervalId = setInterval(function() {
+      remaining -= 1;
+      if (remaining &lt;= 0) {
+        remaining = 0;
+        render();
+        stopTimer();
+        return;
+      }
+      render();
+    }, 1000);
+  }
+
+  function hasTimerClass(slide) {
+    if (!slide || !slide.properties || !slide.properties.class) {
+      return false;
+    }
+    var classes = slide.properties.class.split(/[,\\s]+/).filter(Boolean);
+    return classes.indexOf('timer-5min-cities') !== -1;
+  }
+
+  toggle.addEventListener('click', function() {
+    if (buttonState === 'play') {
+      startTimer();
+    } else {
+      resetTimer();
+    }
+  });
+
+  if (window.slideshow &amp;&amp; window.slideshow.on) {
+    var lastWasTimer = false;
+
+    window.slideshow.on('afterShowSlide', function(slide) {
+      var isTimerSlide = hasTimerClass(slide);
+      if (isTimerSlide &amp;&amp; !lastWasTimer) {
+        resetTimer();
+      }
+      if (!isTimerSlide &amp;&amp; lastWasTimer) {
+        resetTimer();
+      }
+      lastWasTimer = isTimerSlide;
+    });
+
+    if (window.slideshow.getSlides) {
+      var slides = window.slideshow.getSlides();
+      var index = typeof window.slideshow.getCurrentSlideIndex === 'function'
+        ? window.slideshow.getCurrentSlideIndex()
+        : null;
+      if (index !== null &amp;&amp; slides[index] &amp;&amp; hasTimerClass(slides[index])) {
+        lastWasTimer = true;
+        resetTimer();
+      }
+    }
+  } else {
+    resetTimer();
+  }
+})();
+&lt;/script&gt;
+
+---
+
+# Two faces of the city
+
+.pull-left[
+**Benefits**
+
+- **Agglomeration**: ideas, division of labor, thicker markets
+
+- **Trade** and specialization
+
+- **Cultural production**: art, music, learning
+
+- **Defense** behind walls
+
+- Access to political and religious power
+]
+
+.pull-right[
+**Costs**
+
+- **Disease**: dense populations were death traps until the 1900s
+
+- **Fire**: London 1666, Chicago 1871, Tokyo 1923
+
+- **Pollution**: smog, sewage, lead
+
+- **Crime** and social conflict
+
+- Higher rents, congestion
+]
+
+---
+
+# What changed: the urban mortality penalty disappeared
+
+.center-content[
+Three nineteenth-century revolutions made cities *survivable*:
+
+1. **Sanitation**: London sewers (1865), Paris under Haussmann (1850s–60s)
+
+2. **Germ theory**: Pasteur, Koch, Lister → clean water, antiseptics, vaccines
+
+3. **Refrigeration and food distribution**: cities could feed themselves safely
+
+By 1900, urban life expectancy began to *exceed* rural in rich countries — and the modern city took off.
+]
+
+---
+
+# John Snow and the Broad Street pump (1854)
+
+.pull-left[
+&lt;img src="files/snow_cholera_map.jpg" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+- Soho, London, 1854: a cholera outbreak killed 616 people in weeks
+
+- Prior theory was disease from "bad air"
+
+- Snow mapped each death as a bar on the street: clusters pointed to one water pump
+
+- He convinced the parish to remove the pump handle → the outbreak ended
+
+- Snow had no germ theory yet, but he had **data + a map**
+
+]
+
+---
+class: inverse, middle, center
+
+# A timeline of great cities
+
+The largest, most innovative, or most influential city of its era
+
+---
+
+# Uruk .small[(Sumer, c. 3500 BCE)]
+
+.center-content[
+&lt;img src="files/uruk.png" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Babylon .small[(Neo-Babylonian Empire, c. 600 BCE)]
+
+.center-content[
+&lt;img src="files/babylon.png" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Athens .small[(Classical Greece, 5th c. BCE)]
+
+.center-content[
+&lt;img src="files/athens.png" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Alexandria .small[(Hellenistic Egypt, 3rd c. BCE)]
+
+.center-content[
+&lt;img src="files/alexandria.png" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Rome .small[(Imperial Rome, c. 100 CE)]
+
+.center-content[
+&lt;img src="files/rome.png" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Chang'an .small[(Tang dynasty, c. 750 CE)]
+
+.center-content[
+&lt;img src="files/changan.png" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Baghdad .small[(Abbasid Caliphate, c. 800 CE)]
+
+.center-content[
+&lt;img src="files/baghdad.png" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Córdoba .small[(Caliphate of Córdoba, c. 1000 CE)]
+
+.center-content[
+&lt;img src="files/cordoba.png" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Venice .small[(Maritime Republic, c. 1400)]
+
+.center-content[
+&lt;img src="files/venice.png" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Amsterdam .small[(Dutch Golden Age, 17th c.)]
+
+.center-content[
+&lt;img src="files/amsterdam.png" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# London
+
+.center-content[
+&lt;img src="files/london.jpg" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# New York
+
+.center-content[
+&lt;img src="files/new_york.jpg" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Tokyo
+
+.center-content[
+&lt;img src="files/tokyo.jpg" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Shenzhen
+
+.center-content[
+&lt;img src="files/shenzen.jpg" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# The next great cities: megacities, 1975 → 2050
+
+.center-content[
+&lt;img src="files/megacities_rank_flow_1975_2025_2050.svg" width="70%" style="display: block; margin: auto;" /&gt;
+
+
+.footnote[.small[Source: UN World Urbanization Prospects]]
+]
+
+---
+
+# Explore the world's cities
+
+.center-content[
+  &lt;div style="display: flex; justify-content: center; align-items: center; height: 490px; width: 100%;"&gt;
+    &lt;iframe src="https://luminocity3d.org/WorldCity/#1.76/19.3/18.7" width="100%" height="100%" style="border: none; display: block; margin: 0 auto;"&gt;&lt;/iframe&gt;
+  &lt;/div&gt;
+
+.footnote[.small[Source: Duncan Smith, UCL Centre for Advanced Spatial Analysis — *LuminoCity 3D: World City Populations 1950–2035*]]
+]
+
+---
+class: agenda
+
+# Agenda
+
+&lt;ul class="agenda-list"&gt;
+&lt;li class="done"&gt;The long arc of cities&lt;/li&gt;
+&lt;li class="current"&gt;Why do cities exist?&lt;/li&gt;
+&lt;li class="upcoming"&gt;Cities as engines of innovation&lt;/li&gt;
+&lt;li class="upcoming"&gt;The dark side: cities and inequality&lt;/li&gt;
+&lt;li class="upcoming"&gt;The future of cities&lt;/li&gt;
+&lt;/ul&gt;
+
+---
+
+# Alfred Marshall's three reasons (1890)
+
+.center-content[
+1. **Labor pooling** — Thick labor markets reduce risk for workers and firms
+
+2. **Specialized suppliers** — Density supports niche intermediate inputs
+
+3. **Knowledge spillovers** — Ideas flow through proximity and conversation
+
+.footnote[.small[Source: Marshall, *Principles of Economics* (1890), Book IV, Ch. X]]
+]
+
+---
+
+# Jane Jacobs: cross-pollination of ideas
+
+.center-content[
+
+Jacobs argued that diversity of cities is what makes them creative
+
+- Different industries rubbing shoulders
+- Innovation comes from unexpected combinations, not specialization alone
+-  This is why company towns stagnate and diverse cities thrive
+
+"Cities have the capability of providing something for everybody, only because, and only when, they are created by everybody."
+]
+
+---
+
+# Glaeser's summary
+
+.center-content[
+Cities make us:
+
+- **Richer** — Urban wage premium of 30%+
+- **Smarter** — Faster learning, more idea exchange
+- **Greener** — New Yorkers use 1/3 the energy of average Americans
+- **Healthier** — Better access to hospitals, cleaner water
+- **Happier** — More social connections, cultural amenities
+
+]
+
+---
+
+# The value of density: The Berlin Wall experiment &lt;br&gt; .small[&lt;span class="gray"&gt;Ahlfeldt et al. (2015)&lt;/span&gt;]
+
+.center-content[
+
+Exploit Berlin's division and reunification as a natural experiment.
+
+- Data on thousands of city blocks: 1936, 1986, 2006
+- Division destroyed economic density near the Wall
+- Reunification restored it
+
+Key findings:
+
+- Substantial and highly localized production and residential externalities
+
+- The model reproduces observed changes in Berlin's structure across all three periods
+
+- Density itself generates economic value
+]
+
+---
+# Berlin land prices pre-Wall (Wall: 1961-1989)
+
+.center-content[
+&lt;img src="files/berlin_wall1.png" width="50%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Berlin land prices pre-Wall and post-Wall (Wall: 1961-1989)
+
+.center-content[
+&lt;img src="files/berlin_wall2.png" width="85%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+
+# London: where people live vs. where they work
+
+.pull-left[
+&lt;img src="files/london_residential.png" width="100%" style="display: block; margin: auto;" /&gt;
+.center[**Residential** density]
+]
+
+.pull-right[
+&lt;img src="files/london_employment.png" width="100%" style="display: block; margin: auto;" /&gt;
+.center[**Employment** density]
+]
+
+---
+
+# Building the modern metropolis: London &lt;br&gt; .small[&lt;span class="gray"&gt;Heblich, Redding &amp; Sturm (2020)&lt;/span&gt;]
+
+.pull-left[
+*[Placeholder: map of 19th-century London with steam railway expansion overlaid]*
+
+**The natural experiment:** the steam railway arrived in London in the 1840s, dramatically lowering commuting costs.
+
+- Before: workers had to live within walking distance of work
+- After: workplaces concentrate downtown, residences spread out
+- Population of Greater London grew from 1M (1801) to 6.6M (1901)
+]
+
+.pull-right[
+Heblich, Redding &amp; Sturm (QJE 2020) build a quantitative spatial model and use station-level data to estimate:
+
+- The railway raised aggregate **welfare by ~25%**
+
+- Without commuting, central London population would have been **~50% lower**
+
+- Workplace concentration generates large **productivity externalities** — distinct from those that operate through residence
+
+**Big idea:** transportation technology is what lets agglomeration scale up into a *metropolis*.
+]
+
+.footnote[.small[Source: Heblich, Redding &amp; Sturm, "The Making of the Modern Metropolis: Evidence from London" (QJE 2020)]]
+
+---
+
+# Why must agglomeration exist?
+
+.center-content[
+**Starrett's Spatial Impossibility Theorem (1978):**
+
+Without agglomeration economies, there is no advantage to large-scale production over small-scale — and transportation is costly.
+
+→ If agglomeration didn't exist, there should be **no trade and no travel**.
+
+There clearly is. Therefore agglomeration economies must exist.
+]
+
+--
+
+.center-content[
+Cronon (1991): many sites on Lake Michigan are physically equal to Chicago's — yet Chicago dominates.
+
+&lt;span class="gray"&gt;The spatial concentration of cities far exceeds what geography alone can explain.&lt;/span&gt;
+]
+
+---
+
+# The three micro-foundations of agglomeration
+
+.center-content[
+&lt;span class="gray"&gt;Duranton &amp; Puga (2004)&lt;/span&gt; identify three mechanisms:
+]
+
+| Mechanism | How it works | Example |
+|-----------|-------------|---------|
+| **Sharing** | Larger cities support indivisible facilities and a wider variety of specialized inputs | A city can sustain a world-class opera, a niche supplier of medical devices, or a deep market for venture capital |
+| **Matching** | Bigger labor markets improve the fit between workers and jobs | A machine learning engineer in NYC has hundreds of potential employers; in rural Iowa, maybe one |
+| **Learning** | Density facilitates face-to-face knowledge transfer between skilled and unskilled, and across industries | Young firms "tinker" in diverse cities, then mature and move to specialized ones |
+
+.footnote[.small[Source: Duranton &amp; Puga, "Micro-Foundations of Urban Agglomeration Economies" (2004)]]
+
+---
+
+# Sharing: Adam Smith's pin factory, scaled up
+
+.center-content[
+Smith (1776): a bigger workforce allows finer **specialization** → higher productivity
+
+In a city:
+- More workers → more specialized occupations (dog psychologist, AI ethics lawyer)
+- More firms → more specialized suppliers (a factory for just one component)
+- More consumers → support for niche goods and services
+
+**But:** crowding eventually offsets the gains. Equilibrium city size = where the benefit of sharing equals the cost of congestion.
+]
+
+---
+
+# Matching: the power of thick labor markets
+
+.pull-left[
+With more workers and more firms, the average **mismatch** between a worker's skills and their job decreases.
+
+&lt;span class="gray"&gt;Berliant, Reed &amp; Wang (2006)&lt;/span&gt;:
+- U.S. counties in the **top 10% by density** have productivity **0.15–0.30 log points higher** than the bottom half
+- Not explained by firm composition
+]
+
+.pull-right[
+The flip side: in thick markets, workers and firms become **choosier** — they can afford to wait for a better match.
+
+This is why career changes, job-hopping, and specialization are all easier in big cities.
+]
+
+---
+
+# Learning: cities as knowledge machines
+
+.center-content[
+Cities facilitate **face-to-face knowledge transfer**:
+- Skilled workers teach unskilled workers (young workers pay a premium to live in cities for access to mentorship)
+- Firms in different industries share production techniques
+
+**Duranton &amp; Puga (2001) "Nursery Cities":**
+- Young firms thrive in **diverse** cities where they can tinker and learn from many industries
+- As firms mature, they relocate to **specialized** cities to exploit scale
+- The life cycle of firms mirrors the structure of the urban system
+]
+
+---
+
+# Why are cities too big?
+
+.center-content[
+Individuals choose where to live based on their **own** costs and benefits.
+
+They don't account for the **crowding costs** they impose on everyone else:
+- Longer commutes, higher rents, more pollution
+
+→ Cities grow beyond the socially optimal size (Henderson &amp; Venables 2009)
+
+&lt;span class="gray"&gt;This is why urban policy — congestion pricing, housing supply, public transit — matters so much.&lt;/span&gt;
+]
+
+---
+
+# How cities grow: The Standard Urban Model
+
+.center-content[
+The **Alonso-Muth-Mills model** (1960s): cities form concentric rings around a central business district (CBD).
+
+- Housing costs and density **decline** with distance from the CBD
+- Transportation costs **rise** with distance
+- In equilibrium: housing cost + transport cost = constant
+- City size is set where land value for housing = land value for agriculture
+]
+
+--
+
+.center-content[
+**Liotta, Viguié &amp; Lepetit (2022)**: tested on **192 cities globally** — largely confirmed.
+
+Rents decline with distance from CBD in 167 of 192 cities. Density declines in all 192.
+]
+
+---
+
+# Cities are sprawling
+
+.center-content[
+**&lt;span class="gray"&gt;Angel et al. (2010)&lt;/span&gt;**: urban density has been **falling worldwide**.
+
+- Global sample: density fell ~2% per year from 1990–2000
+- U.S. cities: density fell by a **factor of 5** from 1910–2000
+
+Drivers: transportation technology (streetcar → automobile) and rising incomes → more demand for space.
+]
+
+--
+
+.center-content[
+&lt;span class="gray"&gt;If density generates agglomeration benefits, then sprawl may be undermining the very forces that make cities productive.&lt;/span&gt;
+]
+
+---
+
+# The pace of urban life
+
+.pull-left[
+Classic finding (Bornstein &amp; Bornstein 1976): people **walk faster** in larger cities.
+
+Levine &amp; Norenzayan (1999) broadened this to "pace of life" across 31 countries:
+- Faster pace correlates with higher GDP, colder climates, individualistic cultures
+- Positively correlated with **subjective well-being**
+]
+
+.pull-right[
+**But pedestrians are speeding up:**
+
+Ratti et al. (PNAS 2025) compared 1980s video footage with 2010 footage at the same locations in Boston, NYC, and Philadelphia:
+- Walking speed **up 15%**
+- Lingering in public spaces **down 14%**
+
+**Public spaces are becoming thoroughfares, not places of encounter.**
+]
+
+---
+class: agenda
+
+# Agenda
+
+&lt;ul class="agenda-list"&gt;
+&lt;li class="done"&gt;The long arc of cities&lt;/li&gt;
+&lt;li class="done"&gt;Why do cities exist?&lt;/li&gt;
+&lt;li class="current"&gt;Cities as engines of innovation&lt;/li&gt;
+&lt;li class="upcoming"&gt;The dark side: cities and inequality&lt;/li&gt;
+&lt;li class="upcoming"&gt;The future of cities&lt;/li&gt;
+&lt;/ul&gt;
+
+---
+
+# The arc of cities
+
+.center-content[
+| Era | City | Innovation |
+|-----|------|-----------|
+| 3500 BCE | Uruk | Writing, accounting |
+| 1st c. | Rome | Aqueducts, law, roads |
+| 1200s | Venice, Florence | Banking, art, trade |
+| 1800s | Manchester | Factory system |
+| 1950s | Detroit | Mass production |
+| 2000s | Silicon Valley, Shenzhen | Software, hardware |
+
+Cities have **always** been where breakthroughs happen
+]
+
+---
+
+# Case study: Florence in the Renaissance
+
+.pull-left[
+*[Placeholder: image of the Florence skyline with the Duomo]*
+
+A city of just **60,000 people** produced:
+- Michelangelo
+- Leonardo da Vinci
+- Machiavelli
+- Brunelleschi
+- Botticelli
+- Galileo
+]
+
+.pull-right[
+Why Florence?
+
+- Wealthy merchant patrons (Medici)
+- Guild system that trained artisans
+- Competition between workshops
+- **Density**: artists, scientists, and engineers all lived within walking distance
+
+Knowledge spillovers in action — 500 years before economists had the term
+]
+
+---
+
+# Case study: Silicon Valley
+
+.center-content[
+*[Placeholder: timeline graphic of the Silicon Valley family tree]*
+
+**Fred Terman** (Stanford) encourages students to start companies nearby
+
+→ **William Shockley** moves transistor lab to Palo Alto (1956)
+
+→ **Traitorous Eight** leave Shockley → found **Fairchild Semiconductor** (1957)
+
+→ Fairchild alumni create **Intel**, AMD, and dozens of startups
+
+→ Apple, Google, Facebook all sprout from this ecosystem
+
+One decision to locate near a university → a $5 trillion industry
+]
+
+---
+
+# Case study: Detroit's rise and fall
+
+.pull-left[
+**The rise:**
+- 1900: Henry Ford builds the auto industry
+- 1950: **Richest big city in America**
+- Population peaks at 1.85 million
+- Average factory worker earns middle-class wage
+
+*[Placeholder: image of 1950s Detroit skyline]*
+]
+
+.pull-right[
+**The fall:**
+- Over-reliance on **one industry**
+- Highways enabled suburban sprawl
+- Racial tensions and white flight
+- 2013: **Largest municipal bankruptcy in US history**
+- Population drops to 640,000
+
+Lesson: cities that depend on a single industry are **fragile**
+]
+
+---
+
+# What Detroit teaches us
+
+.center-content[
+Detroit violated Jacobs's rule: it was a **company town**, not a diverse city
+
+Compare:
+- **Detroit**: auto manufacturing monoculture → collapse
+- **New York**: finance, media, tech, fashion, healthcare → resilience
+
+**Diversity of industries is the immune system of a city**
+]
+
+---
+class: agenda
+
+# Agenda
+
+&lt;ul class="agenda-list"&gt;
+&lt;li class="done"&gt;The long arc of cities&lt;/li&gt;
+&lt;li class="done"&gt;Why do cities exist?&lt;/li&gt;
+&lt;li class="done"&gt;Cities as engines of innovation&lt;/li&gt;
+&lt;li class="current"&gt;The dark side: cities and inequality&lt;/li&gt;
+&lt;li class="upcoming"&gt;The future of cities&lt;/li&gt;
+&lt;/ul&gt;
+
+---
+
+# The urban wage premium is real — but so is the cost
+
+.center-content[
+Workers in cities earn **30-50% more** than similar workers in rural areas
+
+But housing in productive cities has become extraordinarily expensive:
+- San Francisco median home price: ~$1.3 million
+- Manhattan median rent: ~$4,000/month
+
+This creates a **toll booth** on opportunity: you can access high wages, but only if you can afford the entry fee
+
+.footnote[.small[Source: Glaeser, *Triumph of the City*, Ch. 8]]
+]
+
+---
+
+# Hsieh &amp; Moretti: the $2 trillion misallocation
+
+.center-content[
+*[Placeholder: map showing housing cost variation across US metro areas]*
+
+Housing constraints in high-productivity cities (SF, NYC, San Jose) prevent workers from moving to where they would be most productive
+
+Key finding: relaxing housing constraints in just three cities could have raised **US GDP by 36%** between 1964 and 2009
+
+This is not a typo. Housing policy may be the most important economic policy we are not talking about.
+
+.footnote[.small[Source: Hsieh &amp; Moretti, "Housing Constraints and Spatial Misallocation" (2019), *AEJ: Macro*]]
+]
+
+---
+
+# The spatial sorting machine
+
+.center-content[
+High housing costs act as a **filter**:
+
+- **College-educated workers** move to productive cities → earn high wages → can afford housing
+- **Less-educated workers** are priced out → stuck in lower-productivity areas
+- Result: cities amplify inequality rather than reducing it
+
+Urban vs. rural divergence is now one of the defining fault lines of American politics and economics
+]
+
+---
+
+# Gentrification: progress for whom?
+
+.pull-left[
+When a neighborhood improves:
+- Property values rise
+- New businesses arrive
+- Crime falls
+- Schools improve
+
+These are **good things** — in the aggregate
+]
+
+.pull-right[
+But for existing residents:
+- Rents spike → **displacement**
+- Community networks dissolve
+- Cultural identity erodes
+- Long-time residents can't afford to stay in the neighborhoods they built
+
+The benefits of urban revival are **not equally shared**
+]
+
+---
+class: agenda
+
+# Agenda
+
+&lt;ul class="agenda-list"&gt;
+&lt;li class="done"&gt;The long arc of cities&lt;/li&gt;
+&lt;li class="done"&gt;Why do cities exist?&lt;/li&gt;
+&lt;li class="done"&gt;Cities as engines of innovation&lt;/li&gt;
+&lt;li class="done"&gt;The dark side: cities and inequality&lt;/li&gt;
+&lt;li class="current"&gt;The future of cities&lt;/li&gt;
+&lt;/ul&gt;
+
+---
+
+# Glaeser's prescription: build, build, build
+
+.center-content[
+The fundamental problem: we have made it **illegal** to build housing in our most productive cities
+
+- Zoning laws restrict density
+- NIMBYism blocks new construction
+- Environmental review adds years of delay
+- Height restrictions limit supply
+
+Glaeser's argument: if you care about inequality, you should care about **housing supply**
+
+Restricting building in San Francisco doesn't protect the environment — it just pushes people to sprawling, car-dependent cities like Houston
+]
+
+---
+
+# The car-free city: Paris as case study
+
+.pull-left[
+*[Placeholder: photo of Paris protected bike lane on a major boulevard]*
+
+Mayor Hidalgo's transformation:
+- Protected bike lanes on Rue de Rivoli, Champs-Élysées area
+- Cars banned from the Seine banks → public parks
+- **Bike trips tripled** between 2019 and 2023
+- The "15-minute city": everything reachable by foot or bike
+]
+
+.pull-right[
+*[Placeholder: before/after photo of a Paris street — cars vs. bikes and pedestrians]*
+
+Why it matters for this course:
+
+- Dense, walkable, bikeable cities are the **greenest** form of human settlement
+
+- Reclaiming streets for people reverses the trend of rising walking speeds and declining lingering
+
+- &lt;span class="gray"&gt;Paris shows it's possible to redesign a major city around people, not cars&lt;/span&gt;
+]
+
+---
+
+# The tensions ahead
+
+.center-content[
+- **Build more housing** (Glaeser) vs. **preserve neighborhoods** — can we do both?
+
+- **Density for agglomeration** vs. **density and displacement** — who benefits from growth?
+
+- **Remote work** could democratize opportunity — or it could hollow out the tax base of the cities that generate ideas
+
+- If walking speeds are rising and public spaces are emptying, cities need to **actively design** for encounter, not just throughput
+
+- **Getting urban policy right — housing, transport, public space — is one of the highest-leverage things we can do for both growth and equality**
+]
+
+---
+
+# Summary
+
+.center-content[
+- For 99% of human history cities barely existed; the **Neolithic revolution** made them possible, the **sanitary revolution** made them survivable
+
+- City sizes follow **Zipf's law**; the Berlin Wall and London steam-railway experiments show that **density itself** generates economic value
+
+- The Standard Urban Model explains how cities grow: rents and density decline with distance from the center, shaped by transportation costs
+
+- Throughout history — Florence, Silicon Valley, Shenzhen — cities have been **engines of innovation**
+
+- But cities also generate **inequality**: housing costs act as a toll on mobility, and spatial sorting widens the gap
+
+- The future: car-free design (Paris), the 15-minute city, building housing in productive places
+
+- **Next class:** Knowledge — how humanity produces, stores, and transmits ideas
+]
+
+---
+class: inverse, middle
+
+# Appendix
+
+---
+
+# Readings
+
+.center-content[
+- Gabaix, "Zipf's Law for Cities: An Explanation" (QJE 1999)
+
+- Glaeser, *Triumph of the City*, Ch. 1 and Ch. 8
+
+- Ahlfeldt, Redding, Sturm &amp; Wolf, "The Economics of Density: Evidence from the Berlin Wall" (Econometrica 2015)
+
+- Heblich, Redding &amp; Sturm, "The Making of the Modern Metropolis: Evidence from London" (QJE 2020)
+
+- Duranton &amp; Puga, "Micro-Foundations of Urban Agglomeration Economies" (2004)
+
+- Hsieh &amp; Moretti, "Housing Constraints and Spatial Misallocation" (2019)
+
+- Optional: Ratti et al., "Exploring the Social Life of Urban Spaces through AI" (PNAS 2025)
+]
+
+---
+
+# Discussion questions
+
+.center-content[
+1. Zipf's law says the largest cities are even bigger than random growth would predict. What forces might explain this? Can you think of forces that push back against it?
+
+2. The Berlin Wall experiment shows density generates economic value. Does this mean we should always maximize density? What are the limits?
+
+3. Pedestrians walk 15% faster than they did in the 1980s and linger less in public spaces. What does this tell us about urban life? Is it a problem?
+
+4. Paris is banning cars and building bike lanes. Should American cities follow? What are the obstacles?
+
+5. Is gentrification a sign of urban success or urban failure — or both?
+]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="../../shared/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "ratio": "16:9",
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
