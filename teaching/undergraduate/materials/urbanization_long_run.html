@@ -1,0 +1,81 @@
+<style>
+.cp-btn {
+  font-size:16px; padding:8px 18px; border-radius:6px;
+  border:1.5px solid #1A3A68; background:transparent; color:#1A3A68;
+  cursor:pointer; transition:all 0.2s; font-weight:500;
+}
+.cp-btn:hover { background:#1A3A68; color:#fff; }
+.cp-btn.active { background:#1A3A68; color:#fff; }
+</style>
+<div style="padding: 2rem 0 0.5rem 0;">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+<label style="display:flex;align-items:center;gap:6px;font-size:15px;color:#555;cursor:pointer;user-select:none;">
+<input type="checkbox" id="log-toggle" onchange="toggleLog()" style="cursor:pointer;"> Log scale
+</label>
+<span id="metric-note" style="font-size:14px;color:#888;margin-left:auto;"></span>
+</div>
+<div style="position:relative;width:100%;height:380px;">
+<canvas id="mainChart"></canvas>
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const NAVY='#1A3A68';
+const years=[-10000,-5000,-3000,-1000,-500,1,500,1000,1200,1500,1600,1700,1750,1820,1870,1900,1950,1970,2000,2024];
+const series={values:[0,0,2,3,4,5,4,3,4,5,6,8,9,7,14,16,30,37,47,57],label:'Urbanization rate (%)',note:'Share of population in settlements >5,000 (Bairoch 1988; UN; Our World in Data)'};
+
+let logScale=false;
+let chart;
+
+function fmtYear(y){
+  if(y<0){const a=Math.abs(y);return (a>=1000?a.toLocaleString():String(a))+' BCE';}
+  if(y===0)return '1 CE';
+  return String(y);
+}
+
+function makeChart(){
+  const ctx=document.getElementById('mainChart').getContext('2d');
+  if(chart)chart.destroy();
+  const grad=ctx.createLinearGradient(0,0,0,380);
+  grad.addColorStop(0,NAVY+'30');
+  grad.addColorStop(1,NAVY+'05');
+
+  const points=years.map((yr,i)=>({x:yr,y:series.values[i]}));
+
+  chart=new Chart(ctx,{
+    type:'line',
+    data:{datasets:[{data:points,borderColor:NAVY,backgroundColor:grad,borderWidth:2.5,pointRadius:3,pointBackgroundColor:NAVY,pointBorderColor:'#fff',pointBorderWidth:1.5,pointHoverRadius:6,fill:true,tension:0.3}]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:NAVY,titleFont:{size:15},bodyFont:{size:15},padding:10,cornerRadius:8,
+          callbacks:{
+            title:function(items){return fmtYear(items[0].parsed.x);},
+            label:function(item){return Math.round(item.parsed.y)+'%';}
+          }
+        }
+      },
+      scales:{
+        x:{
+          type:'linear',
+          min:-10000,max:2024,
+          grid:{display:false},
+          ticks:{font:{size:14},color:'#555',stepSize:2000,callback:function(v){return fmtYear(v);}}
+        },
+        y:{type:logScale?'logarithmic':'linear',grid:{display:false},ticks:{font:{size:16},color:'#555',callback:function(v){return v+'%';}},title:{display:true,text:series.label,font:{size:17},color:'#555'}}
+      },
+      animation:{duration:600,easing:'easeOutQuart'}
+    }
+  });
+  document.getElementById('metric-note').textContent=series.note;
+}
+
+function toggleLog(){
+  logScale=document.getElementById('log-toggle').checked;
+  makeChart();
+}
+
+makeChart();
+</script>
