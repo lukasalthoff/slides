@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Lectures 16 &amp; 17: Intergenerational Mobility and the Allocation of Talent</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Graduate Economic History" />
+    <script src="8_mobility_files/header-attrs-2.29/header-attrs.js"></script>
+    <link href="8_mobility_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="8_mobility_files/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="8_mobility_files/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../shared/my-css.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Lectures 16 &amp; 17: Intergenerational Mobility and the Allocation of Talent
+]
+.author[
+### Graduate Economic History
+]
+.date[
+### Lukas Althoff
+]
+
+---
+
+
+
+
+class: agenda
+
+# Agenda
+
+&lt;ul class="agenda-list"&gt;
+&lt;li class="current"&gt;Intergenerational Mobility&lt;/li&gt;
+&lt;li class="upcoming"&gt;Allocation of Talent&lt;/li&gt;
+&lt;/ul&gt;
+
+---
+
+# **Motivation:** The Land of Opportunity
+
+.center-content[
+- How did the US become a land of opportunity?
+
+- Limited evidence on drivers of mobility, especially role of human capital
+
+- Past evidence focused on men: father's income `\(\leftrightarrow\)` son's income
+
+  - *Reason 1:* Income as primary measure of parental background
+
+  - *Reason 2:* Lack of intergenerational datasets that include women
+]
+
+---
+
+# **Historical anecdotes**
+
+.center-content[
+1. **Abraham Lincoln** (1809-1865): US President
+  - (Step-)mother supported his education; father (illiterate farmer) disinterested in education
+
+2. **Thomas Edison** (1847-1931): American inventor
+  - Mother (trained teacher) home-educated him; father had no formal schooling
+
+3. **Katherine Johnson** (1918--2020): NASA mathematician
+  - Mother was a teacher; father a janitor (parents moved for school access amid Jim Crow)
+  - Own daughter also became NASA mathematician
+]
+
+---
+
+# **Preview of results:** Schools as a driver of high mobility
+
+.center-content[
+&lt;img src="files/mobility_shareinschool_1870vs1930.png" width="50%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# **Historical context:** Shift from home to school education
+
+.center-content[
+&lt;img src="files/schoolaccess_evolution.png" width="50%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# **This paper:** Intergenerational mobility &amp; maternal human capital
+
+.center-content[
+- **Methods:** Measuring intergenerational mobility with multiple inputs
+
+  - Measure mobility as variation unexplained by parental background `\((1-R^2)\)`
+
+  - Decompose predictive power of maternal vs. paternal human capital
+
+  - Address data limitations with Gaussian copula method *&lt;span class="gray"&gt;Fan et al. (2017)&lt;/span&gt;*
+
+- **Data:** Representative panel tracing both men &amp; women (1850-1950)
+
+  - 186 million linked census records covering 42 million Americans
+
+  - Overcome marriage name changes using SSA administrative data
+
+- **Results:** Maternal human capital &amp; mass schooling shaped mobility
+
+  - Mothers more predictive of children's literacy-based HC, esp. when schooling limited
+
+  `\(\rightarrow\)` Incl. mothers alters conclusions about trends &amp; geography of mobility
+
+  - Human capital mobility rose sharply (0.3 to 0.65) as schooling expanded
+
+  - Distinct mobility patterns for Black Americans post-slavery &amp; during Jim Crow
+]
+
+---
+
+# **Literature**
+
+.center-content[
+1. **Measuring US intergenerational mobility**
+
+  - Father-child correlations *&lt;span class="gray"&gt;Abramitzky et al. 2021, Ward 2023, Olivetti &amp; Paserman (2015)&lt;/span&gt;*
+
+  - Parents' average status *&lt;span class="gray"&gt;Chetty et al. 2014, Card et al. (2022)&lt;/span&gt;*
+
+  - **This paper:** Directly estimates mothers' distinct role in shaping mobility
+
+2. **Women's contributions to long-run economic development**
+
+  - Labor force participation mid-20th century *&lt;span class="gray"&gt;Goldin 1977, 1990, 2006, Fern\'andez et al. (2004)&lt;/span&gt;*
+
+  - Time spent in home production *&lt;span class="gray"&gt;Greenwood et al. 2005, Ramey 2009, Ngai et al. (2024)&lt;/span&gt;*
+
+  - **This paper:** Quantifies key "hidden" contribution via human capital transmission
+
+3. **Datasets including women in historical mobility studies**
+
+  - Automated record linkage for men *&lt;span class="gray"&gt;Abramitzky et al. (2020)&lt;/span&gt;*
+
+  - Women via vital records or crowd-sourced family trees *&lt;span class="gray"&gt;Craig et al. 2019, Buckles et al. (2023)&lt;/span&gt;*
+
+  - **This paper:** Uses historical administrative data for both scale &amp; representativeness
+]
+
+---
+class: inverse, middle, center
+
+# Intergenerational Datasets
+
+---
+
+# **Data (childhood):** Census cross-sections of children &amp; parents
+
+.center-content[
+- Full-count census data from 1850 to 1950
+
+  - Identifies family relationships within households
+
+  `\(\rightarrow\)` observe parents &amp; children jointly
+
+  - Children (13-16): Measure literacy (1850-1930) and years of schooling (1940-1950)
+
+  - Parents: Measure literacy and years of schooling
+
+- Advantages:
+
+  - Full US population
+
+  - Can directly analyze transmission of human capital during childhood
+
+- Limitations:
+
+  - Cannot observe children's outcomes once they reach adulthood
+
+  - Next: New intergenerational dataset
+]
+
+---
+
+# **Data (adulthood):** Historical administrative data (SSA)
+
+.center-content[
+&lt;img src="files/ssn_app_filledin_type_color.png" width="94%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+name: linkingprocess
+
+# **Data (adulthood):** Linking women despite name changes
+
+.center-content[
+&lt;img src="files/linking_process_6.png" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+&lt;div class="btn-row"&gt;&lt;a href="#multistagelinking" class="btn"&gt;Multi-stage linking process&lt;/a&gt;&lt;/div&gt;
+
+---
+name: representativeness_across_years
+
+# **Data (adulthood):** Representativeness &amp; coverage (1850-1950)
+
+.center-content[
+&lt;img src="files/representativeness_across_years.png" width="46%" style="display: block; margin: auto;" /&gt;
+]
+
+&lt;div class="btn-row"&gt;&lt;a href="#coveragecensus" class="btn"&gt;Coverage&lt;/a&gt; &lt;a href="#rep1940" class="btn"&gt;Rep. 1910–1940&lt;/a&gt; &lt;a href="#rep1910" class="btn"&gt;Rep. 1880–1910&lt;/a&gt; &lt;a href="#rep1880" class="btn"&gt;Rep. 1850–1880&lt;/a&gt; &lt;a href="#linkrates" class="btn"&gt;Linking rates&lt;/a&gt; &lt;a href="#linkingoverlap" class="btn"&gt;Agreement rates&lt;/a&gt; &lt;a href="#errorrates" class="btn"&gt;Error rates&lt;/a&gt;&lt;/div&gt;
+
+---
+class: inverse, middle, center
+
+# Measuring Mobility with Multiple Parental Inputs
+
+---
+
+# **Strategy:** Simple model of rank mobility with multiple inputs
+
+.center-content[
+`$$\text{rank}(Y_{i}) = \alpha + \boldsymbol{\beta}_{1} \textbf{rank}\left(\boldsymbol{Y}^{\text{father}}_{i}\right) + \boldsymbol{\beta}_{2} \textbf{rank}\left(\boldsymbol{Y}^{\text{mother}}_{i}\right) + \varepsilon_{i}$$`
+
+- `\(Y_i^j\)`: `\(i\)`'s outcome (e.g., human capital)
+
+- **New:** Explicitly incorporates multiple parental inputs
+]
+
+---
+name: r2tocoefficient
+
+# **Strategy:** Measuring mobility via `\(R^2\)`
+
+.center-content[
+`$$R^2 = \frac{\text{Variance in child outcomes explained by parents}}{\text{Variance in child outcomes}}$$`
+
+- **Comparability:** Closely tied to parent-child coefficient `\(\beta\)`
+
+  - `\(R^2 = \left(\beta \cdot \frac{\sigma_X}{\sigma_Y}\right)^2\)`
+
+  - One-to-one mapping with rank-rank coefficient: `\(R^2 = \beta^2\)`
+
+- **Multiple parental inputs**
+
+- **Intuitive interpretation**
+]
+
+&lt;div class="btn-row"&gt;&lt;a href="#details_r2tocoefficient" class="btn"&gt;Details: R² ↔ β&lt;/a&gt;&lt;/div&gt;
+
+---
+class: inverse, middle, center
+
+# Human Capital Mobility
+
+---
+
+# **Strategy:** Rank-rank human capital mobility
+
+.center-content[
+`$$HC^{\text{child}}_{i} = \alpha_{g} + \beta_{f} \cdot HC^{\text{father}}_{i} + \beta_{m} \cdot HC^{\text{mother}}_{i} + \varepsilon_{i}$$`
+
+- We only observe literacy as a binary proxy of (latent) human capital.
+
+- **Solution:** Gaussian copula method *&lt;span class="gray"&gt;Fan et al. (2017)&lt;/span&gt;*
+]
+
+---
+name: illustratingsplv
+
+# **Strategy:** Identification of rank mobility despite data limitations
+
+.center-content[
+- **Goal:** Estimate mobility (1-$R^2$) via rank(`\(Y_i\)`) = `\(\alpha\)` + `\(\beta \cdot\)` rank(`\(X_i\)`) + `\(\epsilon_i\)`
+
+- **Challenge:** Only binary indicators observed: `\(Y^*_i = \mathbb{1}[Y_i &gt; \delta_y]\)` and `\(X^*_i = \mathbb{1}[X_i &gt; \delta_x]\)`
+
+  `\(\rightarrow\)` Many possible rank correlations compatible with binary data
+
+- **Solution:** Gaussian copula method *&lt;span class="gray"&gt;Fan et al. (2017)&lt;/span&gt;*
+
+  `\(\rightarrow\)` Allows time-varying marginal distr. `\(\Rightarrow\)` rising literacy does not inflate mobility
+
+- **Validation:** Method performs well under various conditions
+
+  - Alternative methods (Kendall's `\(\tau\)`, normalized `\(R^2\)`) confirm same patterns
+
+  - Simulation: Accurately recovers true rank mobility from binary data
+
+  - 1930-1940 comparison: High correlation (0.85) across states, sex, and race
+
+  - Modern data (NLSY79, PSID): Robust to extreme cutoffs in dichotomization
+]
+
+&lt;div class="btn-row"&gt;&lt;a href="#assumptionlatent" class="btn"&gt;Assumption&lt;/a&gt; &lt;a href="#illustratingsplv_details" class="btn"&gt;Method&lt;/a&gt; &lt;a href="#illustratingsplv_pic" class="btn"&gt;Visual&lt;/a&gt; &lt;a href="#validationlatent2" class="btn"&gt;Simulation&lt;/a&gt; &lt;a href="#valid19301940" class="btn"&gt;1930–1940&lt;/a&gt; &lt;a href="#validationlatent_nlsy" class="btn"&gt;NLSY (1/2)&lt;/a&gt; &lt;a href="#validationlatent_nlsy2" class="btn"&gt;NLSY (2/2)&lt;/a&gt; &lt;a href="#validationlatent" class="btn"&gt;Historical 1940&lt;/a&gt; &lt;a href="#validkendall" class="btn"&gt;Kendall's τ&lt;/a&gt; &lt;a href="#validnormr2" class="btn"&gt;Norm. R²&lt;/a&gt; &lt;a href="#validmeaserror" class="btn"&gt;Meas. error&lt;/a&gt;&lt;/div&gt;
+
+---
+
+# **Results:** Human capital mobility rises over US history
+
+.pull-left[
+**All**
+&lt;img src="files/figure3_panel_a_with_cis_all_years.png" width="78%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+**By group**
+&lt;img src="files/figure3_panel_b_with_cis_all_years.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+.footnote[.small[Bootstrap 95% confidence intervals shown. All available census waves included.]]
+
+---
+
+# **Strategy:** Assessing drivers of changing mobility
+
+.center-content[
+- **Decomposition of** `\(\boldsymbol{R^2}\)` **into components**
+
+`$$R^2 = \beta_m^2 + \beta_f^2 + 2\beta_m \beta_f\hat{\rho}_{m,f}$$`
+
+1. **Maternal contribution:** `\(\beta_m^2\)` (mothers' predictive power)
+
+2. **Paternal contribution:** `\(\beta_f^2\)` (fathers' predictive power)
+
+3. **Assortative mating:** `\(2\beta_m \beta_f\hat{\rho}_{m,f}\)` (where `\(\hat{\rho}_{m,f}\)` is correlation between parents)
+
+- **Application:** Counterfactual analysis by holding parameters constant
+]
+
+---
+
+# **Results:** Changing role of mothers drives rising mobility
+
+.center-content[
+&lt;img src="files/latgaussbin2_counterfactual_r2_betas_xsection.png" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# **Strategy:** Separating contribution of mothers vs. fathers to `\(R^2\)`
+
+.center-content[
+- **Shapley-Owen decomposition of** `\(\boldsymbol{R^2}\)` *&lt;span class="gray"&gt;Shapley 1953; Owen 1977&lt;/span&gt;*
+
+- **Unique advantages** of this method *&lt;span class="gray"&gt;Young 1985&lt;/span&gt;*
+
+1. **Additivity:** Individual contributions add up to the total `\(R^2\)`
+
+2. **Equal treatment:** Perfectly substitutable regressors receive equal values
+
+3. **Monotonicity:** More predictive regressors receive larger values
+]
+
+---
+
+# **Results:** Mothers disproportionally predict child's human capital
+
+.pull-left[
+**All**
+&lt;img src="files/parenthumancap_slv_xsection_lit_literate_cohort_sharemom_latgaussbin.png" width="78%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+**By group**
+&lt;img src="files/parenthumancap_slv_xsection_lit_literate_cohort_bygroup_sharemom_latgaussbin.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+name: famtype_mother
+
+# **Results:** Mothers' predictive power across family types
+
+&lt;img src="files/parenthumancap_xsection_latgaussbin_familystatus1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+&lt;div class="btn-row"&gt;&lt;a href="#famtype_father" class="btn"&gt;Fathers&lt;/a&gt;&lt;/div&gt;
+
+.footnote[.small[Results are for 1900 cohort, based on single input model that excludes fathers.]]
+
+---
+
+# **Results:** Geography of human capital mobility after incorporating mothers
+
+.center-content[
+&lt;img src="files/change_r2_1870_1930_bystate.png" width="23%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Takeaways: Human Capital Mobility
+
+.center-content[
+**Surging human capital mobility in two episodes**
+
+1. **Black:** After end of slavery
+2. **White:** Early 1900s (`\(\sim\)` school attendance becomes universal)
+
+**Maternal human capital** key predictor of child HC
+
+- **Mother's human capital** more predictive than father's
+- **Female &amp; Black children** have stronger maternal link
+]
+
+---
+class: inverse, middle, center
+
+# Rising Human Capital Mobility &amp; Mass Schooling
+
+---
+
+# **Results:** Schools as a driver of high mobility
+
+.center-content[
+&lt;img src="files/mobility_shareinschool_1870vs1930.png" width="48%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# **Results:** Human capital mobility &amp; school access
+
+.pull-left[
+**Mothers**
+&lt;img src="files/geo_school_mom_latgaussbin.png" width="90%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+**Fathers**
+&lt;img src="files/geo_school_pop_latgaussbin.png" width="90%" style="display: block; margin: auto;" /&gt;
+]
+
+.footnote[.small[Estimates separate by sex, race, state.]]
+
+---
+name: schoolaccess_table
+
+# **Results:** Human capital mobility &amp; *two different measures* of school access
+
+.center-content[
+|  | `\(\phi_{\text{Mother}}\)` | `\(\phi_{\text{Father}}\)` | `\(\frac{\phi_{\text{Mother}}}{R^2}\)` | `\(\phi_{\text{Mother}}\)` | `\(\phi_{\text{Father}}\)` | `\(\frac{\phi_{\text{Mother}}}{R^2}\)` |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Baseline measure of school access** | -0.18*** | 0.04 | -0.20*** |  |  |  |
+|  | (0.03) | (0.05) | (0.03) |  |  |  |
+| **Refined measure of school access** |  |  |  | -0.47*** | 0.15 | -0.58*** |
+| *(accounts for attendance, term lengths, etc.)* |  |  |  | (0.08) | (0.11) | (0.10) |
+| R$^2$ | 0.39 | 0.02 | 0.51 | 0.37 | 0.04 | 0.57 |
+| Observations | 133 | 133 | 133 | 128 | 128 | 128 |
+]
+
+&lt;div class="btn-row"&gt;&lt;a href="#schoolquality" class="btn"&gt;School quality (1/2)&lt;/a&gt; &lt;a href="#schoolquality2" class="btn"&gt;School quality (2/2)&lt;/a&gt;&lt;/div&gt;
+
+---
+
+# **Strategy:** Isolating causal impact of schooling on maternal influence
+
+.center-content[
+`$$\phi^{\text{Mother}}_{s,r,yob} = \alpha + \beta \cdot \text{inschool}_{s,r,yob} + \gamma_{yob} + \varepsilon_{s,r,yob}$$`
+
+- **Identification strategy**
+
+  - Outcome: Mother's contribution to intergenerational persistence (`\(\phi^{\text{Mother}}\)`)
+
+  - Endogenous variable: Share of children in school by state-race (`\(\text{inschool}_{s,r,yob}\)`)
+
+  - Exploit staggered implementation of compulsory schooling laws across states
+
+  - Instrument: Number of years child exposed to compulsory schooling
+]
+
+---
+
+# **Results:** Causal evidence from mandatory schooling legislation
+
+.center-content[
+| | OLS | IV | OLS | IV |
+|---|:---:|:---:|:---:|:---:|
+| **IV: Schooling via compulsory schooling laws** | -0.23*** | -0.92*** | -0.73*** | -0.92*** |
+| | (0.04) | (0.22) | (0.18) | (0.22) |
+| Cohort Fixed Effects | Y | Y | Y | Y |
+| Sample restricted to 1920-1940 | N | N | Y | Y |
+| F-statistic | -- | 35.52 | -- | 35.39 |
+| R$^2$ | 0.47 | -- | 0.38 | -- |
+| Observations | 1,049 | 1,049 | 465 | 465 |
+]
+
+---
+
+# Takeaways: Schools and Mobility
+
+.center-content[
+1. **School access** `\(\leftrightarrow\)` **human capital mobility** (time, space, sex, race)
+
+  **With school access, mothers' contribution converges w/ fathers'**
+
+2. **Schooling** `\(\Rightarrow\)` **human capital mobility** via evidence from staggered mandatory school laws
+]
+
+---
+class: inverse, middle, center
+
+# Income Mobility &amp; Human Capital Mobility Rise Together
+
+---
+
+# **Strategy:** Measuring income mobility incorporating human capital
+
+.center-content[
+`$$\text{rank}(\text{inc}_i) = \alpha + \beta_p\text{rank}(\text{inc}^{\text{parents}}_i) + \beta_m\text{rank}(h^{\text{mother}}_i) + \beta_f\text{rank}(h^{\text{father}}_i) + \varepsilon_i$$`
+
+- **Method:** Gaussian copula method to handle binary proxies (literacy)
+
+- **Data:** Applied to our new representative panel dataset
+]
+
+---
+name: incomemobresults
+
+# **Results:** Income mobility rises in tandem with human capital mobility
+
+.center-content[
+&lt;img src="files/parentalbackground_lido_cohort_latgaussbin_new2.png" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+&lt;div class="btn-row"&gt;&lt;a href="#altincomemeasures" class="btn"&gt;Alt. income measures&lt;/a&gt; &lt;a href="#litcomparison" class="btn"&gt;Lit. comparison&lt;/a&gt;&lt;/div&gt;
+
+---
+
+# **Results:** Changing role of mothers sole driver of rising mobility (`\(\beta_m\)`)
+
+.center-content[
+&lt;img src="files/latgaussbin2_counterfactual_r2_betas_new.png" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# **Conclusion**
+
+.center-content[
+- Mothers' human capital was key predictor of children's outcomes before mass schooling
+
+  **→ Including mothers alters key conclusions** *(e.g., South as least mobile region)*
+
+- Mobility in human capital and income surged from the 19th to the 20th century
+
+  **→ US was not born as country of opportunity**
+
+- Mass schooling replaced home education, reducing reliance on maternal human capital
+
+  **→ High mobility is not guaranteed---depends on public provision of schooling**
+
+  **→ Quality schooling especially benefits children of less-educated parents**
+]
+
+---
+class: agenda
+
+# Agenda
+
+&lt;ul class="agenda-list"&gt;
+&lt;li class="done"&gt;Intergenerational Mobility&lt;/li&gt;
+&lt;li class="current"&gt;Allocation of Talent&lt;/li&gt;
+&lt;/ul&gt;
+
+---
+
+# Allocation of Talent
+
+.center-content[
+- Barriers by race, gender, class, ... distort *whose* talents are used
+
+- This creates a gap between *potential* vs. *realized* talent allocation
+
+- Why the gap matters:
+  - **Fairness**: Effort and ability, not parental background or identity orthogonal to those
+  - **Growth**: Misallocation leaves ideas undiscovered &amp; output unrealized
+  - **Direction**: Narrow inventor pool skews R&amp;D toward problems salient to dominant group
+
+- Removing barriers has potential to reallocate talent, increasing **equity** and **output**
+]
+
+---
+
+# Who Becomes an Inventor? &lt;br&gt; .small[&lt;span class="gray"&gt;Bell et al. (2019)&lt;/span&gt;]
+
+.center-content[
+- Research Question
+  - Nature (inherent ability) vs. nurture (environment) in innovation career choice
+  - Who becomes an inventor in the United States today?
+
+- Key Data
+  - 1.2 million inventors linked to tax records
+  - Track inventors from birth to adulthood
+
+- Main Finding
+  - Children from top 1% income families are **10x more likely** to become inventors
+  - Large gaps persist even among children with similar math test scores
+  - Evidence suggests environment, not just ability, matters
+]
+
+---
+
+# Identifying Causal Effects of Exposure &lt;br&gt; .small[&lt;span class="gray"&gt;Bell et al. (2019)&lt;/span&gt;]
+
+.center-content[
+- Methodological Innovation:
+  - Exploit variation across specific technology classes
+  - Compare children's patent classes to parents/neighbors' patent classes
+  - `\(\Rightarrow\)` Innate ability unlikely to vary across narrow tech classes
+
+- Key Results:
+  - Children of inventors patent in their parent's exact tech class ~5x more often than in the next-closest class
+  - Exposure effects are gender-specific: girls more influenced by female inventors in the same class
+  - Moving from a 25th- to 75th-percentile commuting zone (e.g., New Orleans → Austin) raises a child's invention probability by 37%
+
+- Evidence for causal exposure effects, not just selection
+]
+
+---
+
+# Lost Einsteins &lt;br&gt; .small[&lt;span class="gray"&gt;Bell et al. (2019)&lt;/span&gt;]
+
+.center-content[
+&lt;img src="files/inventor_inc.png" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Lost Einsteins &lt;br&gt; .small[&lt;span class="gray"&gt;Bell et al. (2019)&lt;/span&gt;]
+
+.center-content[
+&lt;img src="files/inventor_race.png" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Lost Einsteins &lt;br&gt; .small[&lt;span class="gray"&gt;Bell et al. (2019)&lt;/span&gt;]
+
+.center-content[
+&lt;img src="files/inventor_sex.png" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Lost Einsteins &lt;br&gt; .small[&lt;span class="gray"&gt;Bell et al. (2019)&lt;/span&gt;]
+
+.center-content[
+&lt;img src="files/inventor_inc_sexrace.png" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Lost Einsteins &lt;br&gt; .small[&lt;span class="gray"&gt;Bell et al. (2019)&lt;/span&gt;]
+
+.center-content[
+&lt;img src="files/inventor_class.png" width="52%" style="display: block; margin: auto;" /&gt;
+
+.footnote[.small[Genetic ability is unlikely to explain this pattern. A child shouldn't have genes that specifically make them better at inventing "pulse amplifiers" rather than "antenna oscillators"---these are very similar technological categories that would require similar skills and knowledge.]]
+]
+
+---
+
+# Lost Einsteins &lt;br&gt; .small[&lt;span class="gray"&gt;Bell et al. (2019)&lt;/span&gt;]
+
+.center-content[
+&lt;img src="files/inventor_geo.png" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+# Lost Einsteins and Policy Implications &lt;br&gt; .small[&lt;span class="gray"&gt;Bell et al. (2019)&lt;/span&gt;]
+
+.center-content[
+- **"Lost Einsteins"**
+  - Under-represented inventors have similar earnings and citations as others
+  - `\(\Rightarrow\)` Women/minorities/low-income who don't invent aren't marginal talents
+
+- Counterfactual
+  - If women, minorities, and low-income children invented at same rate as white men from high-income families
+  - `\(\Rightarrow\)` **4x more inventors** in America
+
+- Policy
+  - Focus on increasing exposure to innovation for under-represented groups
+  - May have larger impact than traditional financial incentives
+]
+
+---
+
+# Taking a Step Back: Mechanisms for Lost Einsteins
+
+.center-content[
+- Role-model "exposure" elasticities .small[&lt;span class="gray"&gt;Bell et al. (2019)&lt;/span&gt;]
+  - Children exposed to inventors are more likely to invent
+  - Gender and race-specific exposure effects strongest
+
+- Credit &amp; information frictions
+  - Costly education, lack of exposure to STEM careers
+  - Limited networks for mentorship and financing
+
+- Structural discrimination
+  - School quality differentials
+  - Geographic segregation limiting opportunity
+  - Social capital .small[&lt;span class="gray"&gt;Chetty et al. (2022)&lt;/span&gt;]
+]
+
+---
+
+# Climbing the ivory tower: talent in academic science
+
+.center-content[
+- Human capital drives science &lt;span class="gray"&gt;Waldinger (2016)&lt;/span&gt;
+  - Nazi dismissals of (mostly Jewish) scientists + Allied bombing of German universities
+  - 10% loss of researchers → 0.2 SD drop in dept. output, persisting through 1980
+  - 10% loss of facilities → 0.05 SD drop, recovering by ~1961
+  - Star scientists drive disproportionate output; their loss degrades subsequent hires
+
+- "Hidden stars" &lt;span class="gray"&gt;Hager, Schwarz &amp; Waldinger (2024)&lt;/span&gt;
+  - First citation database created quasi-random visibility of researchers' output
+  - Reduced information frictions in hiring → assortative matching of scientists to departments
+  - Highly cited researchers from lower-ranked departments and minority groups gained most
+
+- Socio-economic background still shapes who climbs &lt;span class="gray"&gt;Abramitzky, Greska, Perez, Price, Schwarz &amp; Waldinger (2024)&lt;/span&gt;
+  - Academics from poorer backgrounds under-represented for seven decades; more at elite unis
+  - Father's occupation predicts professors' field of research `\(\Rightarrow\)` steers research direction
+  - Poorer-background academics introduce more novel concepts but  fewer citations, awards
+]
+
+---
+
+# Macroeconomic Cost of Talent Misallocation &lt;br&gt; .small[&lt;span class="gray"&gt;Hsieh et al. (2019)&lt;/span&gt;]
+
+.center-content[
+- Occupational Convergence (1960-2010):
+  - 1960: 94% of doctors/lawyers were white men
+  - 2010: Only 62% of doctors/lawyers were white men
+  - Assumption: Innate talent distribution unchanging across groups
+
+- Three Sources of Misallocation:
+  - Labor market discrimination (wage-productivity wedges)
+  - Barriers to human capital formation
+  - Differences in preferences/social norms
+
+- Macroeconomic Impact:
+  - **20-40% of growth in US GDP per worker** (1960-2010) due to declining talent-allocation barriers
+  - Mostly from reduced barriers to human capital formation; less from decl. labor market discrim.
+]
+
+---
+
+# Who Innovates `\(\rightarrow\)` What Gets Innovated
+
+.center-content[
+- Directed technical change: inventors' identities steer R&amp;D topics &lt;span class="gray"&gt;Acemoglu (2002)&lt;/span&gt;
+  - Inventors focus on problems they personally understand or value
+  - Market size matters, but inventor demographics also shape focus
+
+- Example facts:
+  - All-female inventor teams 35% more likely than all-male teams to focus on women's health &lt;span class="gray"&gt;Koning, Samila &amp; Ferguson (2021)&lt;/span&gt;
+  - Black NIH applicants disproportionately propose work on community-level interventions and health disparities — topics with lower funding rates &lt;span class="gray"&gt;Hoppe et al. (2019)&lt;/span&gt;
+  - Under-represented groups introduce more novel scientific concepts but get less credit &lt;span class="gray"&gt;Hofstra et al. (2020)&lt;/span&gt;
+]
+
+---
+class: inverse, middle, center
+
+# Appendix
+
+---
+
+# **Background:** The history of the Social Security Number
+
+.center-content[
+- **Social Security Number** was introduced in 1936
+
+- By 1937, 37M people have SSN (28% of pop.)
+  - Initially only for tracking earnings of working population
+  - Expanded substantially in later years (e.g. for taxes, Medicare)
+
+- Increasingly representative
+  - By 1971, SSNs obtained by 107M men &amp; 93M women
+  - More representative due to inclusion of applicant's parents
+]
+
+---
+
+# **Data:** Inputs to our panel
+
+.center-content[
+**SSN Applications**
+
+- Near-universe of SSN applicants who died before 2007
+- Includes name, age, race, state and city of birth, parents' maiden names, SSN
+
+**Census**
+
+- Restricted-access Censuses 1850-1940
+]
+
+---
+
+# **Data:** Step 1 of panel construction
+
+.center-content[
+**SSN Applications** `\(\longrightarrow\)` link to each available Census decade (1850, 1860, ..., 1930, 1940)
+
+- One SSN application record connects directly to a person's appearance in each historical Census
+- Provides the spine of the panel
+]
+
+---
+
+# **Data:** Step 2 of panel construction
+
+.center-content[
+After linking SSN `\(\longleftrightarrow\)` Census, link Census records to one another using SSN-based matches
+
+- Bridges consecutive Census decades for both applicants and their parents
+- Allows tracking individuals (and family structure) across the 1850-1940 panel
+]
+
+---
+name: multistagelinking
+
+# **Data:** Multi-stage linking process
+
+.center-content[
+1. **Applicant SSN** `\(\longleftrightarrow\)` **census (1850-1940)**
+
+  - Find unique match via applicant *and* parent names, year &amp; state of birth, race, sex
+
+  - Progressively relax set of criteria to literature standard *&lt;span class="gray"&gt;Abramitzky et al. (2020)&lt;/span&gt;*
+
+2. **Parent SSN** `\(\longleftrightarrow\)` **census**
+
+  - Direct link from parent to census not possible due to lack of birth details
+
+  - If child is linked to parent household, parents can be assigned (pot. synthetic) SSN
+
+3. **Census** `\(\longleftrightarrow\)` **census**
+
+  - Link census records using SSNs for all possible pairs 1850-1940
+]
+
+&lt;a href="#linkingprocess" class="btn btn-back"&gt;Back&lt;/a&gt;
+
+---
+
+# **Data:** New "Waterfall" linking algorithm
+
+.center-content[
+1. Link SSNs to census starting with maximum information set (gradually reduced)
+  - Min. information set: first/**middle**/last name, **race**, year/state of birth, **mother's**/**father's first name**, **women's marital status**
+  - If no unique match, try again with subset of blocking variables
+  - Min. information set: literature standard (excl. additional variables, *Abramitzky et al. 2021*)
+
+2. After identifying SSN applicant's census records, match parents if present
+
+3. Find parents across census decades using Waterfall algorithm
+
+4. Link census decades using SSN (artificial SSN for parents who never applied)
+]
+
+---
+name: details_r2tocoefficient
+
+# **Strategy:** Relationship between `\(R^2\)` and parent-child coefficient `\(\beta\)`
+
+.center-content[
+In a linear regression with a single explanatory variable, `\(y_i = \alpha + \beta x_i + \varepsilon_i\)`, the coefficient `\(\beta\)` and the `\(R^2\)` are defined as follows:
+
+`$$\beta = \text{cor}(x, y) \cdot \frac{\text{sd}(y)}{\text{sd}(x)}$$`
+
+`$$R^2 = (\text{cor}(x, y))^2 = \left(\beta \cdot \frac{\text{sd}(x)}{\text{sd}(y)}\right)^2$$`
+
+By their very nature, percentile ranked outcomes share the same distribution. Therefore, if both `\(y\)` and `\(x\)` are outcomes in percentile ranks, we have `\(\text{sd}(y)=\text{sd}(x)\)` and thus
+
+`$$R^2=\beta^2$$`
+]
+
+&lt;a href="#r2tocoefficient" class="btn btn-back"&gt;Back&lt;/a&gt;
+
+---
+name: coveragecensus
+
+# **Data (adulthood):** Coverage of our new panel
+
+.center-content[
+**Fraction of US Population Linked in Our New Panel**
+
+&lt;img src="files/numident_to_census_pct_all.png" width="80%" style="display: block; margin: auto;" /&gt;
+]
+
+&lt;a href="#representativeness_across_years" class="btn btn-back"&gt;Back&lt;/a&gt;
+
+---
+name: rep1880
+
+# **Data:** Representativeness of our new panel (1850-1880)
+
+.pull-left[
+**Women (1850-1880)**
+&lt;img src="files/representativeness_1850_1880_wom.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+**Men (1850-1880)**
+&lt;img src="files/representativeness_1850_1880_men.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+&lt;a href="#representativeness_across_years" class="btn btn-back"&gt;Back&lt;/a&gt;
+
+---
+name: rep1910
+
+# **Data:** Representativeness of our new panel (1880-1910)
+
+.pull-left[
+**Women (1880-1910)**
+&lt;img src="files/representativeness_1880_1910_wom.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+**Men (1880-1910)**
+&lt;img src="files/representativeness_1880_1910_men.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+&lt;a href="#representativeness_across_years" class="btn btn-back"&gt;Back&lt;/a&gt;
+
+---
+name: rep1940
+
+# **Data (adulthood):** Balance of long-run linked sample (1910-1940)
+
+.pull-left[
+**Women**
+&lt;img src="files/representativeness_1910_1940_wom.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+**Men**
+&lt;img src="files/representativeness_1910_1940_men.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+&lt;a href="#representativeness_across_years" class="btn btn-back"&gt;Back&lt;/a&gt;
+
+---
+name: linkrates
+
+# **Data:** High linking rates for our new panel
+
+.center-content[
+&lt;img src="files/linking_rate_comparison.png" width="60%" style="display: block; margin: auto;" /&gt;
+]
+
+&lt;a href="#representativeness_across_years" class="btn btn-back"&gt;Back&lt;/a&gt;
+
+---
+name: linkingoverlap
+
+# **Data:** High agreement rates on specific observations linked
+
+.pull-left[
+**Men &amp; women**
+&lt;img src="files/linking_agreement_rates.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+**Women with name changes**
+&lt;img src="files/linking_agreement_rates_marwom.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+&lt;a href="#representativeness_across_years" class="btn btn-back"&gt;Back&lt;/a&gt;
+
+---
+
+# **Strategy:** Example of Shapley-Owen Decomposition of `\(R^2\)`
+
+.center-content[
+&lt;table style="margin: 0 auto 1.5em;"&gt;
+&lt;thead&gt;
+&lt;tr&gt;&lt;th&gt;&lt;/th&gt;&lt;th colspan="2"&gt;Before&lt;/th&gt;&lt;th colspan="2"&gt;After&lt;/th&gt;&lt;th&gt;Marginal contribution&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;th&gt;&lt;/th&gt;&lt;th&gt;Regression inputs&lt;/th&gt;&lt;th&gt;R²&lt;/th&gt;&lt;th&gt;Regression inputs&lt;/th&gt;&lt;th&gt;R²&lt;/th&gt;&lt;th&gt;&lt;/th&gt;&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;∅&lt;/td&gt;&lt;td&gt;0&lt;/td&gt;&lt;td&gt;Mother&lt;/td&gt;&lt;td&gt;0.15&lt;/td&gt;&lt;td&gt;0.15 − 0 = 0.15&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;Father&lt;/td&gt;&lt;td&gt;0.05&lt;/td&gt;&lt;td&gt;Father &amp; Mother&lt;/td&gt;&lt;td&gt;0.25&lt;/td&gt;&lt;td&gt;0.25 − 0.05 = 0.20&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+`\(\Rightarrow\)` Mother's total contribution `\(=\frac{1}{2}\left(0.15+0.2\right)=0.175\)`
+
+Can be generalized to include many inputs (incl. interaction effects, controls)
+]
+
+---
+name: assumptionlatent
+
+# **Strategy:** Gaussian copula assumption
+
+.center-content[
+**Main assumption:** Parental &amp; child outcomes drawn from a joint Gaussian copula
+
+- That is, we assume that there exists a set of (unknown) monotonically increasing transformations `\(f_{\text{c}},f_{\text{m}},f_{\text{f}}\)` such that
+
+`$$\left\{f_{\text{c}}\left(y^{\text{child}}_{i}\right),f_{\text{m}}\left(y^{\text{mother}}_{i}\right),f_{\text{f}}\left(y^{\text{father}}_{i}\right)\right\}^T \sim \mathcal{N}\left(0,\boldsymbol{\Sigma}\right) \quad\text{ w/ } \text{diag}(\boldsymbol{\Sigma}) = \mathbb{1}$$`
+
+- Gaussian copula increasingly popular in statistics due to flexibility and performance *&lt;span class="gray"&gt;Liu et al. (2009); 2012; Zue &amp; Zou (2012)&lt;/span&gt;*
+
+- Includes wide range of marginal distributions (incl. skewed, multi-modal, etc.)
+]
+
+&lt;a href="#illustratingsplv" class="btn btn-back"&gt;Back&lt;/a&gt;
+
+---
+name: illustratingsplv_details
+
+# **Strategy:** Illustrating the Gaussian copula method
+
+.center-content[
+1. Estimate Kendall's `\(\tau\)` from binary data:
+
+`$$\hat{\tau} = \frac{2}{n(n-1)} \sum_{1 \leq i &lt; i' \leq n} (X^*_{i} - X^*_{i'})(Y^*_{i} - Y^*_{i'})$$`
+
+2. Assume `\((X_i,Y_i)\sim\)` **Gaussian copula** `\(\Rightarrow\)` Latent correlation `\(\rho\)` identified:
+
+`$$\mathbb{E}[\hat{\tau}] = 2\left[\Phi_2(\Delta_X, \Delta_Y, \rho) - \Phi(\Delta_X)\Phi(\Delta_Y)\right]$$`
+
+3. Convert `\(\hat\rho\)` to rank correlation `\(\hat\rho_r\)` and `\(R^2\)`:
+
+`$$\hat\rho_r = \frac{6}{\pi}\sin^{-1}\left(\frac{\hat\rho}{2}\right) \qquad\qquad R^2 = \hat\rho_r^2$$`
+]
+
+&lt;a href="#illustratingsplv" class="btn btn-back"&gt;Back&lt;/a&gt;
+
+---
+name: validationlatent2
+
+# **Validation:** Simulation from Gaussian copula distribution
+
+.pull-left[
+Simulate parent &amp; child ranks based on empirical distribution of literacy correlation by decade
+
+1. **Truth** via simulated ranks
+2. **Our method** via literacy dummies
+3. **OLS** (standard) via literacy dummies
+]
+
+.pull-right[
+&lt;img src="files/latgaussbin_sim_validation.png" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+&lt;a href="#illustratingsplv" class="btn btn-back"&gt;Back&lt;/a&gt;
+
+---
+name: valid19301940
+
+# **Validation:** Mobility via binary literacy ('30) vs. continuous educ. ('40)
+
+&lt;img src="files/mobility_litvseduc_1930vs1940_new.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+.footnote[.small[Estimates by state, sex, race.]]
+
+&lt;a href="#illustratingsplv" class="btn btn-back"&gt;Back&lt;/a&gt;
+
+---
+name: illustratingsplv_pic
+
+# **Strategy:** Illustrating the Gaussian copula method
+
+.center-content[
+&lt;img src="files/illustrating_fan_notext.png" width="70%" style="display: block; margin: auto;" /&gt;
+]
+
+&lt;a href="#illustratingsplv" class="btn btn-back"&gt;Back&lt;/a&gt;
+
+---
+name: validationlatent_nlsy
+
+# **Validation:** Modern survey data on cognitive tests scores (1/2)
+
+.pull-left[
+AFQT &amp; other cognitive test scores from NLSY
+
+- **Benchmark:** True rank-rank `\(R^2\)`
+- **Our method:** Rank-rank `\(R^2\)` using **arbitrarily dichotomized data**
+]
+
+.pull-right[
+**Income mobility**
+&lt;img src="files/incomemobility_nlsy79_latgaussbin_vs_actual.png" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+&lt;a href="#illustratingsplv" class="btn btn-back"&gt;Back&lt;/a&gt;
+
+---
+name: validationlatent_nlsy2
+
+# **Validation:** Modern survey data on cognitive tests scores (2/2)
+
+.pull-left[
+AFQT &amp; other cognitive test scores from NLSY
+
+- **Benchmark:** True rank-rank `\(R^2\)`
+- **Our method:** Rank-rank `\(R^2\)` using **arbitrarily dichotomized data**
+]
+
+.pull-right[
+**Human capital mobility**
+&lt;img src="files/parentchild_hc_nlsy79_latgaussbin_vs_actual_q_alltests.png" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+&lt;a href="#illustratingsplv" class="btn btn-back"&gt;Back&lt;/a&gt;
+
+---
+name: validationlatent
+
+# **Validation:** Historical census data on years of education
+
+.pull-left[
+Years of education from 1940 census
+
+- **Benchmark:** True rank-rank `\(R^2\)`
+- **Our method:** Rank-rank `\(R^2\)` using **arbitrarily dichotomized data**
+]
+
+.pull-right[
+**Educational mobility by US state**
+&lt;img src="files/latgaussbin_explore1940.png" width="95%" style="display: block; margin: auto;" /&gt;
+]
+
+&lt;a href="#illustratingsplv" class="btn btn-back"&gt;Back&lt;/a&gt;
+
+---
+name: famtype_father
+
+# **Results:** Fathers' predictive power across family types
+
+**Father's** `\(\rightarrow\)` **child's (latent) human capital rank**
+
+&lt;img src="files/parenthumancap_xsection_latgaussbin_familystatus2.png" width="55%" style="display: block; margin: auto;" /&gt;
+
+&lt;a href="#famtype_mother" class="btn btn-back"&gt;Back&lt;/a&gt;
+
+---
+name: errorrates
+
+# **Data:** Error rates across linking datasets
+
+.center-content[
+&lt;img src="files/error_rates_all.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+.footnote[.small[Error rates based on "ground truth" variables not used for matching: immigration year, literacy consistency, parental birthplace.]]
+
+&lt;a href="#representativeness_across_years" class="btn btn-back"&gt;Back&lt;/a&gt;
+]
+
+---
+name: validkendall
+
+# **Validation:** Kendall's `\(\tau\)` (no Gaussian copula assumption)
+
+.center-content[
+&lt;img src="files/parenthumancap_xsection_kendallstau_mom.png" width="32%" style="display:inline-block" /&gt;
+&lt;img src="files/parenthumancap_xsection_kendallstau_mom_wht.png" width="32%" style="display:inline-block" /&gt;
+&lt;img src="files/parenthumancap_xsection_kendallstau_mom_blk.png" width="32%" style="display:inline-block" /&gt;
+
+.footnote[.small[Kendall's `\(\tau\)` of children's and mothers' literacy over time, compared to Gaussian copula estimates. Left: All; Middle: White Americans; Right: Black Americans.]]
+
+&lt;a href="#illustratingsplv" class="btn btn-back"&gt;Back&lt;/a&gt;
+]
+
+---
+name: validnormr2
+
+# **Validation:** Normalized `\(R^2\)` &lt;br&gt; .small[&lt;span class="gray"&gt;Nekoei &amp; Sinn (2021)&lt;/span&gt;]
+
+.center-content[
+&lt;img src="files/parenthumancap_xsection_mobility_r2norm.png" width="32%" style="display:inline-block" /&gt;
+&lt;img src="files/parenthumancap_xsection_mobility_r2norm_wht.png" width="32%" style="display:inline-block" /&gt;
+&lt;img src="files/parenthumancap_xsection_mobility_r2norm_blk.png" width="32%" style="display:inline-block" /&gt;
+
+.footnote[.small[Normalized `\(R^2\)` using cohort-specific bounds of marginal distribution, compared to Gaussian copula `\(R^2\)`. Left: All; Middle: White Americans; Right: Black Americans.]]
+
+&lt;a href="#illustratingsplv" class="btn btn-back"&gt;Back&lt;/a&gt;
+]
+
+---
+name: validmeaserror
+
+# **Validation:** Robustness to measurement error
+
+.pull-left[
+**Fathers only**
+&lt;img src="files/father_mobility_weighted.png" width="90%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+**Both parents**
+&lt;img src="files/family_mobility_weighted.png" width="90%" style="display: block; margin: auto;" /&gt;
+]
+
+.footnote[.small[Restricted sample: parents with consistent literacy across linked census waves (Ward '23).]]
+
+&lt;a href="#illustratingsplv" class="btn btn-back"&gt;Back&lt;/a&gt;
+
+---
+name: litcomparison
+
+# **Results:** Benchmarking with previous literature
+
+.center-content[
+&lt;img src="files/lit_comp_all_new.png" width="32%" style="display:inline-block" /&gt;
+&lt;img src="files/lit_comp_all_new_whtmen.png" width="32%" style="display:inline-block" /&gt;
+&lt;img src="files/lit_comp_all_new_blkmen.png" width="32%" style="display:inline-block" /&gt;
+
+.footnote[.small[Comparison with Ward '23, Jácome et al. '25, Buckles et al. '23. Converting `\(\beta\)` to `\(1-R^2\)` via `\(1-\beta^2\)`. Left: All; Middle: White men; Right: Black men.]]
+
+&lt;a href="#incomemobresults" class="btn btn-back"&gt;Back&lt;/a&gt;
+]
+
+---
+name: schoolquality
+
+# **Results:** School quality by race and region (1/2)
+
+.pull-left[
+**Student-teacher ratio**
+&lt;img src="files/census_abstract_student_teacher_ratio.png" width="75%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+**Daily school attendance**
+&lt;img src="files/census_abstract_attendance.png" width="75%" style="display: block; margin: auto;" /&gt;
+]
+
+.footnote[.small[Census statistical abstracts (1870-1920). School resources explain 40--80% of variation in mobility.]]
+
+&lt;a href="#schoolaccess_table" class="btn btn-back"&gt;Back&lt;/a&gt;
+
+---
+name: schoolquality2
+
+# **Results:** School quality by race and region (2/2)
+
+.pull-left[
+**School expenditures**
+&lt;img src="files/census_abstract_total_spending.png" width="75%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+**Teacher salaries**
+&lt;img src="files/census_abstract_salary_spending.png" width="75%" style="display: block; margin: auto;" /&gt;
+]
+
+.footnote[.small[Census statistical abstracts (1870-1920). School resources explain 40--80% of variation in mobility.]]
+
+&lt;a href="#schoolaccess_table" class="btn btn-back"&gt;Back&lt;/a&gt;
+
+---
+name: altincomemeasures
+
+# **Results:** Income mobility using alternative income measures
+
+.center-content[
+&lt;img src="files/income_measures_mobility_inclsong.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+.footnote[.small[LIDO scores (1950 census), time-varying Song scores (decade-specific literacy), and occscores.]]
+
+&lt;a href="#incomemobresults" class="btn btn-back"&gt;Back&lt;/a&gt;
+]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="../../shared/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+  "ratio": "16:9",
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

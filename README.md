@@ -10,6 +10,7 @@ Current decks:
 - `teaching/graduate/slides/3_sustained_growth.html`: "Sustained Growth"
 - `teaching/graduate/slides/4_incentives.html`: "Incentives, Diffusion, and the Direction of Innovation"
 - `teaching/graduate/slides/5_tech_inequality.html`: "Technology and Inequality"
+- `teaching/graduate/slides/8_mobility.html`: "Intergenerational Mobility and the Allocation of Talent"
 - `teaching/undergraduate/slides/4_resources_climate.html`: "Resources and Climate"
 - `teaching/undergraduate/slides/5_institutions.html`: "Institutions"
 - `wef`: "How AI Reshapes Manufacturing Work"
