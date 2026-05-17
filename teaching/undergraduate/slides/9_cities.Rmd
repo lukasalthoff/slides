@@ -33,7 +33,7 @@ class: agenda
 <li class="current">The long arc of cities</li>
 <li class="upcoming">Why do cities exist?</li>
 <li class="upcoming">Cities as engines of innovation</li>
-<li class="upcoming">The dark side: cities and inequality</li>
+<li class="upcoming">Cities and inequality</li>
 <li class="upcoming">The future of cities</li>
 </ul>
 
@@ -381,26 +381,6 @@ knitr::include_graphics("files/baghdad.png")
 
 ---
 
-# Córdoba .small[(Caliphate of Córdoba, c. 1000 CE)]
-
-.center-content[
-```{r, echo = F, out.width = '60%'}
-knitr::include_graphics("files/cordoba.png")
-```
-]
-
----
-
-# Venice .small[(Maritime Republic, c. 1400)]
-
-.center-content[
-```{r, echo = F, out.width = '60%'}
-knitr::include_graphics("files/venice.png")
-```
-]
-
----
-
 # Amsterdam .small[(Dutch Golden Age, 17th c.)]
 
 .center-content[
@@ -483,7 +463,7 @@ class: agenda
 <li class="done">The long arc of cities</li>
 <li class="current">Why do cities exist?</li>
 <li class="upcoming">Cities as engines of innovation</li>
-<li class="upcoming">The dark side: cities and inequality</li>
+<li class="upcoming">Cities and inequality</li>
 <li class="upcoming">The future of cities</li>
 </ul>
 
@@ -518,6 +498,23 @@ Jacobs argued that diversity of cities is what makes them creative
 
 ---
 
+# Two neighborhoods, one city
+
+.center-content[
+<img src="files/upper_west.png" width="45%" style="display:inline-block; margin-right:1%;" />
+<img src="files/lower_east.png" width="45%" style="display:inline-block; margin-left:1%;" />
+]
+
+---
+
+# The Commissioners' Plan of 1811
+
+.center-content[
+<img src="files/nyc_commissioners_plan.png" style="height: 500px;" />
+]
+
+---
+
 # Glaeser's summary
 
 .center-content[
@@ -542,13 +539,6 @@ Exploit Berlin's division and reunification as a natural experiment.
 - Data on thousands of city blocks: 1936, 1986, 2006
 - Division destroyed economic density near the Wall
 - Reunification restored it
-
-Key findings:
-
-- Substantial and highly localized production and residential externalities
-
-- The model reproduces observed changes in Berlin's structure across all three periods
-
 - Density itself generates economic value
 ]
 
@@ -571,6 +561,32 @@ knitr::include_graphics("files/berlin_wall2.png")
 ```
 ]
 
+
+---
+
+# Building the modern metropolis: London <br> .small[<span class="gray">Heblich, Redding & Sturm (2020)</span>]
+
+.pull-left[
+
+The steam railway arrived in London in the 1840s, dramatically lowering commuting costs
+
+- Before: workers had to live within walking distance of work
+- After: workplaces concentrate downtown, residences spread out
+- Population of Greater London grew from 1M (1801) to 6.6M (1901)
+]
+
+.pull-right[
+Heblich, Redding & Sturm (QJE 2020) build a quantitative spatial model and use station-level data to estimate:
+
+
+- Without commuting, central London population would have been ~50% lower
+
+- Workplace concentration generates large productivity externalities
+]
+
+.footnote[.small[Source: Heblich, Redding & Sturm, "The Making of the Modern Metropolis: Evidence from London" (QJE 2020)]]
+
+
 ---
 
 
@@ -591,34 +607,36 @@ knitr::include_graphics("files/london_employment.png")
 ```
 .center[**Employment** density]
 ]
+---
+
+# East-Side Story <br> .small[<span class="gray">Heblich, Trew & Zylberberg (2021)</span>]
+
+.center-content[
+- Prevailing west-to-east winds blew coal smoke east
+- Cleaner west sides attracted richer households; poorer households remained in dirtier east-side neighborhoods
+- Pollution sorted people within cities, not just across them
+- That east-west class geography persisted long after coal smoke ended
+]
 
 ---
 
-# Building the modern metropolis: London <br> .small[<span class="gray">Heblich, Redding & Sturm (2020)</span>]
+# East-Side Story <br> .small[<span class="gray">Heblich, Trew & Zylberberg (2021)</span>]
 
-.pull-left[
-
-**The natural experiment:** the steam railway arrived in London in the 1840s, dramatically lowering commuting costs.
-
-- Before: workers had to live within walking distance of work
-- After: workplaces concentrate downtown, residences spread out
-- Population of Greater London grew from 1M (1801) to 6.6M (1901)
+.center-content[
+```{r, echo = F, out.width = '50%'}
+knitr::include_graphics("files/east_side_story.png")
+```
 ]
 
-.pull-right[
-Heblich, Redding & Sturm (QJE 2020) build a quantitative spatial model and use station-level data to estimate:
+---
 
-- The railway raised aggregate **welfare by ~25%**
+# London house prices today
 
-- Without commuting, central London population would have been **~50% lower**
-
-- Workplace concentration generates large **productivity externalities** — distinct from those that operate through residence
-
-**Big idea:** transportation technology is what lets agglomeration scale up into a *metropolis*.
+.center-content[
+```{r, echo = F, out.width = '75%'}
+knitr::include_graphics("files/london_house_prices.png")
+```
 ]
-
-.footnote[.small[Source: Heblich, Redding & Sturm, "The Making of the Modern Metropolis: Evidence from London" (QJE 2020)]]
-
 
 ---
 
@@ -635,54 +653,6 @@ Heblich, Redding & Sturm (QJE 2020) build a quantitative spatial model and use s
 
 ---
 
-# Sharing: Adam Smith's pin factory, scaled up
-
-.center-content[
-Smith (1776): a bigger workforce allows finer **specialization** → higher productivity
-
-In a city:
-- More workers → more specialized occupations (dog psychologist, AI ethics lawyer)
-- More firms → more specialized suppliers (a factory for just one component)
-- More consumers → support for niche goods and services
-
-**But:** crowding eventually offsets the gains. Equilibrium city size = where the benefit of sharing equals the cost of congestion.
-]
-
----
-
-# Matching: the power of thick labor markets
-
-.pull-left[
-With more workers and more firms, the average **mismatch** between a worker's skills and their job decreases.
-
-<span class="gray">Berliant, Reed & Wang (2006)</span>:
-- U.S. counties in the **top 10% by density** have productivity **0.15–0.30 log points higher** than the bottom half
-- Not explained by firm composition
-]
-
-.pull-right[
-The flip side: in thick markets, workers and firms become **choosier** — they can afford to wait for a better match.
-
-This is why career changes, job-hopping, and specialization are all easier in big cities.
-]
-
----
-
-# Learning: cities as knowledge machines
-
-.center-content[
-Cities facilitate **face-to-face knowledge transfer**:
-- Skilled workers teach unskilled workers (young workers pay a premium to live in cities for access to mentorship)
-- Firms in different industries share production techniques
-
-**Duranton & Puga (2001) "Nursery Cities":**
-- Young firms thrive in **diverse** cities where they can tinker and learn from many industries
-- As firms mature, they relocate to **specialized** cities to exploit scale
-- The life cycle of firms mirrors the structure of the urban system
-]
-
----
-
 class: agenda
 
 # Agenda
@@ -691,13 +661,39 @@ class: agenda
 <li class="done">The long arc of cities</li>
 <li class="done">Why do cities exist?</li>
 <li class="current">Cities as engines of innovation</li>
-<li class="upcoming">The dark side: cities and inequality</li>
+<li class="upcoming">Cities and inequality</li>
 <li class="upcoming">The future of cities</li>
 </ul>
 
 ---
 
-# The arc of cities
+# The first skyscraper: Chicago, 1885
+
+.center-content[
+<img src="files/first_skyscraper.jpg" style="height: 480px;" />
+]
+
+---
+
+# History of skyscrapers
+
+.center-content[
+```{r, echo = F, out.width = '80%'}
+knitr::include_graphics("files/skyscrapers_history.jpeg")
+```
+]
+
+---
+
+# Burj Khalifa
+
+.center-content[
+<img src="files/burj_khalifa.jpg" style="height: 480px;" />
+]
+
+---
+
+# Cities have *always* been where breakthroughs happen
 
 .center-content[
 | Era | City | Innovation |
@@ -709,12 +705,12 @@ class: agenda
 | 1950s | Detroit | Mass production |
 | 2000s | Silicon Valley, Shenzhen | Software, hardware |
 
-Cities have **always** been where breakthroughs happen
+
 ]
 
 ---
 
-# Case study: Florence in the Renaissance
+# Florence in the Renaissance
 
 .pull-left[
 
@@ -740,31 +736,29 @@ Knowledge spillovers in action — 500 years before economists had the term
 
 ---
 
-# Case study: Silicon Valley
+# Silicon Valley
 
 .center-content[
 
-**Fred Terman** (Stanford) encourages students to start companies nearby
+- During WWII, Stanford's Fred Terman ran a research lab at Harvard and saw how East Coast universities partnered closely with industry and government
 
-→ **William Shockley** moves transistor lab to Palo Alto (1956)
+- Back at Stanford in the 1950s, he imported the model: pushing engineering students to start companies nearby, building an industrial park on campus
 
-→ **Traitorous Eight** leave Shockley → found **Fairchild Semiconductor** (1957)
+- Small electronics labs took root in Palo Alto; their engineers kept quitting to launch competing firms a few miles away, which spawned more firms
 
-→ Fairchild alumni create **Intel**, AMD, and dozens of startups
+- Within a generation, a stretch of orchards south of San Francisco held the densest concentration of engineers, venture capital, and ideas anywhere in the world
 
-→ Apple, Google, Facebook all sprout from this ecosystem
-
-One decision to locate near a university → a $5 trillion industry
+- That density is what produced Apple, Google, and a $5 trillion industry
 ]
 
 ---
 
-# Case study: Detroit's rise and fall
+# Detroit's rise and fall
 
 .pull-left[
 **The rise:**
 - 1900: Henry Ford builds the auto industry
-- 1950: **Richest big city in America**
+- 1950: Richest big city in America
 - Population peaks at 1.85 million
 - Average factory worker earns middle-class wage
 
@@ -772,30 +766,17 @@ One decision to locate near a university → a $5 trillion industry
 
 .pull-right[
 **The fall:**
-- Over-reliance on **one industry**
+- Over-reliance on one industry
 - Highways enabled suburban sprawl
 - Racial tensions and white flight
-- 2013: **Largest municipal bankruptcy in US history**
+- 2013: Largest municipal bankruptcy in US history
 - Population drops to 640,000
 
-Lesson: cities that depend on a single industry are **fragile**
+Cities that depend on a single industry are fragile
 ]
 
 ---
 
-# What Detroit teaches us
-
-.center-content[
-Detroit violated Jacobs's rule: it was a **company town**, not a diverse city
-
-Compare:
-- **Detroit**: auto manufacturing monoculture → collapse
-- **New York**: finance, media, tech, fashion, healthcare → resilience
-
-**Diversity of industries is the immune system of a city**
-]
-
----
 class: agenda
 
 # Agenda
@@ -804,37 +785,19 @@ class: agenda
 <li class="done">The long arc of cities</li>
 <li class="done">Why do cities exist?</li>
 <li class="done">Cities as engines of innovation</li>
-<li class="current">The dark side: cities and inequality</li>
+<li class="current">Cities and inequality</li>
 <li class="upcoming">The future of cities</li>
 </ul>
 
 ---
 
-# The urban wage premium is real — but so is the cost
-
-.center-content[
-Workers in cities earn **30-50% more** than similar workers in rural areas
-
-But housing in productive cities has become extraordinarily expensive:
-- San Francisco median home price: ~$1.3 million
-- Manhattan median rent: ~$4,000/month
-
-This creates a **toll booth** on opportunity: you can access high wages, but only if you can afford the entry fee
-
-.footnote[.small[Source: Glaeser, *Triumph of the City*, Ch. 8]]
-]
-
----
-
-# Hsieh & Moretti: the $2 trillion misallocation
+# The $2 trillion misallocation
 
 .center-content[
 
-Housing constraints in high-productivity cities (SF, NYC, San Jose) prevent workers from moving to where they would be most productive
+- Housing constraints in high-productivity cities (SF, NYC, San Jose) prevent workers from moving to where they would be most productive
 
-Key finding: relaxing housing constraints in just three cities could have raised **US GDP by 36%** between 1964 and 2009
-
-This is not a typo. Housing policy may be the most important economic policy we are not talking about.
+- Key finding: relaxing housing constraints in just three cities could have raised US GDP by 36% between 1964 and 2009
 
 .footnote[.small[Source: Hsieh & Moretti, "Housing Constraints and Spatial Misallocation" (2019), *AEJ: Macro*]]
 ]
@@ -864,17 +827,15 @@ When a neighborhood improves:
 - Crime falls
 - Schools improve
 
-These are **good things** — in the aggregate
 ]
 
 .pull-right[
 But for existing residents:
-- Rents spike → **displacement**
+- Rents spike → displacement
 - Community networks dissolve
 - Cultural identity erodes
 - Long-time residents can't afford to stay in the neighborhoods they built
 
-The benefits of urban revival are **not equally shared**
 ]
 
 ---
@@ -886,7 +847,7 @@ class: agenda
 <li class="done">The long arc of cities</li>
 <li class="done">Why do cities exist?</li>
 <li class="done">Cities as engines of innovation</li>
-<li class="done">The dark side: cities and inequality</li>
+<li class="done">Cities and inequality</li>
 <li class="current">The future of cities</li>
 </ul>
 
@@ -909,16 +870,55 @@ Restricting building in San Francisco doesn't protect the environment — it jus
 
 ---
 
-# The car-free city: Paris as case study
+.center-content[
+```{r, echo = F, out.width = '60%'}
+knitr::include_graphics("files/marin.png")
+```
+]
+
+---
 
 .center-content[
 ```{r, echo = F, out.width = '60%'}
+knitr::include_graphics("files/atherton.png")
+```
+]
+
+---
+
+.center-content[
+```{r, echo = F, out.width = '60%'}
+knitr::include_graphics("files/east_bay.png")
+```
+]
+
+---
+
+# The car-free city: Paris as case study
+
+.pull-left[
+```{r, echo = F, out.width = '100%'}
 knitr::include_graphics("files/paris_carfree.jpg")
 ```
+]
 
+.pull-right[
 Mayor Hidalgo's transformation:
 - Protected bike lanes on Rue de Rivoli, Champs-Élysées area
 - Cars banned from the Seine banks → public parks
-- **Bike trips tripled** between 2019 and 2023
-- The "15-minute city": everything reachable by foot or bike
+- Bike trips tripled between 2019 and 2023
+]
+
+---
+
+# Building a city from scratch?
+
+.center-content[
+<img src="files/neom.jpg" style="height: 500px;" />
+]
+
+---
+
+.center-content[
+<iframe width="322" height="573" src="https://www.youtube.com/embed/fqpJZG2AEG4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="display: block; margin: 0 auto;"></iframe>
 ]
