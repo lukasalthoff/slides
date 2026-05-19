@@ -1,0 +1,776 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Stanford Progress Lab</title>
+<style>
+  :root {
+    --cream: #FAF6EE;
+    --card:  #F2EBDD;
+    --ink:   #1F2937;
+    --body:  #374151;
+    --mute:  #8A8378;
+    --blue:  #3066CA;
+    --rule:  #E2D9C5;
+    --slide-h: 720px;
+    --slide-w: 1280px;
+    --pad-x: 77px;
+    --pad-y: 58px;
+    --chrome-bottom: 28px;
+    --chrome-h: 37px;
+    /* Typography matched to progress-lab-aligned.pptx (pt × 4/3 at 1280×720) */
+    --fs-eyebrow: 15px;
+    --fs-caption: 15px;
+    --fs-body: 19px;
+    --fs-h4: 23px;
+    --fs-h3: 27px;
+    --fs-lead: 29px;
+    --fs-project-title: 37px;
+    --fs-section: 53px;
+    --fs-approach: 51px;
+    --fs-num-lg: 53px;
+    --fs-num-xl: 85px;
+    --fs-brand: 88px;
+    --fs-brand-footer: 30px;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: #1e1d1b;
+    color: var(--ink);
+    font-family: "Helvetica Neue", "Helvetica", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+  .deck { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+  .stage {
+    width: var(--slide-w);
+    height: var(--slide-h);
+    background: var(--cream);
+    box-shadow: 0 24px 60px rgba(0,0,0,.35);
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+    transform-origin: center center;
+  }
+  .slide {
+    position: absolute; inset: 0;
+    padding: var(--pad-y) var(--pad-x) calc(var(--chrome-bottom) + var(--chrome-h) + 12px);
+    display: none;
+    flex-direction: column;
+    background: var(--cream);
+  }
+  .slide.active { display: flex; }
+  .slide-body { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+  .slide-chrome {
+    position: absolute;
+    left: var(--pad-x);
+    right: var(--pad-x);
+    bottom: var(--chrome-bottom);
+    height: var(--chrome-h);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: 5;
+  }
+  .slide-chrome.back-only { justify-content: flex-start; }
+  .slide-chrome .slide-btn { pointer-events: auto; flex-shrink: 0; }
+  .slide-brand {
+    font-size: var(--fs-brand-footer);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -.01em;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .slide-brand .blue { color: var(--blue); }
+  .slide-brand .dark { color: #2C3138; }
+  .title-slide { justify-content: flex-end; padding-bottom: 140px; }
+
+  /* Typography building blocks */
+  .eyebrow {
+    color: var(--mute);
+    font-weight: 700;
+    font-size: var(--fs-eyebrow);
+    letter-spacing: .28em;
+    text-transform: uppercase;
+  }
+  h1.title {
+    font-size: var(--fs-section);
+    font-weight: 800;
+    color: var(--ink);
+    margin: 10px 0 0 0;
+    line-height: 1.08;
+    letter-spacing: -.01em;
+  }
+  h2.section-title {
+    font-size: var(--fs-section);
+    font-weight: 800;
+    color: var(--ink);
+    margin: 10px 0 0 0;
+    line-height: 1.08;
+    letter-spacing: -.01em;
+  }
+  .approach-title {
+    font-size: var(--fs-approach);
+    font-weight: 800;
+    color: var(--ink);
+    margin: 10px 0 0 0;
+    line-height: 1.12;
+    letter-spacing: -.01em;
+  }
+  .approach-title .line { display: block; }
+  .approach-title .line.indent { padding-left: 1.65em; }
+  .approach-title em { font-style: italic; font-weight: 800; color: var(--body); }
+  .lead {
+    font-size: var(--fs-lead);
+    font-weight: 800;
+    color: var(--ink);
+    line-height: 1.28;
+    letter-spacing: -.005em;
+    max-width: 1120px;
+  }
+  .lead .hi { color: var(--blue); }
+  .lead em { font-style: italic; font-weight: 800; color: var(--body); }
+
+  .desc { color: var(--mute); font-size: var(--fs-body); }
+  .body { color: var(--body); font-size: var(--fs-body); line-height: 1.45; }
+  .caption { color: var(--mute); font-size: var(--fs-caption); font-style: italic; }
+  .micro {
+    color: var(--mute);
+    font-weight: 700;
+    font-size: var(--fs-eyebrow);
+    letter-spacing: .22em;
+    text-transform: uppercase;
+  }
+
+  /* Bullets */
+  ul.bullets { list-style: none; padding: 0; margin: 0; }
+  ul.bullets li {
+    position: relative;
+    padding: 7px 0 7px 28px;
+    color: var(--body);
+    font-size: var(--fs-body);
+    line-height: 1.4;
+  }
+  ul.bullets li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 15px;
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--blue);
+  }
+
+  /* Numbered rows (overview + data slides) */
+  .num-list { flex: 1; display: flex; flex-direction: column; justify-content: space-between; margin-top: 28px; min-height: 0; }
+  .num-list.compact { justify-content: flex-start; gap: 14px; }
+  .projects-slide .slide-head { margin-bottom: 22px; }
+  .num-list.dense { justify-content: flex-start; gap: 18px; }
+  .data-slide .slide-head { margin-bottom: 22px; }
+  .data-slide .num-list { margin-top: 22px; gap: 18px; }
+  .data-slide .num-row h3 { margin-bottom: 4px; }
+  .data-slide .status-list { list-style: none; padding: 0; margin: 0; }
+  .data-slide .status-list li {
+    position: relative;
+    padding: 2px 0 2px 32px;
+    color: var(--body);
+    font-size: var(--fs-body);
+    line-height: 1.32;
+  }
+  .data-slide .status-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 5px;
+    width: 18px;
+    height: 18px;
+  }
+  .data-slide .status-list li.done::before {
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='10' fill='%233066CA'/%3E%3Cpath d='M6 10l2.5 2.5L14 7' stroke='%23fff' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+  .data-slide .status-list li.pending::before {
+    background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2020%2020%27%3E%3Cg%20transform%3D%27translate(10%2C10)%27%3E%3Cline%20x1%3D%270%27%20y1%3D%27-9%27%20x2%3D%270%27%20y2%3D%27-2.5%27%20stroke%3D%27%233066CA%27%20stroke-width%3D%271.7%27%20stroke-linecap%3D%27round%27%20transform%3D%27rotate(0)%27%20opacity%3D%271.0%27%2F%3E%3Cline%20x1%3D%270%27%20y1%3D%27-9%27%20x2%3D%270%27%20y2%3D%27-2.5%27%20stroke%3D%27%233066CA%27%20stroke-width%3D%271.7%27%20stroke-linecap%3D%27round%27%20transform%3D%27rotate(30)%27%20opacity%3D%270.93%27%2F%3E%3Cline%20x1%3D%270%27%20y1%3D%27-9%27%20x2%3D%270%27%20y2%3D%27-2.5%27%20stroke%3D%27%233066CA%27%20stroke-width%3D%271.7%27%20stroke-linecap%3D%27round%27%20transform%3D%27rotate(60)%27%20opacity%3D%270.85%27%2F%3E%3Cline%20x1%3D%270%27%20y1%3D%27-9%27%20x2%3D%270%27%20y2%3D%27-2.5%27%20stroke%3D%27%233066CA%27%20stroke-width%3D%271.7%27%20stroke-linecap%3D%27round%27%20transform%3D%27rotate(90)%27%20opacity%3D%270.78%27%2F%3E%3Cline%20x1%3D%270%27%20y1%3D%27-9%27%20x2%3D%270%27%20y2%3D%27-2.5%27%20stroke%3D%27%233066CA%27%20stroke-width%3D%271.7%27%20stroke-linecap%3D%27round%27%20transform%3D%27rotate(120)%27%20opacity%3D%270.7%27%2F%3E%3Cline%20x1%3D%270%27%20y1%3D%27-9%27%20x2%3D%270%27%20y2%3D%27-2.5%27%20stroke%3D%27%233066CA%27%20stroke-width%3D%271.7%27%20stroke-linecap%3D%27round%27%20transform%3D%27rotate(150)%27%20opacity%3D%270.62%27%2F%3E%3Cline%20x1%3D%270%27%20y1%3D%27-9%27%20x2%3D%270%27%20y2%3D%27-2.5%27%20stroke%3D%27%233066CA%27%20stroke-width%3D%271.7%27%20stroke-linecap%3D%27round%27%20transform%3D%27rotate(180)%27%20opacity%3D%270.55%27%2F%3E%3Cline%20x1%3D%270%27%20y1%3D%27-9%27%20x2%3D%270%27%20y2%3D%27-2.5%27%20stroke%3D%27%233066CA%27%20stroke-width%3D%271.7%27%20stroke-linecap%3D%27round%27%20transform%3D%27rotate(210)%27%20opacity%3D%270.47%27%2F%3E%3Cline%20x1%3D%270%27%20y1%3D%27-9%27%20x2%3D%270%27%20y2%3D%27-2.5%27%20stroke%3D%27%233066CA%27%20stroke-width%3D%271.7%27%20stroke-linecap%3D%27round%27%20transform%3D%27rotate(240)%27%20opacity%3D%270.4%27%2F%3E%3Cline%20x1%3D%270%27%20y1%3D%27-9%27%20x2%3D%270%27%20y2%3D%27-2.5%27%20stroke%3D%27%233066CA%27%20stroke-width%3D%271.7%27%20stroke-linecap%3D%27round%27%20transform%3D%27rotate(270)%27%20opacity%3D%270.33%27%2F%3E%3Cline%20x1%3D%270%27%20y1%3D%27-9%27%20x2%3D%270%27%20y2%3D%27-2.5%27%20stroke%3D%27%233066CA%27%20stroke-width%3D%271.7%27%20stroke-linecap%3D%27round%27%20transform%3D%27rotate(300)%27%20opacity%3D%270.25%27%2F%3E%3Cline%20x1%3D%270%27%20y1%3D%27-9%27%20x2%3D%270%27%20y2%3D%27-2.5%27%20stroke%3D%27%233066CA%27%20stroke-width%3D%271.7%27%20stroke-linecap%3D%27round%27%20transform%3D%27rotate(330)%27%20opacity%3D%270.18%27%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") center / contain no-repeat;
+  }
+  .num-row { display: grid; grid-template-columns: 120px 1fr; align-items: start; gap: 0; }
+  .num-row .num { color: var(--blue); font-size: var(--fs-num-lg); font-weight: 800; line-height: 1; }
+  .num-row h3 { margin: 0 0 6px 0; font-size: var(--fs-h3); font-weight: 800; color: var(--ink); line-height: 1.2; }
+  .num-row h3 .kw, .bullets .kw { color: var(--blue); }
+  .num-row .desc-line { color: var(--mute); font-size: var(--fs-body); line-height: 1.35; }
+  .num-row ul.bullets li { padding-top: 5px; padding-bottom: 5px; }
+  .slide-btn {
+    padding: 8px 14px;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--card);
+    color: var(--ink);
+    font-family: inherit;
+    font-size: var(--fs-body);
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .slide-btn:hover { border-color: var(--blue); color: var(--blue); }
+
+  /* Cards */
+  .cards { display: grid; gap: 24px; flex: 1; align-content: center; }
+  .cards.three { grid-template-columns: repeat(3, 1fr); }
+  .cards.two   { grid-template-columns: repeat(2, 1fr); }
+  .card {
+    background: var(--card);
+    padding: 28px 30px;
+    border-radius: 4px;
+  }
+  .card .label { color: var(--mute); font-weight: 700; font-size: var(--fs-eyebrow); letter-spacing: .22em; text-transform: uppercase; margin-bottom: 10px; }
+  .card h4 { margin: 0 0 12px 0; font-size: var(--fs-h3); font-weight: 800; color: var(--ink); }
+  .card .body { margin: 0; }
+
+  /* Title slide */
+  .title-slide .deck-label {
+    font-size: var(--fs-body);
+    color: var(--body);
+    line-height: 1.35;
+    margin-bottom: 14px;
+  }
+  .title-slide .progress-lab {
+    font-size: var(--fs-brand); font-weight: 800; line-height: 1; letter-spacing: -.01em;
+  }
+  .title-slide .progress-lab .blue { color: var(--blue); }
+  .title-slide .progress-lab .dark { color: #2C3138; }
+  .title-slide .who { margin-top: 22px; }
+  .title-slide .who .name { font-weight: 700; font-size: var(--fs-body); color: var(--ink); line-height: 1.35; }
+  .title-slide .who .role { color: var(--body); font-size: var(--fs-body); line-height: 1.35; }
+
+  /* Approach slide */
+  .approach-body { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 48px; margin-top: 36px; }
+  .approach-row { display: grid; grid-template-columns: 71px 1fr; gap: 24px; align-items: start; }
+  .approach-row .icon {
+    width: 53px; height: 53px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .approach-row .icon.layers img { width: 45px; height: 45px; }
+  .approach-row .icon svg,
+  .approach-row .icon img { width: 100%; height: 100%; display: block; object-fit: contain; }
+  .approach-row h4 { margin: 0 0 6px 0; font-size: var(--fs-h4); font-weight: 800; color: var(--ink); line-height: 1.25; }
+  .approach-row .body { font-size: var(--fs-body); }
+
+  /* Questions slide */
+  .questions-slide { justify-content: center; }
+  .questions-slide .title { font-size: var(--fs-approach); margin-top: 18px; }
+  .questions-slide .title + .title { margin-top: 8px; }
+
+  /* Resources 2x2 */
+  .res-grid { display: flex; flex-direction: column; gap: 28px; flex: 1; justify-content: center; margin-top: 32px; }
+  .res-grid h4 { margin: 0 0 10px 0; font-size: var(--fs-h4); font-weight: 800; color: var(--ink); }
+
+  /* Project slide layout */
+  .proj-head { display: grid; grid-template-columns: 154px 1fr; align-items: center; gap: 0; }
+  .proj-head .pnum { color: var(--blue); font-size: var(--fs-num-xl); font-weight: 800; line-height: 1; }
+  .proj-head h2 { font-size: var(--fs-project-title); font-weight: 800; color: var(--ink); margin: 0; line-height: 1.15; }
+  .proj-content { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 36px; margin-top: 24px; }
+  .proj-bullets { margin: 0; }
+  /* Team layout */
+  .team-slide .slide-body { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .team-slide .roster { margin-top: 28px; }
+  .roster { display: grid; grid-template-columns: 1.7fr 0.92fr 0.92fr; gap: 20px; align-items: stretch; }
+  .roster .card { min-height: 200px; display: flex; flex-direction: column; }
+  .roster .pi-block { display: flex; align-items: stretch; }
+  .roster .pi-block .pi-photo {
+    width: 170px;
+    flex-shrink: 0;
+    height: auto;
+    object-fit: cover;
+    border-radius: 4px 0 0 4px;
+    display: block;
+  }
+  .roster .pi-block .card {
+    flex: 1;
+    border-radius: 0 4px 4px 0;
+  }
+  .roster .card.card-count {
+    display: flex;
+    flex-direction: column;
+  }
+  .roster .card-count .card-head {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 14px;
+    align-items: center;
+    min-height: calc(var(--fs-eyebrow) * 1.35 + 10px + var(--fs-lead) * 1.2);
+  }
+  .roster .card-count .card-num {
+    color: var(--ink);
+    font-size: calc(var(--fs-eyebrow) + var(--fs-lead) + 4px);
+    font-weight: 800;
+    line-height: 0.9;
+  }
+  .roster .card-count .label { margin-bottom: 0; line-height: 1.35; }
+  .roster .card-count .body { margin-top: 12px; }
+  .roster .card h4 { font-size: var(--fs-lead); }
+
+  /* Header layout */
+  .slide-head { margin-bottom: 0; flex-shrink: 0; }
+
+  /* Nav UI */
+  .nav {
+    position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 6px; padding: 8px 12px;
+    background: rgba(0,0,0,.45); border-radius: 999px;
+    color: #fff; font-size: 12px;
+    align-items: center;
+    backdrop-filter: blur(6px);
+  }
+  .nav button {
+    background: transparent; border: 0; color: #fff; cursor: pointer;
+    width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; padding: 0;
+  }
+  .nav button:hover { background: rgba(255,255,255,.15); }
+  .nav .count { padding: 0 8px; opacity: .9; min-width: 56px; text-align: center; }
+  .dots { display: flex; gap: 6px; padding: 0 4px; }
+  .dots .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.35); cursor: pointer; border: 0; padding: 0; }
+  .dots .dot.active { background: #fff; }
+
+  /* Stage scales to viewport */
+  @media (max-aspect-ratio: 16/9) {
+    .stage { width: 100vw; height: calc(100vw * 9 / 16); }
+  }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+  <div class="stage" id="stage">
+
+    <!-- Slide 1: Title -->
+    <section class="slide active title-slide" data-i="1">
+      <div class="deck-label">Pitch Deck</div>
+      <div class="progress-lab">
+        <span class="dark">Stanford</span> <span class="blue">Progress</span> <span class="dark">Lab</span>
+      </div>
+      <div class="who">
+        <div class="name">Lukas Althoff</div>
+        <div class="role">Assistant Professor of Economics</div>
+        <div class="role">Stanford University &amp; NBER</div>
+      </div>
+    </section>
+
+    <!-- Slide 2: Questions -->
+    <section class="slide questions-slide" data-i="2">
+      <div class="eyebrow">Questions</div>
+      <h1 class="title">What drives long-run economic <span style="color: var(--blue);">progress</span>?</h1>
+      <h1 class="title">How can we accelerate <span style="color: var(--blue);">it</span>, for everyone?</h1>
+      <div class="slide-chrome"><div class="slide-brand"><span class="dark">Stanford</span> <span class="blue">Progress</span> <span class="dark">Lab</span></div></div>
+    </section>
+
+    <!-- Slide 3: Approach -->
+    <section class="slide" data-i="3">
+      <div class="slide-head">
+        <div class="eyebrow">Approach</div>
+        <h1 class="approach-title">
+          <span class="line">Economic History</span>
+          <span class="line indent"><em>+ Artificial Intelligence</em></span>
+        </h1>
+      </div>
+      <div class="slide-body approach-body">
+        <div class="approach-row">
+          <div class="icon layers" aria-hidden="true">
+            <img src="icon-layers.png" alt="">
+          </div>
+          <div>
+            <h4>Economic History for a long-run view on progress</h4>
+            <div class="body">Historical context, causal identification, economic and statistical modeling</div>
+          </div>
+        </div>
+        <div class="approach-row">
+          <div class="icon" aria-hidden="true">
+            <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="34" width="7" height="4" fill="#3066CA"/><rect x="10" y="26" width="7" height="4" fill="#3066CA"/><rect x="10" y="42" width="7" height="4" fill="#3066CA"/><rect x="10" y="66" width="7" height="4" fill="#3066CA"/><rect x="10" y="58" width="7" height="4" fill="#3066CA"/><rect x="10" y="50" width="7" height="4" fill="#3066CA"/><rect x="79" y="58" width="7" height="4" fill="#3066CA"/><rect x="79" y="66" width="7" height="4" fill="#3066CA"/><rect x="79" y="50" width="7" height="4" fill="#3066CA"/><rect x="79" y="26" width="7" height="4" fill="#3066CA"/><rect x="79" y="42" width="7" height="4" fill="#3066CA"/><rect x="79" y="34" width="7" height="4" fill="#3066CA"/><rect x="50" y="10" width="4" height="7" fill="#3066CA"/><rect x="66" y="10" width="4" height="7" fill="#3066CA"/><rect x="58" y="10" width="4" height="7" fill="#3066CA"/><rect x="42" y="10" width="4" height="7" fill="#3066CA"/><rect x="26" y="10" width="4" height="7" fill="#3066CA"/><rect x="34" y="10" width="4" height="7" fill="#3066CA"/><rect x="34" y="79" width="4" height="7" fill="#3066CA"/><rect x="26" y="79" width="4" height="7" fill="#3066CA"/><rect x="42" y="79" width="4" height="7" fill="#3066CA"/><rect x="50" y="79" width="4" height="7" fill="#3066CA"/><rect x="58" y="79" width="4" height="7" fill="#3066CA"/><rect x="66" y="79" width="4" height="7" fill="#3066CA"/><rect x="35" y="35" width="26" height="26" fill="#3066CA"/><path d="M71 21 25 21C22.7909 21 21 22.7909 21 25L21 71C21 73.2091 22.7909 75 25 75L71 75C73.2091 75 75 73.2091 75 71L75 25C75 22.7909 73.2091 21 71 21ZM65 65 31 65 31 31 65 31Z" fill="#3066CA"/></svg>
+          </div>
+          <div>
+            <h4>Artificial Intelligence for big data</h4>
+            <div class="body">Digitizing, repairing, linking, and openly releasing microeconomic datasets</div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-chrome"><div class="slide-brand"><span class="dark">Stanford</span> <span class="blue">Progress</span> <span class="dark">Lab</span></div></div>
+    </section>
+
+    <!-- Slide 4: Overview -->
+    <section class="slide projects-slide" data-i="4">
+      <div class="slide-head">
+        <div class="eyebrow">Work in progress</div>
+        <h2 class="section-title">Five projects in progress</h2>
+      </div>
+      <div class="slide-body num-list compact">
+        <div class="num-row">
+          <div class="num">1</div>
+          <div>
+            <h3>How have <span class="kw">writing technologies</span> shaped societal progress?</h3>
+            <div class="desc-line">10,000 years of archaeological writing artifacts linked to data on state and economic development</div>
+          </div>
+        </div>
+        <div class="num-row">
+          <div class="num">2</div>
+          <div>
+            <h3>How has the <span class="kw">internet</span> shaped global scientific collaboration?</h3>
+            <div class="desc-line">New data on the internet's global spread across universities to study the rise of scientific collaboration</div>
+          </div>
+        </div>
+        <div class="num-row">
+          <div class="num">3</div>
+          <div>
+            <h3>How is <span class="kw">AI</span> changing scientific discovery?</h3>
+            <div class="desc-line">New data on scientific tasks and data on science-specific AI capabilities to study researcher productivity across fields</div>
+          </div>
+        </div>
+        <div class="num-row">
+          <div class="num">4</div>
+          <div>
+            <h3>How will <span class="kw">AI</span> reshape labor market inequality?</h3>
+            <div class="desc-line">Dynamic task-based model of skills, occupations, and AI's effects on labor market inequality</div>
+          </div>
+        </div>
+        <div class="num-row">
+          <div class="num">5</div>
+          <div>
+            <h3>How is <span class="kw">AI</span> reshaping healthcare occupations?</h3>
+            <div class="desc-line">Hospital AI adoption from Medicare claims, with event studies on workers across the clinical hierarchy</div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-chrome">
+        <div class="slide-brand"><span class="dark">Stanford</span> <span class="blue">Progress</span> <span class="dark">Lab</span></div>
+        <button type="button" class="slide-btn" data-go="4">Details →</button>
+      </div>
+    </section>
+
+    <!-- Appendix: Project 01 -->
+    <section class="slide appendix-slide" data-i="5" data-appendix="1">
+      <div class="proj-head">
+        <div class="pnum">01</div>
+        <h2>How have writing technologies shaped societal progress?</h2>
+      </div>
+      <div class="slide-body proj-content">
+        <div class="lead">
+          Unlocking <span class="hi">hundreds of millions of archaeological artifacts</span> to understand how information technology has shaped human progress over 10,000 years
+        </div>
+        <ul class="bullets proj-bullets">
+          <li>AI extracts material, function, and provenance from artifact records at scale</li>
+          <li>Build the first global, machine-readable map of writing systems and their diffusion</li>
+          <li>Quantify when, where, and why information technologies spread, and what they enabled</li>
+          <li>Link writing technologies to the size and complexity of states and economies around the world over thousands of years</li>
+        </ul>
+      </div>
+      <div class="slide-chrome back-only">
+        <button type="button" class="slide-btn" data-go="3">← Back to projects</button>
+      </div>
+    </section>
+
+    <!-- Appendix: Project 02 -->
+    <section class="slide appendix-slide" data-i="6" data-appendix="2">
+      <div class="proj-head">
+        <div class="pnum">02</div>
+        <h2>How has the internet shaped global scientific collaboration?</h2>
+      </div>
+      <div class="slide-body proj-content">
+        <div class="lead">
+          Leveraging <span class="hi">the internet's global spread</span> to link universities and trace the takeoff of collaboration for discovery
+        </div>
+        <ul class="bullets proj-bullets">
+          <li>Geocoded internet rollouts linked to university addresses across 50+ years</li>
+          <li>Authors, institutions, and papers linked across hundreds of millions of works</li>
+          <li>Causal identification of how connectivity reshapes co-authorship and discovery</li>
+        </ul>
+      </div>
+      <div class="slide-chrome back-only">
+        <button type="button" class="slide-btn" data-go="3">← Back to projects</button>
+      </div>
+    </section>
+
+    <!-- Appendix: Project 03 -->
+    <section class="slide appendix-slide" data-i="7" data-appendix="3">
+      <div class="proj-head">
+        <div class="pnum">03</div>
+        <h2>How is AI changing scientific discovery?</h2>
+      </div>
+      <div class="slide-body proj-content">
+        <div class="lead">
+          Mapping <span class="hi">hundreds of millions of works</span> across every field and era to measure how AI is reshaping discovery itself
+        </div>
+        <ul class="bullets proj-bullets">
+          <li>5 domains → 30 fields → 300 subfields → 4,500+ topics → 7,800+ tasks</li>
+          <li>Embeddings-based field classifications, author disambiguation, and task taxonomies on top of OpenAlex</li>
+          <li>Case studies of specific AI tools like AlphaFold, as well as general-purpose technologies like Claude Code</li>
+          <li>Enables the first structural studies of how AI is changing research itself</li>
+        </ul>
+      </div>
+      <div class="slide-chrome back-only">
+        <button type="button" class="slide-btn" data-go="3">← Back to projects</button>
+      </div>
+    </section>
+
+    <!-- Appendix: Project 04 -->
+    <section class="slide appendix-slide" data-i="8" data-appendix="4">
+      <div class="proj-head">
+        <div class="pnum">04</div>
+        <h2>How will AI reshape labor market inequality?</h2>
+      </div>
+      <div class="slide-body proj-content">
+        <div class="lead">
+          Predicting <span class="hi">AI's long-run impact on wages and inequality</span> through a dynamic task-based model of skills, occupational choice, and general equilibrium
+        </div>
+        <ul class="bullets proj-bullets">
+          <li>Adds <span class="kw">simplification</span> to the channels through which technology affects workers, alongside automation and augmentation</li>
+          <li>Multidimensional skills determine comparative advantage across tasks and shape dynamic occupational choice</li>
+          <li>Estimation recovers skills → task productivity, the law of motion for skill accumulation, and occupational choice</li>
+          <li>Predicts substantial long-run wage gains and a sharp drop in inequality, driven almost entirely by task simplification</li>
+        </ul>
+      </div>
+      <div class="slide-chrome back-only">
+        <button type="button" class="slide-btn" data-go="3">← Back to projects</button>
+      </div>
+    </section>
+
+    <!-- Appendix: Project 05 -->
+    <section class="slide appendix-slide" data-i="9" data-appendix="5">
+      <div class="proj-head">
+        <div class="pnum">05</div>
+        <h2>How is AI reshaping healthcare occupations?</h2>
+      </div>
+      <div class="slide-body proj-content">
+        <div class="lead">
+          Identifying <span class="hi">hospital AI adoption from Medicare claims</span> and tracing impacts on healthcare workers across clinical hierarchies through event studies
+        </div>
+        <ul class="bullets proj-bullets">
+          <li>Medicare claims that flag AI usage pinpoint hospital-level adoption events</li>
+          <li>Event-study estimates of impacts on nurses, technicians, physicians, and administrators over time</li>
+          <li>Tests where AI substitutes, complements, or restructures work along the clinical hierarchy</li>
+        </ul>
+      </div>
+      <div class="slide-chrome back-only">
+        <button type="button" class="slide-btn" data-go="3">← Back to projects</button>
+      </div>
+    </section>
+
+    <!-- Slide 10: Data -->
+    <section class="slide data-slide" data-i="10">
+      <div class="slide-head">
+        <div class="eyebrow">Data in Progress</div>
+        <h2 class="section-title">Open data projects</h2>
+      </div>
+      <div class="slide-body num-list dense">
+        <div class="num-row">
+          <div class="num">1</div>
+          <div>
+            <h3>Scaling automated record linkage</h3>
+            <ul class="status-list">
+              <li class="done">Building representative linked census records that include women, not just men</li>
+              <li class="pending">AI-enabled transcription of historical censuses (1850–1950), fixing errors and opening access</li>
+              <li class="pending">Privacy-preserving linkage of modern US Census records inside the US Census Bureau (1950–2010)</li>
+              <li class="pending">Multi-source linkages spanning Census, Veteran Administration, military administrative, and Wikipedia</li>
+            </ul>
+          </div>
+        </div>
+        <div class="num-row">
+          <div class="num">2</div>
+          <div>
+            <h3>Unleashing multi-modal unstructured data</h3>
+            <ul class="status-list">
+              <li class="pending">AI-structured Wikidata and museum catalogs: translation, image-to-data, and standardization at scale</li>
+              <li class="pending">Uncovering cultural attributes from political speeches, newspapers, and other texts</li>
+            </ul>
+          </div>
+        </div>
+        <div class="num-row">
+          <div class="num">3</div>
+          <div>
+            <h3>Uncovering the anatomy of science</h3>
+            <ul class="status-list">
+              <li class="done">Hundreds of millions of works from OpenAlex, cleaned and refined for structural analysis</li>
+              <li class="done">SciNet task taxonomy derived from scientific protocols, papers, and patents</li>
+              <li class="pending">Researcher surveys on tool and AI use, time allocation, and how it's changing</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="slide-chrome"><div class="slide-brand"><span class="dark">Stanford</span> <span class="blue">Progress</span> <span class="dark">Lab</span></div></div>
+    </section>
+
+    <!-- Slide 11: Team -->
+    <section class="slide team-slide" data-i="11">
+      <div class="slide-head">
+        <h2 class="section-title">Current Team</h2>
+      </div>
+      <div class="slide-body">
+        <div class="roster">
+          <div class="pi-block">
+            <img class="pi-photo" src="photo.jpg" alt="Lukas Althoff">
+            <div class="card">
+              <div class="label">Principal investigator</div>
+              <h4>Lukas Althoff</h4>
+              <div class="body">Assistant Professor of Economics<br>Stanford University &amp; NBER</div>
+            </div>
+          </div>
+          <div class="card card-count">
+            <div class="card-head">
+              <div class="card-num">1</div>
+              <div class="label">Predoctoral researcher</div>
+            </div>
+            <div class="body">Full-time research scientist leading data pipelines and analysis</div>
+          </div>
+          <div class="card card-count">
+            <div class="card-head">
+              <div class="card-num">1</div>
+              <div class="label">Research<br>assistant</div>
+            </div>
+            <div class="body">Stanford undergraduate contributing to coding, data cleaning, and exploratory work</div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-chrome"><div class="slide-brand"><span class="dark">Stanford</span> <span class="blue">Progress</span> <span class="dark">Lab</span></div></div>
+    </section>
+
+    <!-- Slide 12: Resources -->
+    <section class="slide" data-i="12">
+      <div class="slide-head">
+        <div class="eyebrow">Resources</div>
+        <h1 class="title">What we need to scale</h1>
+      </div>
+      <div class="slide-body res-grid">
+        <div>
+          <h4>Compute &amp; API credits</h4>
+          <div class="body">AI model usage for transcription, classification, and disambiguation across millions of historical and scientific records</div>
+        </div>
+        <div>
+          <h4>Personnel</h4>
+          <div class="body">One Postdoc and one additional Predoc to expand engineering and analysis capacity across the five projects</div>
+        </div>
+        <div>
+          <h4>Travel &amp; conferences</h4>
+          <div class="body">Conference hosting and archive visits to advance the historical research streams</div>
+        </div>
+        <div>
+          <h4>Free time</h4>
+          <div class="body">Course releases for the PI to focus on building and scaling the data and AI pipelines</div>
+        </div>
+      </div>
+      <div class="slide-chrome"><div class="slide-brand"><span class="dark">Stanford</span> <span class="blue">Progress</span> <span class="dark">Lab</span></div></div>
+    </section>
+
+  </div>
+</div>
+
+<div class="nav" aria-label="Slide navigation">
+  <button id="prev" aria-label="Previous slide" title="Previous (←)">‹</button>
+  <span class="count"><span id="cur">1</span> / <span id="total">7</span></span>
+  <div class="dots" id="dots"></div>
+  <button id="next" aria-label="Next slide" title="Next (→ or Space)">›</button>
+</div>
+
+<script>
+(function () {
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  const overviewIndex = 3;
+  const appendixIndices = slides.map((s, i) => s.classList.contains('appendix-slide') ? i : -1).filter(i => i >= 0);
+  const mainIndices = slides.map((s, i) => s.classList.contains('appendix-slide') ? -1 : i).filter(i => i >= 0);
+
+  const curEl = document.getElementById('cur');
+  const totalEl = document.getElementById('total');
+
+  const dotsEl = document.getElementById('dots');
+  mainIndices.forEach((slideIdx) => {
+    const b = document.createElement('button');
+    b.className = 'dot';
+    b.setAttribute('aria-label', 'Go to slide ' + (mainIndices.indexOf(slideIdx) + 1));
+    b.addEventListener('click', () => go(slideIdx));
+    dotsEl.appendChild(b);
+  });
+  const dots = Array.from(dotsEl.children);
+
+  function isAppendix(i) { return appendixIndices.includes(i); }
+
+  function clamp(i) { return Math.max(0, Math.min(total - 1, i)); }
+
+  function updateNavUI(i) {
+    if (isAppendix(i)) {
+      curEl.textContent = 'A' + (appendixIndices.indexOf(i) + 1);
+      totalEl.textContent = appendixIndices.length;
+      dots.forEach((d) => d.classList.remove('active'));
+    } else {
+      curEl.textContent = mainIndices.indexOf(i) + 1;
+      totalEl.textContent = mainIndices.length;
+      dots.forEach((d, j) => d.classList.toggle('active', mainIndices[j] === i));
+    }
+  }
+
+  let cur = 0;
+
+  function go(i) {
+    i = clamp(i);
+    cur = i;
+    slides.forEach((s, j) => s.classList.toggle('active', i === j));
+    updateNavUI(i);
+    if (location.hash !== '#' + (i + 1)) {
+      history.replaceState(null, '', '#' + (i + 1));
+    }
+    fit();
+  }
+
+  function step(d) {
+    if (isAppendix(cur)) {
+      const pos = appendixIndices.indexOf(cur);
+      if (d > 0) {
+        go(pos < appendixIndices.length - 1 ? appendixIndices[pos + 1] : mainIndices[mainIndices.indexOf(overviewIndex) + 1]);
+      } else {
+        go(pos > 0 ? appendixIndices[pos - 1] : overviewIndex);
+      }
+      return;
+    }
+    const pos = mainIndices.indexOf(cur);
+    const next = mainIndices[pos + d];
+    if (next !== undefined) go(next);
+  }
+
+  document.querySelectorAll('[data-go]').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      go(parseInt(btn.dataset.go, 10));
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+    if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); step(1); }
+    else if (['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace'].includes(e.key)) { e.preventDefault(); step(-1); }
+    else if (e.key === 'Home') { e.preventDefault(); go(mainIndices[0]); }
+    else if (e.key === 'End') { e.preventDefault(); go(mainIndices[mainIndices.length - 1]); }
+  });
+
+  document.getElementById('prev').addEventListener('click', () => step(-1));
+  document.getElementById('next').addEventListener('click', () => step(1));
+
+  document.getElementById('stage').addEventListener('click', (e) => {
+    if (e.target.closest('.nav') || e.target.closest('button') || e.target.closest('a')) return;
+    step(1);
+  });
+
+  const m = (location.hash.match(/\d+/) || [1])[0];
+  go(clamp(parseInt(m, 10) - 1));
+
+  const stage = document.getElementById('stage');
+  function fit() {
+    const baseW = 1280, baseH = 720;
+    const vw = window.innerWidth, vh = window.innerHeight - 36;
+    const scale = Math.min(vw / baseW, vh / baseH);
+    stage.style.transform = 'scale(' + scale + ')';
+  }
+  window.addEventListener('resize', fit);
+  fit();
+})();
+</script>
+</body>
+</html>
