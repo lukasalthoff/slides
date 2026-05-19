@@ -14,4 +14,5 @@ Current decks:
 - `teaching/graduate/slides/8_mobility.html`: "Intergenerational Mobility and the Allocation of Talent"
 - `teaching/undergraduate/slides/4_resources_climate.html`: "Resources and Climate"
 - `teaching/undergraduate/slides/5_institutions.html`: "Institutions"
+- `teaching/undergraduate/slides/8_incentives_talent_mobility.html`: "Incentives, Talent, and Intergenerational Mobility"
 - `wef`: "How AI Reshapes Manufacturing Work"
