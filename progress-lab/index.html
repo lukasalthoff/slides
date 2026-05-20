@@ -42,10 +42,16 @@
     font-family: "Helvetica Neue", "Helvetica", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
     overflow: hidden;
     height: 100vh;
+    height: 100dvh;
     width: 100vw;
+    width: 100dvw;
+    overscroll-behavior: none;
   }
+  body { touch-action: none; }
+  img { max-width: 100%; }
   .deck { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
   .stage {
     width: var(--slide-w);
@@ -317,27 +323,50 @@
 
   /* Nav UI */
   .nav {
-    position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+    position: fixed;
+    bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+    left: 50%; transform: translateX(-50%);
     display: flex; gap: 6px; padding: 8px 12px;
     background: rgba(0,0,0,.45); border-radius: 999px;
     color: #fff; font-size: 12px;
     align-items: center;
+    -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
+    z-index: 10;
+    touch-action: manipulation;
   }
   .nav button {
     background: transparent; border: 0; color: #fff; cursor: pointer;
     width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
     font-size: 14px; padding: 0;
+    font-family: inherit;
+    -webkit-tap-highlight-color: transparent;
   }
   .nav button:hover { background: rgba(255,255,255,.15); }
-  .nav .count { padding: 0 8px; opacity: .9; min-width: 56px; text-align: center; }
+  .nav button:focus-visible,
+  .dots .dot:focus-visible,
+  .slide-btn:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
+  }
+  .nav .count { padding: 0 8px; opacity: .9; min-width: 56px; text-align: center; font-variant-numeric: tabular-nums; }
   .dots { display: flex; gap: 6px; padding: 0 4px; }
-  .dots .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.35); cursor: pointer; border: 0; padding: 0; }
+  .dots .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.35); cursor: pointer; border: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   .dots .dot.active { background: #fff; }
 
-  /* Stage scales to viewport */
-  @media (max-aspect-ratio: 16/9) {
-    .stage { width: 100vw; height: calc(100vw * 9 / 16); }
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+
+  /* Print: render every slide stacked on its own page */
+  @media print {
+    html, body { background: #fff; height: auto; width: auto; overflow: visible; }
+    .deck { position: static; display: block; }
+    .stage { width: var(--slide-w); height: var(--slide-h); transform: none !important; box-shadow: none; border-radius: 0; overflow: visible; }
+    .slide { position: relative; display: flex !important; page-break-after: always; break-after: page; }
+    .slide:last-child { page-break-after: auto; break-after: auto; }
+    .nav { display: none; }
   }
 </style>
 </head>
@@ -753,22 +782,59 @@
   document.getElementById('prev').addEventListener('click', () => step(-1));
   document.getElementById('next').addEventListener('click', () => step(1));
 
-  document.getElementById('stage').addEventListener('click', (e) => {
+  const stage = document.getElementById('stage');
+
+  let touchStartX = 0, touchStartY = 0, touchStartT = 0, touchActive = false;
+  stage.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1) { touchActive = false; return; }
+    const t = e.touches[0];
+    touchStartX = t.clientX; touchStartY = t.clientY;
+    touchStartT = Date.now();
+    touchActive = true;
+  }, { passive: true });
+  stage.addEventListener('touchend', (e) => {
+    if (!touchActive) return;
+    touchActive = false;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchStartX;
+    const dy = t.clientY - touchStartY;
+    const dt = Date.now() - touchStartT;
+    const absX = Math.abs(dx), absY = Math.abs(dy);
+    if (dt < 600 && absX > 40 && absX > absY * 1.5) {
+      e.preventDefault();
+      step(dx < 0 ? 1 : -1);
+      return;
+    }
+    if (absX < 10 && absY < 10 && dt < 400) {
+      const target = e.target;
+      if (target.closest('.nav') || target.closest('button') || target.closest('a')) return;
+      step(1);
+    }
+  });
+
+  stage.addEventListener('click', (e) => {
     if (e.target.closest('.nav') || e.target.closest('button') || e.target.closest('a')) return;
+    if ('ontouchstart' in window) return;
     step(1);
   });
 
   const m = (location.hash.match(/\d+/) || [1])[0];
   go(clamp(parseInt(m, 10) - 1));
 
-  const stage = document.getElementById('stage');
+  const NAV_RESERVE = 56;
   function fit() {
     const baseW = 1280, baseH = 720;
-    const vw = window.innerWidth, vh = window.innerHeight - 36;
+    const vv = window.visualViewport;
+    const vw = vv ? vv.width : window.innerWidth;
+    const vh = (vv ? vv.height : window.innerHeight) - NAV_RESERVE;
     const scale = Math.min(vw / baseW, vh / baseH);
     stage.style.transform = 'scale(' + scale + ')';
   }
   window.addEventListener('resize', fit);
+  window.addEventListener('orientationchange', fit);
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', fit);
+  }
   fit();
 })();
 </script>
