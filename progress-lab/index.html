@@ -727,6 +727,14 @@
   const appendixIndices = slides.map((s, i) => s.classList.contains('appendix-slide') ? i : -1).filter(i => i >= 0);
   const mainIndices = slides.map((s, i) => s.classList.contains('appendix-slide') ? -1 : i).filter(i => i >= 0);
 
+  const stage = document.getElementById('stage');
+  const NAV_RESERVE = 56;
+  const supportsZoom = (function () {
+    try {
+      return typeof CSS !== 'undefined' && CSS.supports && CSS.supports('zoom', '0.5');
+    } catch (_) { return false; }
+  })();
+
   const curEl = document.getElementById('cur');
   const totalEl = document.getElementById('total');
 
@@ -802,8 +810,6 @@
   document.getElementById('prev').addEventListener('click', () => step(-1));
   document.getElementById('next').addEventListener('click', () => step(1));
 
-  const stage = document.getElementById('stage');
-
   let touchStartX = 0, touchStartY = 0, touchStartT = 0, touchActive = false;
   stage.addEventListener('touchstart', (e) => {
     if (e.touches.length !== 1) { touchActive = false; return; }
@@ -838,16 +844,6 @@
     step(1);
   });
 
-  const m = (location.hash.match(/\d+/) || [1])[0];
-  go(clamp(parseInt(m, 10) - 1));
-
-  const NAV_RESERVE = 56;
-  const supportsZoom = (function () {
-    try {
-      return typeof CSS !== 'undefined' && CSS.supports && CSS.supports('zoom', '0.5');
-    } catch (_) { return false; }
-  })();
-
   function fit() {
     const baseW = 1280, baseH = 720;
     const vv = window.visualViewport;
@@ -867,6 +863,9 @@
   if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', fit);
   }
+
+  const initialHash = (location.hash.match(/\d+/) || [1])[0];
+  go(clamp(parseInt(initialHash, 10) - 1));
   fit();
   requestAnimationFrame(fit);
 })();
