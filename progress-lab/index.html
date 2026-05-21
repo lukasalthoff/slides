@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Stanford Progress Lab</title>
 <style>
   :root {
@@ -66,7 +66,7 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(var(--scale, 1));
+    transform: translate(-50%, -50%) scale(1);
     transform-origin: center center;
     will-change: transform;
     overflow: hidden;
@@ -853,7 +853,7 @@
     const vw = vv ? vv.width : window.innerWidth;
     const vh = (vv ? vv.height : window.innerHeight) - NAV_RESERVE;
     const scale = Math.min(vw / baseW, vh / baseH);
-    stage.style.setProperty('--scale', scale);
+    stage.style.transform = 'translate(-50%, -50%) scale(' + scale + ')';
   }
   window.addEventListener('resize', fit);
   window.addEventListener('orientationchange', fit);
@@ -861,6 +861,7 @@
     window.visualViewport.addEventListener('resize', fit);
   }
   fit();
+  requestAnimationFrame(fit);
 })();
 </script>
 </body>
