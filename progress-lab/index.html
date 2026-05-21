@@ -52,16 +52,25 @@
   }
   body { touch-action: none; }
   img { max-width: 100%; }
-  .deck { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+  .deck {
+    position: fixed; inset: 0;
+    overflow: hidden;
+    isolation: isolate;
+  }
   .stage {
     width: var(--slide-w);
     height: var(--slide-h);
     background: var(--cream);
     box-shadow: 0 24px 60px rgba(0,0,0,.35);
     border-radius: 6px;
-    position: relative;
-    overflow: hidden;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(var(--scale, 1));
     transform-origin: center center;
+    will-change: transform;
+    overflow: hidden;
+    contain: layout paint;
   }
   .slide {
     position: absolute; inset: 0;
@@ -69,8 +78,11 @@
     display: none;
     flex-direction: column;
     background: var(--cream);
+    transform: translateZ(0);
+    contain: layout paint;
   }
-  .slide.active { display: flex; }
+  .slide:not(.active) { visibility: hidden; pointer-events: none; }
+  .slide.active { display: flex; visibility: visible; pointer-events: auto; z-index: 1; }
   .slide-body { flex: 1; display: flex; flex-direction: column; min-height: 0; }
   .slide-chrome {
     position: absolute;
@@ -362,9 +374,22 @@
   /* Print: render every slide stacked on its own page */
   @media print {
     html, body { background: #fff; height: auto; width: auto; overflow: visible; }
-    .deck { position: static; display: block; }
-    .stage { width: var(--slide-w); height: var(--slide-h); transform: none !important; box-shadow: none; border-radius: 0; overflow: visible; }
-    .slide { position: relative; display: flex !important; page-break-after: always; break-after: page; }
+    .deck { position: static; display: block; isolation: auto; }
+    .stage {
+      position: static;
+      width: var(--slide-w); height: var(--slide-h);
+      transform: none !important;
+      box-shadow: none; border-radius: 0; overflow: visible;
+      contain: none;
+    }
+    .slide {
+      position: relative;
+      display: flex !important;
+      visibility: visible !important;
+      page-break-after: always;
+      break-after: page;
+      contain: none;
+    }
     .slide:last-child { page-break-after: auto; break-after: auto; }
     .nav { display: none; }
   }
@@ -828,7 +853,7 @@
     const vw = vv ? vv.width : window.innerWidth;
     const vh = (vv ? vv.height : window.innerHeight) - NAV_RESERVE;
     const scale = Math.min(vw / baseW, vh / baseH);
-    stage.style.transform = 'scale(' + scale + ')';
+    stage.style.setProperty('--scale', scale);
   }
   window.addEventListener('resize', fit);
   window.addEventListener('orientationchange', fit);
