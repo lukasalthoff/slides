@@ -729,11 +729,6 @@
 
   const stage = document.getElementById('stage');
   const NAV_RESERVE = 56;
-  const supportsZoom = (function () {
-    try {
-      return typeof CSS !== 'undefined' && CSS.supports && CSS.supports('zoom', '0.5');
-    } catch (_) { return false; }
-  })();
 
   const curEl = document.getElementById('cur');
   const totalEl = document.getElementById('total');
@@ -850,13 +845,8 @@
     const vw = vv ? vv.width : window.innerWidth;
     const vh = (vv ? vv.height : window.innerHeight) - NAV_RESERVE;
     const scale = Math.min(vw / baseW, vh / baseH);
-    if (supportsZoom) {
-      stage.style.zoom = scale;
-      stage.style.transform = '';
-    } else {
-      stage.style.transform = 'scale(' + scale + ')';
-      stage.style.transformOrigin = 'center center';
-    }
+    stage.style.transform = 'scale(' + scale + ')';
+    stage.style.transformOrigin = 'center center';
   }
   window.addEventListener('resize', fit);
   window.addEventListener('orientationchange', fit);
