@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Lecture 8: Incentives, Talent, and Intergenerational Mobility</title>
+    <title>Lecture 7: Incentives, Talent, and Intergenerational Mobility</title>
     <meta charset="utf-8" />
     <meta name="author" content="Progress and Inequality" />
-    <script src="8_incentives_talent_mobility_files/header-attrs-2.29/header-attrs.js"></script>
-    <link href="8_incentives_talent_mobility_files/remark-css-0.0.1/default.css" rel="stylesheet" />
-    <link href="8_incentives_talent_mobility_files/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
-    <link href="8_incentives_talent_mobility_files/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <script src="7_incentives_talent_mobility_files/header-attrs-2.29/header-attrs.js"></script>
+    <link href="7_incentives_talent_mobility_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="7_incentives_talent_mobility_files/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="7_incentives_talent_mobility_files/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
     <link rel="stylesheet" href="../../shared/my-css.css" type="text/css" />
   </head>
   <body>
@@ -15,7 +15,7 @@
 class: center, middle, inverse, title-slide
 
 .title[
-# Lecture 8: Incentives, Talent, and Intergenerational Mobility
+# Lecture 7: Incentives, Talent, and Intergenerational Mobility
 ]
 .author[
 ### Progress and Inequality
@@ -185,7 +185,7 @@ class: inverse, middle, center
   - **Growth**: Misallocation leaves ideas undiscovered &amp; output unrealized
   - **Direction**: Narrow inventor pool skews R&amp;D toward problems salient to dominant group
 
-- Removing barriers has potential to reallocate talent, increasing **equity** and **output**
+- Removing barriers has potential to reallocate talent, increasing equity and output
 ]
 
 ---
@@ -409,9 +409,9 @@ class: inverse, middle, center
 .pull-left[
 - **Absolute mobility**: the fraction of children who earn more than their parents
 
-- Children born in **1940**: about **90%** earned more than their parents
+- Children born in 1940: about 90% earned more than their parents
 
-- Children born in **1980**: only about **50%** earned more than their parents
+- Children born in 1980: only about 50% earned more than their parents
 
 - In a single generation, the odds of achieving the American Dream fell by nearly half
 ]
@@ -628,11 +628,10 @@ class: inverse, middle, center
 .center-content[
 - **Methods:** Measuring intergenerational mobility with multiple inputs
 
-  - Measure mobility as variation unexplained by parental background `\((1-R^2)\)`
+  - Measure mobility as variation unexplained by parental background
 
   - Decompose predictive power of maternal vs. paternal human capital
 
-  - Address data limitations with Gaussian copula method *&lt;span class="gray"&gt;Fan et al. (2017)&lt;/span&gt;*
 
 - **Data:** Representative panel tracing both men &amp; women (1850-1950)
 
@@ -644,7 +643,7 @@ class: inverse, middle, center
 
   - Mothers more predictive of children's literacy-based HC, esp. when schooling limited
 
-  `\(\rightarrow\)` Incl. mothers alters conclusions about trends &amp; geography of mobility
+      `\(\rightarrow\)` Incl. mothers alters conclusions about trends &amp; geography of mobility
 
   - Human capital mobility rose sharply (0.3 to 0.65) as schooling expanded
 
@@ -684,137 +683,7 @@ class: inverse, middle, center
 ---
 class: inverse, middle, center
 
-# Intergenerational Datasets
-
----
-
-# **Data (childhood):** Census cross-sections of children &amp; parents &lt;br&gt; .small[&lt;span class="gray"&gt;Althoff, Brookes Gray &amp; Reichardt (2025)&lt;/span&gt;]
-
-.center-content[
-- Full-count census data from 1850 to 1950
-
-  - Identifies family relationships within households
-
-  `\(\rightarrow\)` observe parents &amp; children jointly
-
-  - Children (13-16): Measure literacy (1850-1930) and years of schooling (1940-1950)
-
-  - Parents: Measure literacy and years of schooling
-
-- Advantages:
-
-  - Full US population
-
-  - Can directly analyze transmission of human capital during childhood
-
-- Limitations:
-
-  - Cannot observe children's outcomes once they reach adulthood
-
-  - Next: New intergenerational dataset
-]
-
----
-
-# **Data (adulthood):** Historical administrative data (SSA) &lt;br&gt; .small[&lt;span class="gray"&gt;Althoff, Brookes Gray &amp; Reichardt (2025)&lt;/span&gt;]
-
-.center-content[
-&lt;img src="files/ssn_app_filledin_type_color.png" width="84%" style="display: block; margin: auto;" /&gt;
-]
-
----
-
-# **Data (adulthood):** Linking women despite name changes &lt;br&gt; .small[&lt;span class="gray"&gt;Althoff, Brookes Gray &amp; Reichardt (2025)&lt;/span&gt;]
-
-.center-content[
-&lt;img src="files/linking_process_6.png" width="95%" style="display: block; margin: auto;" /&gt;
-]
-
----
-
-# **Data (adulthood):** Representativeness &amp; coverage (1850-1950) &lt;br&gt; .small[&lt;span class="gray"&gt;Althoff, Brookes Gray &amp; Reichardt (2025)&lt;/span&gt;]
-
-.center-content[
-&lt;img src="files/representativeness_across_years.png" width="36%" style="display: block; margin: auto;" /&gt;
-]
-
----
-class: inverse, middle, center
-
-# Measuring Mobility with Multiple Parental Inputs
-
----
-
-# **Strategy:** Simple model of rank mobility with multiple inputs &lt;br&gt; .small[&lt;span class="gray"&gt;Althoff, Brookes Gray &amp; Reichardt (2025)&lt;/span&gt;]
-
-.center-content[
-`$$\text{rank}(Y_{i}) = \alpha + \boldsymbol{\beta}_{1} \textbf{rank}\left(\boldsymbol{Y}^{\text{father}}_{i}\right) + \boldsymbol{\beta}_{2} \textbf{rank}\left(\boldsymbol{Y}^{\text{mother}}_{i}\right) + \varepsilon_{i}$$`
-
-- `\(Y_i^j\)`: `\(i\)`'s outcome (e.g., human capital)
-
-- **New:** Explicitly incorporates multiple parental inputs
-]
-
----
-
-# **Strategy:** Measuring mobility via `\(R^2\)` &lt;br&gt; .small[&lt;span class="gray"&gt;Althoff, Brookes Gray &amp; Reichardt (2025)&lt;/span&gt;]
-
-.center-content[
-`$$R^2 = \frac{\text{Variance in child outcomes explained by parents}}{\text{Variance in child outcomes}}$$`
-
-- **Comparability:** Closely tied to parent-child coefficient `\(\beta\)`
-
-  - `\(R^2 = \left(\beta \cdot \frac{\sigma_X}{\sigma_Y}\right)^2\)`
-
-  - One-to-one mapping with rank-rank coefficient: `\(R^2 = \beta^2\)`
-
-- **Multiple parental inputs**
-
-- **Intuitive interpretation**
-]
-
----
-class: inverse, middle, center
-
 # Human Capital Mobility
-
----
-
-# **Strategy:** Rank-rank human capital mobility &lt;br&gt; .small[&lt;span class="gray"&gt;Althoff, Brookes Gray &amp; Reichardt (2025)&lt;/span&gt;]
-
-.center-content[
-`$$HC^{\text{child}}_{i} = \alpha_{g} + \beta_{f} \cdot HC^{\text{father}}_{i} + \beta_{m} \cdot HC^{\text{mother}}_{i} + \varepsilon_{i}$$`
-
-- We only observe literacy as a binary proxy of (latent) human capital.
-
-- **Solution:** Gaussian copula method *&lt;span class="gray"&gt;Fan et al. (2017)&lt;/span&gt;*
-]
-
----
-
-# **Strategy:** Identification of rank mobility despite data limitations &lt;br&gt; .small[&lt;span class="gray"&gt;Althoff, Brookes Gray &amp; Reichardt (2025)&lt;/span&gt;]
-
-.center-content[
-- **Goal:** Estimate mobility (1-$R^2$) via rank(`\(Y_i\)`) = `\(\alpha\)` + `\(\beta \cdot\)` rank(`\(X_i\)`) + `\(\epsilon_i\)`
-
-- **Challenge:** Only binary indicators observed: `\(Y^*_i = \mathbb{1}[Y_i &gt; \delta_y]\)` and `\(X^*_i = \mathbb{1}[X_i &gt; \delta_x]\)`
-
-  `\(\rightarrow\)` Many possible rank correlations compatible with binary data
-
-- **Solution:** Gaussian copula method *&lt;span class="gray"&gt;Fan et al. (2017)&lt;/span&gt;*
-
-  `\(\rightarrow\)` Allows time-varying marginal distr. `\(\Rightarrow\)` rising literacy does not inflate mobility
-
-- **Validation:** Method performs well under various conditions
-
-  - Alternative methods (Kendall's `\(\tau\)`, normalized `\(R^2\)`) confirm same patterns
-
-  - Simulation: Accurately recovers true rank mobility from binary data
-
-  - 1930-1940 comparison: High correlation (0.85) across states, sex, and race
-
-  - Modern data (NLSY79, PSID): Robust to extreme cutoffs in dichotomization
-]
 
 ---
 
@@ -834,44 +703,10 @@ class: inverse, middle, center
 
 ---
 
-# **Strategy:** Assessing drivers of changing mobility &lt;br&gt; .small[&lt;span class="gray"&gt;Althoff, Brookes Gray &amp; Reichardt (2025)&lt;/span&gt;]
-
-.center-content[
-- **Decomposition of** `\(\boldsymbol{R^2}\)` **into components**
-
-`$$R^2 = \beta_m^2 + \beta_f^2 + 2\beta_m \beta_f\hat{\rho}_{m,f}$$`
-
-1. **Maternal contribution:** `\(\beta_m^2\)` (mothers' predictive power)
-
-2. **Paternal contribution:** `\(\beta_f^2\)` (fathers' predictive power)
-
-3. **Assortative mating:** `\(2\beta_m \beta_f\hat{\rho}_{m,f}\)` (where `\(\hat{\rho}_{m,f}\)` is correlation between parents)
-
-- **Application:** Counterfactual analysis by holding parameters constant
-]
-
----
-
 # **Results:** Changing role of mothers drives rising mobility &lt;br&gt; .small[&lt;span class="gray"&gt;Althoff, Brookes Gray &amp; Reichardt (2025)&lt;/span&gt;]
 
 .center-content[
 &lt;img src="files/latgaussbin2_counterfactual_r2_betas_xsection.png" width="50%" style="display: block; margin: auto;" /&gt;
-]
-
----
-
-# **Strategy:** Separating contribution of mothers vs. fathers to `\(R^2\)` &lt;br&gt; .small[&lt;span class="gray"&gt;Althoff, Brookes Gray &amp; Reichardt (2025)&lt;/span&gt;]
-
-.center-content[
-- **Shapley-Owen decomposition of** `\(\boldsymbol{R^2}\)` *&lt;span class="gray"&gt;Shapley 1953; Owen 1977&lt;/span&gt;*
-
-- **Unique advantages** of this method *&lt;span class="gray"&gt;Young 1985&lt;/span&gt;*
-
-1. **Additivity:** Individual contributions add up to the total `\(R^2\)`
-
-2. **Equal treatment:** Perfectly substitutable regressors receive equal values
-
-3. **Monotonicity:** More predictive regressors receive larger values
 ]
 
 ---
@@ -898,15 +733,8 @@ class: inverse, middle, center
 
 ---
 
-# **Results:** Geography of human capital mobility after incl. mothers &lt;br&gt; .small[&lt;span class="gray"&gt;Althoff, Brookes Gray &amp; Reichardt (2025)&lt;/span&gt;]
 
-.center-content[
-&lt;img src="files/change_r2_1870_1930_bystate.png" width="20%" style="display: block; margin: auto;" /&gt;
-]
-
----
-
-# Takeaways: Human Capital Mobility &lt;br&gt; .small[&lt;span class="gray"&gt;Althoff, Brookes Gray &amp; Reichardt (2025)&lt;/span&gt;]
+# Human Capital Mobility &lt;br&gt; .small[&lt;span class="gray"&gt;Althoff, Brookes Gray &amp; Reichardt (2025)&lt;/span&gt;]
 
 .center-content[
 **Surging human capital mobility in two episodes**
@@ -951,45 +779,13 @@ class: inverse, middle, center
 
 ---
 
-# **Results:** Human capital mobility &amp; *two different measures* of school access &lt;br&gt; .small[&lt;span class="gray"&gt;Althoff, Brookes Gray &amp; Reichardt (2025)&lt;/span&gt;]
-
-.center-content[
-|  | `\(\phi_{\text{Mother}}\)` | `\(\phi_{\text{Father}}\)` | `\(\frac{\phi_{\text{Mother}}}{R^2}\)` | `\(\phi_{\text{Mother}}\)` | `\(\phi_{\text{Father}}\)` | `\(\frac{\phi_{\text{Mother}}}{R^2}\)` |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|
-| **Baseline measure of school access** | -0.18*** | 0.04 | -0.20*** |  |  |  |
-|  | (0.03) | (0.05) | (0.03) |  |  |  |
-| **Refined measure of school access** |  |  |  | -0.47*** | 0.15 | -0.58*** |
-| *(accounts for attendance, term lengths, etc.)* |  |  |  | (0.08) | (0.11) | (0.10) |
-| R$^2$ | 0.39 | 0.02 | 0.51 | 0.37 | 0.04 | 0.57 |
-| Observations | 133 | 133 | 133 | 128 | 128 | 128 |
-]
-
----
-
-# **Strategy:** Isolating causal impact of schooling on maternal influence &lt;br&gt; .small[&lt;span class="gray"&gt;Althoff, Brookes Gray &amp; Reichardt (2025)&lt;/span&gt;]
-
-.center-content[
-`$$\phi^{\text{Mother}}_{s,r,yob} = \alpha + \beta \cdot \text{inschool}_{s,r,yob} + \gamma_{yob} + \varepsilon_{s,r,yob}$$`
-
-- **Identification strategy**
-
-  - Outcome: Mother's contribution to intergenerational persistence (`\(\phi^{\text{Mother}}\)`)
-
-  - Endogenous variable: Share of children in school by state-race (`\(\text{inschool}_{s,r,yob}\)`)
-
-  - Exploit staggered implementation of compulsory schooling laws across states
-
-  - Instrument: Number of years child exposed to compulsory schooling
-]
-
----
 
 # **Results:** Causal evidence from mandatory schooling legislation &lt;br&gt; .small[&lt;span class="gray"&gt;Althoff, Brookes Gray &amp; Reichardt (2025)&lt;/span&gt;]
 
 .center-content[
 | | OLS | IV | OLS | IV |
 |---|:---:|:---:|:---:|:---:|
-| **IV: Schooling via compulsory schooling laws** | -0.23*** | -0.92*** | -0.73*** | -0.92*** |
+| **IV: Schooling via compulsory schooling laws** | -0.23\*\*\* | -0.92\*\*\* | -0.73\*\*\* | -0.92\*\*\* |
 | | (0.04) | (0.22) | (0.18) | (0.22) |
 | Cohort Fixed Effects | Y | Y | Y | Y |
 | Sample restricted to 1920-1940 | N | N | Y | Y |
@@ -1000,7 +796,7 @@ class: inverse, middle, center
 
 ---
 
-# Takeaways: Schools and Mobility &lt;br&gt; .small[&lt;span class="gray"&gt;Althoff, Brookes Gray &amp; Reichardt (2025)&lt;/span&gt;]
+# Schools and Mobility &lt;br&gt; .small[&lt;span class="gray"&gt;Althoff, Brookes Gray &amp; Reichardt (2025)&lt;/span&gt;]
 
 .center-content[
 1. **School access** `\(\leftrightarrow\)` **human capital mobility** (time, space, sex, race)
@@ -1017,30 +813,10 @@ class: inverse, middle, center
 
 ---
 
-# **Strategy:** Measuring income mobility incorporating human capital &lt;br&gt; .small[&lt;span class="gray"&gt;Althoff, Brookes Gray &amp; Reichardt (2025)&lt;/span&gt;]
-
-.center-content[
-`$$\text{rank}(\text{inc}_i) = \alpha + \beta_p\text{rank}(\text{inc}^{\text{parents}}_i) + \beta_m\text{rank}(h^{\text{mother}}_i) + \beta_f\text{rank}(h^{\text{father}}_i) + \varepsilon_i$$`
-
-- **Method:** Gaussian copula method to handle binary proxies (literacy)
-
-- **Data:** Applied to our new representative panel dataset
-]
-
----
-
 # **Results:** Income mobility rises in tandem with human capital mobility &lt;br&gt; .small[&lt;span class="gray"&gt;Althoff, Brookes Gray &amp; Reichardt (2025)&lt;/span&gt;]
 
 .center-content[
 &lt;img src="files/parentalbackground_lido_cohort_latgaussbin_new2.png" width="50%" style="display: block; margin: auto;" /&gt;
-]
-
----
-
-# **Results:** Changing role of mothers sole driver of rising mobility (`\(\beta_m\)`) &lt;br&gt; .small[&lt;span class="gray"&gt;Althoff, Brookes Gray &amp; Reichardt (2025)&lt;/span&gt;]
-
-.center-content[
-&lt;img src="files/latgaussbin2_counterfactual_r2_betas_new.png" width="50%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -1058,7 +834,7 @@ class: inverse, middle, center
 
 - Mass schooling replaced home education, reducing reliance on maternal human capital
 
-  **→ High mobility is not guaranteed---depends on public provision of schooling**
+  **→ High mobility is not guaranteed, depends on public provision of schooling**
 
   **→ Quality schooling especially benefits children of less-educated parents**
 ]
@@ -1142,7 +918,7 @@ exclude: true
 .center-content[
 *[Placeholder: scatter plot of inequality (Gini) vs. intergenerational earnings elasticity across countries]*
 
-- The **Great Gatsby Curve** shows a striking cross-country pattern: **more unequal societies are also less mobile**
+- The Great Gatsby Curve shows a cross-country pattern: more unequal societies are also less mobile
 
 - Countries with high inequality (U.S., UK) have lower intergenerational mobility
 
@@ -1153,7 +929,7 @@ exclude: true
   - Greater returns to parental investments --- amplifying initial advantages
   - Weaker public institutions that might otherwise level the playing field
 
-- Inequality and immobility reinforce each other in a **vicious cycle**
+- Inequality and immobility reinforce each other in a vicious cycle
 ]
 
 ---
@@ -1164,13 +940,13 @@ exclude: true
 .center-content[
 - **Black children** have substantially lower upward mobility than white children, even from families with the same income &lt;span class="gray"&gt;Chetty et al. (2020)&lt;/span&gt;
 
-- The gap is especially large for **Black boys**, driven by neighborhoods, incarceration, and discrimination
+- The gap is especially large for Black boys, driven by neighborhoods, incarceration, and discrimination
 
 - **Hispanic children** show relatively high rates of upward mobility --- closer to white children than Black children
 
 - **Girls** have higher upward mobility than boys in most places --- but face a glass ceiling at the top of the income distribution
 
-- Mobility is not a single number --- it depends on **who you are** and **where you grow up**
+- Mobility is not a single number; it depends on who you are and where you grow up
 ]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "title": "Guided walkthrough",
+  "steps": [
+    {
+      "id": "hero",
+      "anchor": "#hero",
+      "title": "The Price of Integration",
+      "narration": "This essay is about South Africa after apartheid: the country rejoined the world economy when sanctions lifted after 1994. Trade and growth rose, but jobs and income did not spread evenly. The pattern in the data is that openness squeezed trade-exposed sectors while unemployment stayed high and the richest households kept more income.",
+      "highlight": "#hero",
+      "suggestedQuestions": ["What is this essay about?", "What happened in 1994?"]
+    },
+    {
+      "id": "question",
+      "anchor": "#question",
+      "title": "The research question",
+      "narration": "The question driving everything: Did opening up the country open it up for everyone? Short answer: not enough. After 1994 the RDP promised redistribution; by 1996 policy shifted to GEAR, with tighter budgets and lower trade barriers. The site focuses on what the numbers show over time.",
+      "highlight": "#question",
+      "suggestedQuestions": ["What is GEAR?", "What is RDP?"]
+    },
+    {
+      "id": "from-the-ground",
+      "anchor": "#from-the-ground",
+      "title": "Places before averages",
+      "narration": "Before the national charts, the essay grounds you in places: Johannesburg's CBD, a township like Gugulethu, and Durban's port. One national average hides how apartheid's geography still shapes who gets good jobs and who does not.",
+      "highlight": "#from-the-ground",
+      "suggestedQuestions": ["Why start with photos?", "What is a township?"]
+    },
+    {
+      "id": "timeline",
+      "anchor": "#timeline",
+      "title": "Timeline",
+      "narration": "The timeline walks key policy and economic moments from 1994 onward: democratisation, RDP, GEAR, trade liberalisation, and the long climb in trade openness. Use it as the narrative spine before you read the charts.",
+      "highlight": "#timeline",
+      "suggestedQuestions": ["What happened in 1996?", "When did trade rise?"]
+    },
+    {
+      "id": "macro",
+      "anchor": "#macro",
+      "title": "National economy",
+      "narration": "Trade openness (exports plus imports divided by GDP) shoots up after the nineties. Income per person rises, but much more slowly. Unemployment stays high. When two lines move together that is correlation, not automatic proof that trade caused unemployment by itself.",
+      "highlight": "#macro",
+      "suggestedQuestions": ["Why didn't unemployment fall?", "What is trade openness?"]
+    },
+    {
+      "id": "sectors",
+      "anchor": "#sectors",
+      "title": "Sectors",
+      "narration": "This is the core of the project. Manufacturing lost about a third of its GDP share since 1990. Tradable sectors (farming, mining, factories) shed nearly twelve percentage points of employment share from 1999 to 2025. Services did not fully replace those losses.",
+      "highlight": "#sectors",
+      "suggestedQuestions": ["What are tradable sectors?", "What does Erten-Leight-Tregenna show?"]
+    },
+    {
+      "id": "inequality",
+      "anchor": "#inequality",
+      "title": "Inequality",
+      "narration": "Income and wealth stayed concentrated at the top. The top 10% income share rose sharply; wealth is even more skewed than income. Trade openness tracks the top 1% share in regressions that survive strict multiple-testing correction.",
+      "highlight": "#inequality",
+      "suggestedQuestions": ["How unequal is South Africa?", "Does trade explain inequality?"]
+    },
+    {
+      "id": "two-lives",
+      "anchor": "#two-lives",
+      "title": "Two Lives",
+      "narration": "Two Lives is an interactive story: Pieter in Johannesburg finance versus Sipho in a Cape Town township factory. You make choices through thirty years of integration. Same country, different starting points, different options.",
+      "highlight": "#two-lives",
+      "suggestedQuestions": ["Who are Pieter and Sipho?", "Is Two Lives real data?"]
+    },
+    {
+      "id": "results",
+      "anchor": "#results",
+      "title": "Evidence",
+      "narration": "Hundreds of regressions were run with HAC errors and multiple-testing corrections. What survives BH: trade openness with falling tradable employment and with rising top-income concentration. What does not: a clean GEAR break in 1996, or trade alone explaining unemployment.",
+      "highlight": "#results",
+      "suggestedQuestions": ["What is BH significant?", "What survived the regressions?"]
+    },
+    {
+      "id": "map",
+      "anchor": "#map",
+      "title": "Map",
+      "narration": "One national unemployment rate hides huge provincial differences. The map uses the same colour scale every year so you can see real change. Poorer eastern provinces and former homelands tend to stay darker; Gauteng is lighter on average but still far from full employment.",
+      "highlight": "#map",
+      "suggestedQuestions": ["What does the map show?", "Which provinces have highest unemployment?"]
+    },
+    {
+      "id": "conclusions",
+      "anchor": "#conclusions",
+      "title": "Conclusions",
+      "narration": "Four takeaways: opening showed up in headline numbers; it did not produce broad inclusion; the sector story is the sharper lens; policy should combine trade with jobs, training, and place-based investment. If you remember one line: South Africa reconnected to the world faster than it shared the benefits.",
+      "highlight": "#conclusions",
+      "suggestedQuestions": ["What is the one sentence to remember?", "What is the policy lesson?"]
+    }
+  ]
+}

@@ -114,7 +114,6 @@ function toggleLog(){
   makeChart();
 }
 
-makeChart();
 if (new URLSearchParams(location.search).get('hidetabs') === '1') {
   var _buttonRow = document.querySelector('[style*="display: flex"][style*="flex-wrap: wrap"]');
   if (_buttonRow) _buttonRow.style.display = 'none';

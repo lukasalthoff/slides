@@ -1,0 +1,77 @@
+@media print {
+  :root {
+    color-scheme: light;
+  }
+
+  body {
+    background: #fff !important;
+    color: #111 !important;
+    font-size: 12pt;
+    line-height: 1.4;
+  }
+
+  .topbar,
+  .arg-breadcrumb,
+  .section-indicator,
+  .ambient-paths,
+  .section-bridge,
+  .results-scrolly,
+  .quote-orbit-card,
+  .ghost-btn,
+  #theme-toggle {
+    display: none !important;
+  }
+
+  #hero,
+  #conclusions,
+  #sources {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .section {
+    padding-top: 0.5rem !important;
+    margin-top: 1rem !important;
+  }
+
+  .card,
+  figure.card {
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+    background: #fff !important;
+  }
+
+  .chart-canvas-wrap,
+  #za-map,
+  .map-wrap--compare {
+    min-height: 220px !important;
+  }
+
+  .map-scrolly {
+    min-height: 0 !important;
+  }
+  .map-scrolly-sticky {
+    position: static !important;
+    background: transparent !important;
+  }
+  .map-scrolly-hint {
+    display: none !important;
+  }
+  #map-compare:not([hidden]) {
+    display: block !important;
+    break-inside: avoid;
+  }
+
+  a {
+    color: #111 !important;
+    text-decoration: underline !important;
+  }
+
+  .title,
+  .section-head h2,
+  .argument-summary h2 {
+    background: none !important;
+    color: #111 !important;
+    -webkit-text-fill-color: #111 !important;
+  }
+}

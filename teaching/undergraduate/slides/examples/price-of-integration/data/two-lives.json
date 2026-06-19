@@ -1,0 +1,365 @@
+{
+  "intro": {
+    "year": "1994",
+    "kicker": "April 1994 · the door opens",
+    "lede": "Apartheid ends. Sanctions lift, the rand floats, capital controls ease, and South Africa rejoins the world economy. Two men start the new era on the same day, but not in the same place. Walk them both through the next thirty years. You make the calls; the country answers.",
+    "start_button": "Begin in 1994 →"
+  },
+  "characters": {
+    "pieter": {
+      "name": "Pieter",
+      "tagline": "White · Johannesburg · a broker's salary and a paid-off house",
+      "blurb": "Under apartheid, the law reserved the good jobs, the suburbs, and the bank credit for people like Pieter. In 1994 he is 38, employed in finance, with savings and a network.",
+      "start": 6
+    },
+    "sipho": {
+      "name": "Sipho",
+      "tagline": "Black · Gugulethu, Cape Town · a textile-factory wage and a rented room",
+      "blurb": "Sipho was born into a township the law built to keep labour cheap and far away. In 1994 he is 38, working a machine on a clothing-factory floor, renting a room, with no savings to fall back on.",
+      "start": -2
+    }
+  },
+  "access_meta": {
+    "label": "of South Africans could take this path",
+    "disclaimer": "Estimated share of South African adults for whom each option was realistically available—not a survey of choices people actually picked. No national dataset maps 1:1 onto these narrative beats; figures combine QLFS employment shares, FinScope savings/inclusion, stokvel participation, grant coverage, and migration proxies."
+  },
+  "bands": [
+    { "key": "destitute", "max": -3, "status": "Falling behind" },
+    { "key": "crisis", "max": 0, "status": "In trouble" },
+    { "key": "precarious", "max": 3, "status": "Just holding on" },
+    { "key": "holding", "max": 6, "status": "Steady" },
+    { "key": "comfortable", "max": 9, "status": "Doing well" },
+    { "key": "thriving", "max": 999, "status": "Pulling ahead" }
+  ],
+  "beats": [
+    {
+      "year": "1994",
+      "title": "The vote, and the open door",
+      "scene": "The country reopens to global trade and investment. Foreign money flows back in. Local factories are still busy, for now.",
+      "prompt": "You still have your job, but the economy is changing fast. What do you do first?",
+      "options": [
+        {
+          "label": "Invest whatever savings you have",
+          "access_pct": 22,
+          "access_basis": "FinScope proxy: ~20–25% of adults had investable savings (lower in 1994; most wealth concentrated at top)",
+          "effects": { "pieter": 3, "sipho": 0 },
+          "react": {
+            "pieter": "Pieter has savings and a broker on speed-dial. As global money floods the stock exchange, his portfolio starts to climb.",
+            "sipho": "Sipho has no savings to invest. The reopening is news that happens to other people."
+          }
+        },
+        {
+          "label": "Keep your head down at your current job",
+          "access_pct": 51,
+          "access_basis": "QLFS: roughly half of adults were employed and could stay put in an existing job",
+          "effects": { "pieter": -2, "sipho": -1 },
+          "react": {
+            "pieter": "Pieter stays cautious and salaried. That is fine, but he watches colleagues who invested pull ahead.",
+            "sipho": "Sipho keeps working the machine. The order book is still full; the trouble is two years away."
+          }
+        },
+        {
+          "label": "Go back to school to learn new skills",
+          "access_pct": 9,
+          "access_basis": "Adult/part-time study participation — low single digits nationally",
+          "effects": { "pieter": 1, "sipho": 2 },
+          "react": {
+            "pieter": "Pieter takes night classes; with a cushion to fall back on, the risk is small.",
+            "sipho": "Sipho scrapes together fees for a part-time course. It costs him sleep and rent, but it is the one bet that is his to make."
+          }
+        },
+        {
+          "label": "Start a small side business after work",
+          "access_pct": 26,
+          "access_basis": "Informal supplementary income: ~20–30% of households run side trade or hustles",
+          "effects": { "pieter": 1, "sipho": 2 },
+          "react": {
+            "pieter": "Pieter tries a side venture for fun and a little extra. He can afford to fail.",
+            "sipho": "Sipho sells goods after his shift. Cash-in-hand, no contract, no safety net, but it is income he controls."
+          }
+        }
+      ]
+    },
+    {
+      "year": "1996",
+      "title": "Cheaper imports arrive",
+      "scene": "The government tightens budgets and lowers import taxes. Cheaper clothing and goods pour in. Customers start buying from abroad instead of local factories.",
+      "prompt": "Your factory is losing orders. What do you do next?",
+      "options": [
+        {
+          "label": "Move your savings into finance or overseas",
+          "access_pct": 15,
+          "access_basis": "Adults with movable capital after 1994 liberalisation — a small affluent minority",
+          "effects": { "pieter": 3, "sipho": 0 },
+          "react": {
+            "pieter": "With capital controls loosened, Pieter shifts savings into global assets. The open economy is built for him.",
+            "sipho": "Sipho has nothing to move offshore. He reads about the exchange rate in the paper, not in his bank balance."
+          }
+        },
+        {
+          "label": "Stay at the factory and hope orders return",
+          "access_pct": 10,
+          "access_basis": "Manufacturing workers in import-competing plants (~12–15% of employment in 1990s)",
+          "effects": { "pieter": -1, "sipho": -3 },
+          "react": {
+            "pieter": "Not really Pieter's fight, but a slowing factory town is not good for anyone's clients.",
+            "sipho": "The orders dry up. Sipho's shift is cut, then cut again. The work he knows best is what the world now buys cheaper elsewhere."
+          }
+        },
+        {
+          "label": "Organize with coworkers to slow the layoffs",
+          "access_pct": 5,
+          "access_basis": "Unionised manufacturing workers — COSATU peak membership was a small share of all adults",
+          "effects": { "pieter": -2, "sipho": 2 },
+          "react": {
+            "pieter": "Pieter sides with the workers and is quietly marked as not a team player by the firm.",
+            "sipho": "Sipho helps push for a slower phase-in of the tariff cuts. It buys the plant, and his wage, a few more years."
+          }
+        },
+        {
+          "label": "Apply for a steadier government or office job",
+          "access_pct": 36,
+          "access_basis": "Public-sector employment eventually ~25% of formal jobs; many more could plausibly apply",
+          "effects": { "pieter": 0, "sipho": 1 },
+          "react": {
+            "pieter": "Pieter could land something stable, but leaving finance feels like a step down. He stays put.",
+            "sipho": "Sipho queues for municipal work. The pay is modest, but a contract beats a dying factory floor."
+          }
+        }
+      ]
+    },
+    {
+      "year": "2000s",
+      "title": "The commodity boom",
+      "scene": "Resource prices and foreign investment surge. Mining and finance are minting money. Factory wages outside those sectors keep struggling.",
+      "prompt": "A few industries are booming while yours is not. How do you try to get ahead?",
+      "options": [
+        {
+          "label": "Switch to a higher-paying industry while you can",
+          "access_pct": 17,
+          "access_basis": "Job-switchers during the commodity boom — labour turnover in booming sectors",
+          "effects": { "pieter": 3, "sipho": 1 },
+          "react": {
+            "pieter": "Pieter's sector is exactly where the boom lands. His income compounds.",
+            "sipho": "Sipho lands contract work near the mines: better pay, but no security and far from home."
+          }
+        },
+        {
+          "label": "Stay where you are and wait it out",
+          "access_pct": 44,
+          "access_basis": "Employed adults who stayed in place while mining/finance boomed elsewhere",
+          "effects": { "pieter": 0, "sipho": -1 },
+          "react": {
+            "pieter": "Pieter coasts; the rising tide carries him regardless.",
+            "sipho": "Sipho stays in clothing. The boom never really reaches his factory floor."
+          }
+        },
+        {
+          "label": "Pick up informal work on the side for extra cash",
+          "access_pct": 29,
+          "access_basis": "QLFS informal sector + supplementary hustles (~20–30% of workers in informal activity)",
+          "effects": { "pieter": 1, "sipho": 2 },
+          "react": {
+            "pieter": "Pieter dabbles in a side venture for fun and a little extra.",
+            "sipho": "Sipho sells goods after his shift. It is cash-in-hand, no contract, no safety net, but it is his."
+          }
+        },
+        {
+          "label": "Pool money with family or friends in a savings group",
+          "access_pct": 19,
+          "access_basis": "FinScope: stokvel/savings-group participation ~11–19% of adults (higher in Black households)",
+          "effects": { "pieter": 0, "sipho": 2 },
+          "react": {
+            "pieter": "Pieter already has a bank. A stokvel feels unnecessary when credit is one call away.",
+            "sipho": "Sipho joins a rotating savings group. Small, steady pools of cash beat no cushion at all."
+          }
+        }
+      ]
+    },
+    {
+      "year": "2008–09",
+      "title": "The global crisis hits",
+      "scene": "A worldwide financial crisis lands. Manufacturing shrinks sharply and unemployment steps up. Whoever you are, the ground moves.",
+      "prompt": "Jobs and pay are at risk. How do you handle the shock?",
+      "options": [
+        {
+          "label": "Hold on to what you own and wait it out",
+          "access_pct": 17,
+          "access_basis": "Households with assets (housing, pensions, investments) to ride out the GFC shock",
+          "effects": { "pieter": 2, "sipho": -1 },
+          "react": {
+            "pieter": "Pieter's holdings dip, then recover. Having assets to hold is its own kind of shelter.",
+            "sipho": "Sipho has no assets to ride out the storm. When the work stops, the income stops the same day."
+          }
+        },
+        {
+          "label": "Take any job you can find, however temporary",
+          "access_pct": 40,
+          "access_basis": "Unemployed and precarious workers (~30%+ unemployment + churn seeking any wage)",
+          "effects": { "pieter": -2, "sipho": 1 },
+          "react": {
+            "pieter": "Pieter takes a step down to stay employed, a bruise to the ego, not the bank balance.",
+            "sipho": "Sipho grabs whatever work appears: security, cleaning, day labour. A wage is everything."
+          }
+        },
+        {
+          "label": "Move to a bigger city where more jobs are listed",
+          "access_pct": 13,
+          "access_basis": "Internal migrants to metros (Gauteng inflows; ~3–5% of adults move in crisis years)",
+          "effects": { "pieter": 1, "sipho": 2 },
+          "react": {
+            "pieter": "Pieter relocates easily: a moving van, a new suburb, a transferred mortgage.",
+            "sipho": "Sipho leaves Cape Town for a shack on Johannesburg's edge, closer to jobs but far from everyone he knows."
+          }
+        },
+        {
+          "label": "Move in with family to cut rent and expenses",
+          "access_pct": 32,
+          "access_basis": "Multigenerational/doubled-up households — common cost-cutting strategy in downturns",
+          "effects": { "pieter": -1, "sipho": 1 },
+          "react": {
+            "pieter": "Pieter downsizes slightly. It is an adjustment, not a crisis.",
+            "sipho": "Sipho gives up his rented room and sleeps three to a house. Pride hurts, but the rent bill disappears."
+          }
+        }
+      ]
+    },
+    {
+      "year": "2015–25",
+      "title": "The long aftermath",
+      "scene": "Recovery is thin and uneven. Unemployment stays very high; the wealthiest keep pulling ahead. This last choice shapes where each man lands.",
+      "prompt": "Growth is slow and jobs are scarce. This is your last big move. What do you choose?",
+      "options": [
+        {
+          "label": "Double down on what has worked for you so far",
+          "access_pct": 19,
+          "access_basis": "Asset-holders and established professionals who could lean into existing strategy",
+          "effects": { "pieter": 3, "sipho": 0 },
+          "react": {
+            "pieter": "Pieter leans harder into assets and connections. His income is now mostly money making money.",
+            "sipho": "Sipho doubles down too, but doubling down on a precarious wage just means more of the same."
+          }
+        },
+        {
+          "label": "Live on government help, odd jobs, and family support",
+          "access_pct": 38,
+          "access_basis": "Grant recipients + piece-work survival (SASSA coverage + informal fallback)",
+          "effects": { "pieter": -3, "sipho": 1 },
+          "react": {
+            "pieter": "For Pieter this would mean a hard fall: selling up, leaning on the state he never expected to need.",
+            "sipho": "Sipho stitches together a grant, piece-work, and family support. It is survival, not security."
+          }
+        },
+        {
+          "label": "Try to move to another country for work",
+          "access_pct": 3,
+          "access_basis": "Viable emigration pathways — net emigration ~20–30k/yr vs ~40m adults; few have capital and visas",
+          "effects": { "pieter": 2, "sipho": -1 },
+          "react": {
+            "pieter": "Pieter has passport options, savings, and in-demand skills to emigrate cleanly.",
+            "sipho": "Sipho explores leaving, but without papers, capital, or contacts abroad, the door barely opens."
+          }
+        },
+        {
+          "label": "Spend what you have on your children's schooling",
+          "access_pct": 46,
+          "access_basis": "Parents with school-age children prioritising fees — roughly half of households",
+          "effects": { "pieter": 0, "sipho": 2 },
+          "react": {
+            "pieter": "Pieter's kids were already in good schools. The choice changes little for him.",
+            "sipho": "Sipho drains what he saved to keep a child in class. It is a bet on the next generation, not on his own paycheck."
+          }
+        }
+      ]
+    }
+  ],
+  "endings": {
+    "pieter": {
+      "destitute": {
+        "title": "Knocked down, but not out",
+        "tag": "A rare fall",
+        "body": "A run of bad bets and stubborn choices cost Pieter dearly; he sold the house and leaned on help he never thought he'd need. Even so, he kept a roof, a network, and a way back. This is the unusual path. For someone who started where Pieter did, the floor sits much higher than most South Africans will ever stand on.",
+        "stat": "Even Pieter's worst case clears the bar most never reach."
+      },
+      "crisis": {
+        "title": "A bruised decade",
+        "tag": "Employed throughout",
+        "body": "Pieter took pay cuts, grumbled about the country, and moved some savings offshore. It felt like decline to him, but he was salaried and housed the whole way through. His 'crisis' is another man's dream.",
+        "stat": "Unemployment never touched him; it stayed above 30% for the country."
+      },
+      "precarious": {
+        "title": "Comfortable enough",
+        "tag": "Steady professional",
+        "body": "Pieter holds a steady professional job and a modest pile of assets. Not spectacular, but secure: a pension, medical aid, a house that's his.",
+        "stat": "Squarely inside the formal economy that most never enter."
+      },
+      "holding": {
+        "title": "Quietly ahead",
+        "tag": "Home, pension, options",
+        "body": "Home owner, pension fund, kids in good schools. Pieter rode the open economy without ever feeling its sharp edge.",
+        "stat": "The kind of household whose income share rose, not fell."
+      },
+      "comfortable": {
+        "title": "Riding the open economy",
+        "tag": "Mostly asset income",
+        "body": "By the 2010s most of Pieter's income comes from assets, not a paycheck, exactly what an open capital account rewards. The integration he barely had to think about paid him every year.",
+        "stat": "Capital opening rewarded those who already held capital."
+      },
+      "thriving": {
+        "title": "Top of the distribution",
+        "tag": "The top tenth",
+        "body": "Pieter lands squarely in the best-off tenth of South Africans, the group whose slice of national income climbed from about 47% to 65% over these decades. He made smart calls. He also started on the right side of a line drawn long before 1994.",
+        "stat": "Top-10% income share: ≈47% (1990) to ≈65% (2020).",
+        "statHref": "#inequality"
+      }
+    },
+    "sipho": {
+      "destitute": {
+        "title": "Evicted, and off the grid",
+        "tag": "Counted among the 43%",
+        "body": "The work ran out and the rent ran past the wage. Sipho lost the room in Gugulethu and ended up in an informal settlement on the city's edge, doing odd jobs when they appear. He is one of the millions the broad unemployment rate counts and the economy forgot.",
+        "stat": "Broad unemployment (incl. discouraged seekers): 43.1% (QLFS Q1 2025).",
+        "statHref": "#map"
+      },
+      "crisis": {
+        "title": "Retrenched for good",
+        "tag": "Out of formal work",
+        "body": "When the plant finally closed, Sipho was in his forties, and never found formal work again. He survives on piece-work and a relative's grant. He did much of what Pieter did; it simply didn't pay, because he never had the capital to make it pay.",
+        "stat": "Manufacturing shed roughly a third of its share of the economy after 1990.",
+        "statHref": "#sectors"
+      },
+      "precarious": {
+        "title": "Hustling to stay afloat",
+        "tag": "Informal, no safety net",
+        "body": "Sipho trades and hustles in the informal economy: no contract, no medical aid, no pension. Some months are fine. He is always one bad month from the street.",
+        "stat": "Informal and precarious work absorbed many who lost factory jobs."
+      },
+      "holding": {
+        "title": "A foot back in the door",
+        "tag": "Low-wage but formal",
+        "body": "Sipho claws his way into a formal job: security, retail, logistics. It's real and it's steady, at roughly half the old factory wage. After everything, that counts as winning.",
+        "stat": "Re-entry to formal work, well below the wage he started with."
+      },
+      "comfortable": {
+        "title": "Against the odds",
+        "tag": "Into the new middle",
+        "body": "Sipho retrained into a scarce skill and joined the small Black professional class the transition did create. It took relentless effort and a few lucky breaks, and he is sharply aware how few who started beside him made it here.",
+        "stat": "Real, but rarer than it should be for the effort it took."
+      },
+      "thriving": {
+        "title": "The exception that proves the rule",
+        "tag": "A rare climb",
+        "body": "Sipho built something that lasted: a business that survived, assets of his own. It's a genuine success, and an uncommon one: when you start in a township the law built to keep you poor, reaching the top takes everything breaking right. The fact that it's this rare is the whole point.",
+        "stat": "Upward mobility this large is the exception, not the pattern."
+      }
+    }
+  },
+  "epilogue": {
+    "lede": "Same five rounds of choices. Same thirty years. Different starting points.",
+    "body": "Pieter and Sipho answered the same questions. Where they landed was decided less by the choices on this screen than by where 1994 found each of them standing: who already held capital, which jobs were exposed to imports, and which neighbourhoods the old law had built. That gap is what the charts above measure: trade and growth rose, and the gains piled up at the top.",
+    "punchline": "There are 1,024 ways to play this. Across all of them, Pieter reaches a secure life about 88% of the time. Sipho gets there only 22%, ends in outright crisis or displacement 42% of the time, and never once reaches the very top. The choices were identical. The starting line was not.",
+    "recap_label": "The five choices you made",
+    "restart": "↺ Live it again, differently",
+    "cta": { "label": "See the evidence behind their split ↓", "href": "#results" }
+  }
+}
