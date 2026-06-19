@@ -1,0 +1,889 @@
+---
+title: "Lectures 12 & 13: Race"
+author: "Graduate Economic History"
+date: "Lukas Althoff"
+output:
+  xaringan::moon_reader:
+    chakra: '../../shared/remark-latest.min.js'
+    css: ['default', 'metropolis', 'metropolis-fonts', '../../shared/my-css.css']
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r, setup, include = F}
+library(knitr)
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 7,
+  fig.width = 10.5,
+  warning = F,
+  message = F
+)
+```
+
+class: agenda
+
+# Agenda
+
+<ul class="agenda-list">
+<li class="current">Racial inequality</li>
+<li class="upcoming">Racial inequality and role of historical discrimination</li>
+</ul>
+
+---
+
+# Household income by race: Black-white gap stands out consistently
+
+.center-content[
+```{r, echo = F, out.width = '90%'}
+knitr::include_graphics("files/race_income_census.png")
+```
+]
+
+.footnote[.small[Source: [Census](https://www2.census.gov/library/publications/2024/demo/p60-282.pdf).]]
+
+---
+class: inverse, center, middle
+
+<div style="text-align: center; width: 100%;">
+  <div style="color: #1A3A68; font-weight: 700; font-size: 42px; line-height: 1.2;">
+    Race and Economic Well-Being in the United States
+  </div>
+  <div style="color: rgba(26, 58, 104, 0.7); font-weight: 400; font-size: 26px; line-height: 1.35; margin-top: 16px;">
+    Brouillette et al. (2024)
+  </div>
+</div>
+
+---
+
+# Black-white inequality across outcomes <br> .small[<span class="gray">Brouillette et al. (2024)</span>]
+
+.center-content[
+<div style="display: flex; justify-content: space-between; gap: 12px;">
+<div style="width: 32%;">
+```{r, echo = F, out.width = '100%', fig.cap = 'Life expectancy'}
+knitr::include_graphics("files/bw_life_expectancy.png")
+```
+</div>
+<div style="width: 32%;">
+```{r, echo = F, out.width = '100%', fig.cap = 'Consumption'}
+knitr::include_graphics("files/bw_consumption.png")
+```
+</div>
+<div style="width: 32%;">
+```{r, echo = F, out.width = '100%', fig.cap = 'Leisure'}
+knitr::include_graphics("files/bw_leisure.png")
+```
+</div>
+</div>
+]
+
+---
+
+# Black-white gap in consumption-equivalent welfare <br> .small[<span class="gray">Brouillette et al. (2024)</span>]
+
+.center-content[
+```{r, echo = F, out.width = '60%'}
+knitr::include_graphics("files/bw_welfare.png")
+```
+]
+
+---
+
+# Black-white gap in consumption-equivalent welfare <br> .small[<span class="gray">Brouillette et al. (2024)</span>]
+
+.center-content[
+```{r, echo = F, out.width = '60%'}
+knitr::include_graphics("files/bw_welfare_long.png")
+```
+]
+
+---
+
+# Black-white gap in consumption-equivalent welfare <br> .small[<span class="gray">Brouillette et al. (2024)</span>]
+
+.center-content[
+```{r, echo = F, out.width = '60%'}
+knitr::include_graphics("files/bw_welfare_long_decomp.png")
+```
+]
+
+---
+
+# Evolution of Black-white gap in welfare <br> .small[<span class="gray">Brouillette et al. (2024)</span>]
+
+.center-content[
+- **Good news:** Substantial progress in narrowing of Black-white gap
+- **Bad news:** Remaining welfare gap larger than consumption, earnings, life expectancy suggest
+  - Largest contributors to remaining gap: consumption, life expectancy
+  - Black Americans' life expectancy is 95% of white Americans', but each year of life worth ~5 years of consumption (4 year gap $\rightarrow$ 20 years of consumption)
+]
+
+---
+
+.center-content[
+  <div style="display: flex; justify-content: center; align-items: center; height: 580px; width: 100%;">
+    <iframe src="../materials/black_history_timeline.html?v=7" width="100%" height="100%" style="border: none; display: block; margin: 0 auto;"></iframe>
+  </div>
+]
+
+---
+class: agenda
+
+# Agenda
+
+<ul class="agenda-list">
+<li class="done">Racial inequality</li>
+<li class="current">Racial inequality and role of historical discrimination</li>
+</ul>
+
+---
+class: inverse, center, middle
+
+<div style="text-align: center; width: 100%;">
+  <div style="color: #1A3A68; font-weight: 700; font-size: 42px; line-height: 1.2;">
+    Jim Crow and Black Economic Progress after Slavery
+  </div>
+  <div style="color: rgba(26, 58, 104, 0.7); font-weight: 400; font-size: 26px; line-height: 1.35; margin-top: 16px;">
+    Althoff, Reichardt (2024)
+  </div>
+</div>
+
+---
+
+# **Motivation:** US's long history of anti-Black institutions <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.center-content[
+- Racial inequality pervasive throughout US history
+
+- Long history of anti-Black institutions
+
+  - **Slavery** (--1865)
+
+  - **Jim Crow** (1877--1964): segregation, voter suppression, mobility restrictions
+
+- (How) does past institutional discrimination continue to shape economic outcomes?
+]
+
+---
+
+# **Background:** Differential exposure to anti-Black institutions <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.pull-left[
+**High exposure**
+
+- **Enslaved** until 1865
+- Concentrated in **Jim Crow** states
+
+```{r, echo = F, out.width = '65%'}
+knitr::include_graphics("files/map_pop_enslaved_1860_clipped_s.png")
+```
+]
+
+.pull-right[
+**Low exposure**
+
+- **Free** before 1865
+- Concentrated in **non-Jim Crow** states
+
+```{r, echo = F, out.width = '65%'}
+knitr::include_graphics("files/map_pop_free_1860_clipped_s.png")
+```
+]
+
+<div style="clear: both;"></div>
+
+---
+
+# **This paper:** Serial oppression has perpetuated historical injustices <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.center-content[
+1. Black Americans w/ ancestors enslaved until Civil War have lower economic status
+    - Trace families' records over past 175 years
+    - Develop new ways to measure ancestors' enslavement status
+    - Document large Free-Enslaved gap among Black Americans (1870--2023)
+
+2. Cause is not slavery per se, but living in the soon-to-be Jim Crow South
+    - Use ancestors' enslavement location to assess causal impact of location-specific factors
+    - Show that state institutions created sharp gaps in Black progress (RDD)
+    - Explain institutional effects with newly collected data on states' Jim Crow regimes
+]
+
+---
+
+# Contributions to the literature <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.center-content[
+1. **Slavery's long-run effects on Black families**
+    - Regional outcomes <span class="gray">(Wright 2006; Nunn 2008; Acharya et al. 2018; Laudares et al. 2023)</span>
+    - Families <span class="gray">(Sacerdote 2005)</span>
+    - **This paper:** Importance of ancestors' enslavement status from Civil War to 2023
+
+2. **Jim Crow's long-run effects on Black families**
+    - Short-run impact on regions <span class="gray">(Margo 1990; Naidu 2010, 2012; Carruthers et al. 2017)</span>
+    - Civil Rights' impact on regions <span class="gray">(Heckman et al. 2000; Almond et al. 2007; Wright 2013, 2015)</span>
+    - **This paper:** Long-run impact on families via RDD on ancestors' enslavement locations
+
+3. **Evolution of racial inequality in US**
+    - Evolving Black-white gaps <span class="gray">(..., Bayer et al. 2018; Chetty et al. 2020; Derenoncourt et al. 2023)</span>
+    - **This paper:** Large share of today's racial gap due to series of anti-Black institutions
+]
+
+---
+
+# **Data:** Main datasets <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.center-content[
+- **1850--1940: Census**
+    - Family panel via automated record linking <span class="gray">(Abramitzky et al. 2019)</span>
+    - Individual-level information on education, income, wealth
+
+- **2000: Social Security records**
+    - 1940 census linked to death records 1988--2007
+    - Proxies for education, income, wealth based on last neighborhood
+
+- **2023: Credit bureau**
+    - Cross-section covering large share of US population
+    - Names, race (imputed), credit scores, income, wealth, etc.
+]
+
+---
+
+# **Data:** Enslavement status of Black Americans' ancestors <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.center-content[
+1. **Linking-based measure**
+    - Censuses of 1850 and 1860 only recorded free Black Americans
+    - Descendant of Free if linkable to ancestor in 1850 or 1860
+    - Descendant of Enslaved if not linkable
+
+2. **Surname-based measure**
+    - Enslaved chose surnames upon being freed
+    - Change in distribution of Black surnames in census around 1865
+    - Probabilistic Free-Enslaved classification of surnames
+
+3. Combined in **IV strategy** to address potential measurement error
+]
+
+---
+
+# **Data:** Jim Crow exposure via ancestors' enslavement location <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.center-content[
+1. **Jim Crow Index** *(new)* — principal component of five factors:
+    1. **Jim Crow laws** (share of all race-specific laws)
+    2. **Disfranchisement devices** (number)
+    3. **Southern Manifesto** (share of congressional delegates who signed)
+    4. **School term length** (Black-white gap)
+    5. **Teacher minimum pay** (year passed)
+
+2. **Jim Crow laws** (total & by type)
+
+3. **Historical Racial Regime (HRR) index** <span class="gray">(Baker 2022)</span>
+]
+
+.footnote[.small[Sources: Murray 1951; Roback 1951; Card, Krueger 1992; Walton, Puckett, Deskins 2012; Baker 2022; Card et al. 2022; Cascio, Lewis 2022]]
+
+---
+class: inverse, middle, center
+
+# **Q:** Is the socioeconomic status of Black families today associated with their historical exposure to institutionalized oppression?
+
+---
+
+# **Strategy:** Free-Enslaved gap <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.center-content[
+$$y_{i,t}\;=\;\alpha_t+\beta_t \, s_i+\phi_t'X_{i,t}+\varepsilon_{i,t}$$
+
+- $y_{i,t}:$ socioeconomic outcome of person $i$ in year $t=1870,\dots,2023$
+- $s_i:$ 1 if $i$'s ancestors enslaved until Civil War <span class="gray">(male ancestry line)</span>
+]
+
+---
+
+# **Results:** The Free-Enslaved gap (1870--1940) <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.pull-left[
+```{r, echo = F, out.width = '90%', fig.cap = 'Literacy'}
+knitr::include_graphics("files/lit_s.png")
+```
+]
+
+.pull-right[
+```{r, echo = F, out.width = '90%', fig.cap = 'Occupational skill'}
+knitr::include_graphics("files/occskill_s.png")
+```
+]
+
+<div style="clear: both;"></div>
+
+---
+
+# **Results:** The Free-Enslaved gap (1940) <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.center-content[
+<table style="font-size: 16pt; margin: 0 auto;">
+<thead>
+<tr><th></th><th>Education (Years)</th><th>Wage Income ($)</th><th>Homeownership (%)</th><th>House Value ($)</th></tr>
+</thead>
+<tbody>
+<tr><td></td><td><span class="gray"><i>Mean: 5.99</i></span></td><td><span class="gray"><i>Mean: 381.20</i></span></td><td><span class="gray"><i>Mean: 29.25</i></span></td><td><span class="gray"><i>Mean: 1,371.95</i></span></td></tr>
+<tr><td><b>Ancestor Enslaved</b></td><td><b>-1.59</b><sup>***</sup></td><td><b>-145.92</b><sup>***</sup></td><td><b>-7.24</b><sup>***</sup></td><td><b>-694.69</b><sup>***</sup></td></tr>
+<tr><td></td><td>(0.05)</td><td>(6.13)</td><td>(0.62)</td><td>(65.85)</td></tr>
+<tr><td>As % of B-W gap</td><td>42</td><td>29</td><td>36</td><td>37</td></tr>
+<tr><td>Observations</td><td>163,549</td><td>154,463</td><td>164,357</td><td>46,971</td></tr>
+</tbody>
+</table>
+]
+
+---
+
+# **Results:** The Free-Enslaved gap in neighborhood outcomes (2000) <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.center-content[
+<table style="font-size: 16pt; margin: 0 auto;">
+<thead>
+<tr><th></th><th>HS Degree (%)</th><th>College Degree (%)</th><th>Income ($)</th><th>House Value ($)</th></tr>
+</thead>
+<tbody>
+<tr><td></td><td><span class="gray"><i>Mean: 68.85</i></span></td><td><span class="gray"><i>Mean: 12.31</i></span></td><td><span class="gray"><i>Mean: 29,875.58</i></span></td><td><span class="gray"><i>Mean: 87,921.78</i></span></td></tr>
+<tr><td><b>Ancestor Enslaved</b></td><td><b>-3.54</b><sup>***</sup></td><td><b>-2.43</b><sup>***</sup></td><td><b>-4,917.67</b><sup>***</sup></td><td><b>-15,865.97</b><sup>***</sup></td></tr>
+<tr><td></td><td>(0.38)</td><td>(0.32)</td><td>(437.35)</td><td>(1,822.52)</td></tr>
+<tr><td>As % of B-W gap</td><td>25</td><td>20</td><td>57</td><td>67</td></tr>
+<tr><td>Observations</td><td>26,765</td><td>26,765</td><td>26,803</td><td>25,787</td></tr>
+</tbody>
+</table>
+]
+
+---
+
+# **Results:** Free-Enslaved gap based on surnames (March 2023) <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.center-content[
+<table style="font-size: 16pt; margin: 0 auto;">
+<thead>
+<tr><th></th><th>Total income (USD)</th><th>Disp. income (USD)</th><th>Credit Score (300-850)</th><th>Hourly Job</th></tr>
+</thead>
+<tbody>
+<tr><td></td><td><span class="gray"><i>Mean: 92,068.48</i></span></td><td><span class="gray"><i>Mean: 52,773.74</i></span></td><td><span class="gray"><i>Mean: 630.41</i></span></td><td><span class="gray"><i>Mean: 0.72</i></span></td></tr>
+<tr><td><b>Ancestor Enslaved</b></td><td><b>-12,487.72</b><sup>***</sup></td><td><b>-11,623.44</b><sup>***</sup></td><td><b>-33.15</b><sup>***</sup></td><td><b>0.05</b><sup>***</sup></td></tr>
+<tr><td></td><td>(1,147.08)</td><td>(920.12)</td><td>(2.07)</td><td>(0.01)</td></tr>
+<tr><td>As % of B-W gap</td><td>23</td><td>26</td><td>40</td><td>69</td></tr>
+<tr><td>Observations</td><td>547,189</td><td>547,189</td><td>547,189</td><td>459,889</td></tr>
+</tbody>
+</table>
+]
+
+---
+class: inverse, middle, center
+
+# Takeaway
+
+Black Americans whose ancestors were enslaved until the Civil War continue to have lower socioeconomic status today.
+
+Free-Enslaved gap $\approx$ 40% of Black-white gap
+
+---
+class: inverse, middle, center
+
+# **Q:** What factors explain the large Free-Enslaved gap?
+
+---
+
+# **Strategy:** Drivers of persistence <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.center-content[
+1. Inherent disadvantage of being enslaved longer
+
+2. **Exposure to different locations**
+    - 2.a) **Jim Crow regime**
+    - 2.b) Other location factors <span class="gray">(economic activity, climate, culture, ...)</span>
+
+3. Potential differences in ability
+]
+
+---
+
+# **Strategy:** Causal effect of exposure to different locations <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.center-content[
+- Generally: geographic heterogeneity $\neq$ causal effect of location
+
+- Empirical strategies
+    - Prior work: "mover designs" <span class="gray">(e.g., Chetty et al. 2016)</span>
+    - **Here:** Use *immobility* of enslaved population
+]
+
+---
+
+# **Strategy:** Place effect via enslaved ancestor's state of birth <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.center-content[
+**Assumption**
+
+Where an enslaved person was born is unrelated to their "innate ability"
+
+**Justification**
+
+1. No free movement $\Rightarrow$ no self-selection
+2. Forced migration implausible to have induced selection on inheritable traits <span class="gray">(Phillips 1918; Fogel & Engerman 1974; Pritchett 2001, 2019; Tadman 2008)</span>
+3. Strongly supported by RDD evidence
+]
+
+---
+
+# **Strategy:** Causal effects of exposure to state-specific factors <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.center-content[
+$$y_{i}=\eta_{\ell(i,1865)}+\phi^{\prime} X_{i}+\epsilon_{i} \quad \text{if } s_i=1$$
+
+- $y_{i}:$ 1940 outcome
+- $\eta_{\ell(i,1865)}:$ fixed effect for enslaved ancestor's state of birth $\ell$
+]
+
+---
+
+# **Result:** Geography of Black economic progress <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.center-content[
+```{r, echo = F, out.width = '48%', fig.cap = 'Causal pre-1865 state effect on years of education in 1940'}
+knitr::include_graphics("files/map_bplfe_yreduc_zoom_s.png")
+```
+]
+
+---
+class: inverse, middle, center
+
+# **Q:** What fraction of the Free-Enslaved gap is driven by the Enslaved's higher exposure to negative state effects?
+
+**A:** Virtually all of it.
+
+---
+
+# **Result:** Free-Enslaved gap driven by Enslaved's geographic distribution <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.pull-left[
+```{r, echo = F, out.width = '85%', fig.cap = 'Literacy'}
+knitr::include_graphics("files/lit_fe_legend_s.png")
+```
+]
+
+.pull-right[
+```{r, echo = F, out.width = '85%', fig.cap = 'Occupational skill'}
+knitr::include_graphics("files/occskill_fe_legend_s.png")
+```
+]
+
+<div style="clear: both;"></div>
+
+---
+class: inverse, middle, center
+
+# Takeaway
+
+State-specific factors played a critical role in perpetuating the Free-Enslaved gap in the long run
+
+---
+
+# **Strategy:** Institutions vs. other place-specific factors <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.center-content[
+Separate states' causal effects into
+
+1. **Continuous factors:** economic activity, culture, climate, etc.
+
+2. **Discontinuous factors:** state institutions
+]
+
+---
+
+# **Strategy:** RDD to isolate role of state institutions <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.pull-left[
+```{r, echo = F, out.width = '100%', fig.cap = "County's distance to the closest border"}
+knitr::include_graphics("files/rdd100_pairwise_map_s.png")
+```
+]
+
+.pull-right[
+<br>
+
+Compare effect of state institutions with new **Jim Crow Index**
+]
+
+<div style="clear: both;"></div>
+
+---
+
+# **Result:** State institutions drive geography of Black economic progress <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.center-content[
+```{r, echo = F, out.width = '45%'}
+knitr::include_graphics("files/rdd350_jc_index3_decompstatefe_s.png")
+```
+]
+
+---
+
+# **Result:** RD estimates across all Southern borders <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.center-content[
+```{r, echo = F, out.width = '55%'}
+knitr::include_graphics("files/rdd100_jc_index3_yreduc_0_black_s.png")
+```
+]
+
+---
+
+# **Result:** RD estimates across borders by institutional differences <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.pull-left[
+```{r, echo = F, out.width = '100%', fig.cap = 'High-contrast borders (above-median diff. in Jim Crow Index)'}
+knitr::include_graphics("files/rdd100_jc_index3_yreduc_2_black_s.png")
+```
+]
+
+.pull-right[
+```{r, echo = F, out.width = '100%', fig.cap = 'Low-contrast borders (below-median diff. in Jim Crow Index)'}
+knitr::include_graphics("files/rdd100_jc_index3_yreduc_1_black_s.png")
+```
+]
+
+<div style="clear: both;"></div>
+
+---
+
+# **Result:** RD estimates by border differences in Jim Crow intensity <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.pull-left[
+```{r, echo = F, out.width = '80%', fig.cap = 'Black'}
+knitr::include_graphics("files/rdd350_pairwise_labs_jc_index3_1_s.png")
+```
+]
+
+.pull-right[
+```{r, echo = F, out.width = '80%', fig.cap = 'White'}
+knitr::include_graphics("files/rdd350_pairwise_labs_jc_index3_2_s.png")
+```
+]
+
+<div style="clear: both;"></div>
+
+---
+
+# **Result:** Jim Crow benefited wealthy white Americans (top-10%) <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.center-content[
+```{r, echo = F, out.width = '45%'}
+knitr::include_graphics("files/rdd350_pairwise_labs_discrim_total4_s.png")
+```
+]
+
+---
+
+# .hi-lared[Validation] of the RDD <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.center-content[
+1. **Location characteristics** do not differ across borders under slavery
+
+2. **Before Jim Crow:** no gaps in key outcomes
+
+3. Effects increase with time exposed to Jim Crow
+
+4. Persistent effects for movers
+
+5. Results robust to 1860 location-specific controls
+
+6. Results robust to bandwidth selection
+]
+
+---
+
+# .hi-lared[Validation:] No differences in location characteristics under slavery
+
+.center-content[
+<div style="display: flex; justify-content: space-between; gap: 12px;">
+<div style="width: 32%;">
+```{r, echo = F, out.width = '100%', fig.cap = 'Slaves Per-Capita'}
+knitr::include_graphics("files/rdd100_jc_slaves_pc_allb2_s.png")
+```
+</div>
+<div style="width: 32%;">
+```{r, echo = F, out.width = '100%', fig.cap = 'Cotton Output'}
+knitr::include_graphics("files/rdd100_jc_cotton_pc_allb2_s.png")
+```
+</div>
+<div style="width: 32%;">
+```{r, echo = F, out.width = '100%', fig.cap = 'Farm Value'}
+knitr::include_graphics("files/rdd100_jc_FARMVAL_1860_allb2_s.png")
+```
+</div>
+</div>
+]
+
+---
+
+# .hi-lared[Validation:] Evolution of RDs (1860--1940) <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.pull-left[
+```{r, echo = F, out.width = '80%', fig.cap = 'Votes per capita'}
+knitr::include_graphics("files/rdd100event_black_jc_index3_vote_s.png")
+```
+]
+
+.pull-right[
+```{r, echo = F, out.width = '80%', fig.cap = 'Black literacy'}
+knitr::include_graphics("files/rdd100event0_black_jc_index3_literate_s.png")
+```
+]
+
+<div style="clear: both;"></div>
+
+---
+class: inverse, middle, center
+
+# Takeaway
+
+Jim Crow almost single-handedly perpetuated the Free-Enslaved gap
+
+<div style="text-align: left; display: inline-block; margin: 0 auto;">
+
+1. Entire Free-Enslaved gap explained by Enslaved's concentration in states with most negative effects
+</div>
+<div style="text-align: left; display: inline-block; margin: 0 auto;">
+2. Jim Crow regime shaped state's long-run effects
+
+</div>
+
+---
+
+# **Data:** Education was a key target of Jim Crow <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.center-content[
+```{r, echo = F, out.width = '50%'}
+knitr::include_graphics("files/totalnumber_jim_crow_laws_bytype_s.png")
+```
+]
+
+---
+
+# **Results:** Large gaps in school quality <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.pull-left[
+```{r, echo = F, out.width = '100%', fig.cap = 'Black teacher wages (1940)'}
+knitr::include_graphics("files/rdd100_teacherwage_jc_index3_incwage_2_black40_s.png")
+```
+]
+
+.pull-right[
+```{r, echo = F, out.width = '100%', fig.cap = 'Black teacher education (1940)'}
+knitr::include_graphics("files/rdd100_teachereduc_jc_index3_yreduc_2_black40_s.png")
+```
+]
+
+<div style="clear: both;"></div>
+
+---
+class: inverse, middle, center
+
+# **Q:** Did access to education mediate Jim Crow's effect?
+
+---
+
+# **Strategy:** Rosenwald program (1914-31) <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.center-content[
+```{r, echo = F, out.width = '50%', fig.cap = 'Number of Rosenwald schools in 1931 (Aaronson & Mazumder 2011)'}
+knitr::include_graphics("files/rosenwald_school_map_s.png")
+```
+]
+
+---
+
+# **Strategy:** Quasi-experimental school access — Rosenwald (1914--31) <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.center-content[
+$$y_{i,1940} = \beta\cdot \text{Rosenwald}_{c(i,1870),y} + \mu_{c(i,1870)} + \mu_{s(i,1870),y} + \varepsilon_{i,1940}$$
+
+- $y_{i,1940}:$ 1940-outcome of child $i$
+- $\text{Rosenwald}_{c,y}:$ share of children w/ access to Rosenwald school (county $c$, cohort $y$)
+- $\mu_{c(i,1870)}:$ ancestor county fixed effects
+- $\mu_{s(i,1870),y}:$ ancestor state $\times$ cohort fixed effects
+]
+
+---
+
+# **Result:** School access mediated gap in education caused by Jim Crow <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.center-content[
+**Effects of the Rosenwald schools** <span class="gray">(Years of Education in 1940, Sample mean: 5.26)</span>
+
+<table style="font-size: 14pt; margin: 0 auto;">
+<thead>
+<tr><th></th><th>Baseline</th><th>Movers</th><th>Stayers</th><th>Few Laws</th><th>Many Laws</th><th>Low HRR</th><th>High HRR</th></tr>
+</thead>
+<tbody>
+<tr><td>Rosenwald exposure</td><td><b>0.30</b><sup>***</sup></td><td><b>0.16</b></td><td><b>0.61</b><sup>***</sup></td><td><b>0.24</b></td><td><b>0.53</b><sup>***</sup></td><td><b>0.20</b></td><td><b>0.85</b><sup>***</sup></td></tr>
+<tr><td></td><td>(0.11)</td><td>(0.13)</td><td>(0.19)</td><td>(0.27)</td><td>(0.20)</td><td>(0.15)</td><td>(0.23)</td></tr>
+<tr><td>Observations</td><td>107,141</td><td>74,287</td><td>32,799</td><td>43,061</td><td>32,639</td><td>37,516</td><td>34,475</td></tr>
+</tbody>
+</table>
+
+$\rightarrow$ Rosenwald program closed 80% of gap caused by high Jim Crow exposure
+]
+
+---
+
+# **Result:** School access had large intergenerational effects <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.center-content[
+**Intergenerational effects of the Rosenwald schools** <span class="gray">(Children's Neighborhood Level Outcomes in 2000)</span>
+
+<table style="font-size: 16pt; margin: 0 auto;">
+<thead>
+<tr><th></th><th>HS Degree (%)</th><th>College Degree (%)</th><th>Income (USD)</th><th>House Value (USD)</th></tr>
+</thead>
+<tbody>
+<tr><td></td><td><span class="gray"><i>Mean: 69.33</i></span></td><td><span class="gray"><i>Mean: 12.15</i></span></td><td><span class="gray"><i>Mean: 28,831.25</i></span></td><td><span class="gray"><i>Mean: 95,986.10</i></span></td></tr>
+<tr><td>Father's Rosenwald exposure</td><td><b>2.78</b></td><td><b>4.95</b><sup>**</sup></td><td><b>2,277.22</b><sup>**</sup></td><td><b>35,471.16</b><sup>**</sup></td></tr>
+<tr><td></td><td>(3.06)</td><td>(2.10)</td><td>(1,120.35)</td><td>(16,917.63)</td></tr>
+<tr><td>Observations</td><td>6,420</td><td>6,420</td><td>6,434</td><td>6,434</td></tr>
+</tbody>
+</table>
+]
+
+---
+class: inverse, middle, center
+
+# Takeaway
+
+Limiting access to education was a key mechanism through which Jim Crow harmed Black economic progress.
+
+Rosenwald schools:
+<div style="text-align: left; display: inline-block; margin: 0 auto;">
+- Closed 80% of education gap caused by Jim Crow in 1940
+</div>
+<div style="text-align: left; display: inline-block; margin: 0 auto;">
+- Increased 40% in 2nd generation's college completion in 2000
+</div>
+
+---
+
+# Further evidence: race
+
+.center-content[
+- Postwar suburbanization was partly white flight from Black in-migration <span class="gray">(Boustan 2010)</span>
+
+- Moving north did not guarantee mobility; destination conditions mattered <span class="gray">(Derenoncourt 2022)</span>
+
+- Segregating the federal workforce under Wilson lowered Black earnings <span class="gray">(Aneja & Xu 2022)</span>
+
+- The film The Birth of a Nation increased racial violence <span class="gray">(Ang 2023)</span>
+
+- Black WWI veterans advanced the early civil rights movement <span class="gray">(Ang & Chinoy 2026)</span>
+]
+
+---
+
+# Conclusion <br> .small[<span class="gray">Althoff, Reichardt (2024)</span>]
+
+.center-content[
+1. Today, descendants of Enslaved have vastly lower socioeconomic outcomes
+
+    <span class="hi-newblue">→ Racial disparities have deep roots in historical institutions of oppression</span>
+
+2. Jim Crow single-handedly perpetuated the Free-Enslaved gap
+
+    <span class="hi-newblue">→ Continued oppression limited progress of formerly enslaved families</span>
+
+3. School provision increased human capital and alleviated Jim Crow's long-run effects
+
+    <span class="hi-newblue">→ Targeted efforts can be effective in mediating harm of oppressive institutions</span>
+]
+
+---
+class: inverse, center, middle
+
+<div style="text-align: center; width: 100%;">
+  <div style="color: #1A3A68; font-weight: 700; font-size: 42px; line-height: 1.2;">
+    The Slaughter of the Bison and Reversal of Fortunes on the Great Plains
+  </div>
+  <div style="color: rgba(26, 58, 104, 0.7); font-weight: 400; font-size: 26px; line-height: 1.35; margin-top: 16px;">
+    Feir, Gillezeau &amp; Jones (2024)
+  </div>
+</div>
+
+---
+
+# A resource shock in a single decade <br> .small[<span class="gray">Feir, Gillezeau & Jones (2024)</span>]
+
+.center-content[
+- The North American bison was brought to near-extinction in little over a decade
+
+- Many Plains nations were bison-reliant for food, materials, and trade
+
+- The collapse removed the economic base of these societies almost at once
+
+- The paper traces the immediate and the long-run consequences
+]
+
+---
+
+# Data: anthropometrics and census <br> .small[<span class="gray">Feir, Gillezeau & Jones (2024)</span>]
+
+.center-content[
+- Height records for over 15,000 Native Americans, collected by Franz Boas (1889-1903)
+
+- Age-adjusted height compared across birth cohorts and across nations
+
+- Bison-reliant nations compared with nations never reliant on the bison
+
+- Merged with later census records on mortality and occupations
+]
+
+---
+
+# Immediate effects: the height advantage lost <br> .small[<span class="gray">Feir, Gillezeau & Jones (2024)</span>]
+
+.center-content[
+- Bison-reliant people had been among the tallest in the world
+
+- Cohorts born after the slaughter lost their entire height advantage
+
+- About a 2.5 cm decline in height relative to non-bison nations
+
+- Skewed sex ratios and higher child mortality indicate maternal deprivation
+]
+
+---
+
+# Long-run effects: a persistent gap <br> .small[<span class="gray">Feir, Gillezeau & Jones (2024)</span>]
+
+.center-content[
+- By the early twentieth century: child mortality 16 percentage points higher
+
+- Lower probability of reporting an occupation in bison nations
+
+- Income per capita has remained roughly 25% lower, on average, into the present
+
+- Not explained by agricultural productivity, self-governance, or the Dawes Act
+]
+
+---
+
+# Mechanism: credit and adjustment <br> .small[<span class="gray">Feir, Gillezeau & Jones (2024)</span>]
+
+.center-content[
+- The shock altered the dynamic path of development, not just the level
+
+- Federal policy limited mobility and employment options
+
+- Limited access to credit constrained respecialization and migration
+
+- Nations could not adjust, so the loss became permanent
+]

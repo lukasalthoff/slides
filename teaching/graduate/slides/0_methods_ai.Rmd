@@ -1,0 +1,537 @@
+---
+title: "AI in Economics Research"
+author: "Graduate Economic History"
+date: "Lukas Althoff"
+output:
+  xaringan::moon_reader:
+    chakra: '../../shared/remark-latest.min.js'
+    css: ['default', 'metropolis', 'metropolis-fonts', '../../shared/my-css.css']
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+
+opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  fig.align = "center",
+  out.width = "100%"
+)
+
+deck_dir <- normalizePath(dirname(knitr::current_input(dir = TRUE)), winslash = "/", mustWork = TRUE)
+stanford_fig_dir <- file.path(deck_dir, "files", "stanford_survey_comparison")
+
+system2(
+  "python3",
+  c(file.path(deck_dir, "generate_stanford_survey_figures.py")),
+  stdout = TRUE,
+  stderr = TRUE
+)
+```
+
+class: agenda
+
+# Agenda
+
+<ul class="agenda-list">
+<li class="current">AI in Science</li>
+<li class="upcoming">AI at Stanford</li>
+<li class="upcoming">Methods for Continuous Adaptation</li>
+</ul>
+
+---
+
+# Why an economic historian studies AI
+
+.center-content[
+- Many AI questions are historical: how general-purpose technologies diffuse, who gains, who loses
+
+- The long-run record (steam, electricity, computing) is the only at-scale evidence on these dynamics
+
+- This course uses that record to discipline claims about AI
+
+- This lecture: how AI is changing research, and a workflow to adapt
+]
+
+---
+
+# Measuring AI adoption via OpenAlex
+
+.center-content[
+- [OpenAlex](https://openalex.org/): open catalog of **250M+ scholarly works** with real-time metadata <a class="btn" href="#pub-volume">Publication volume</a>
+
+- Classification: 5 domains → 26 fields → ~250 subfields → ~4,500 topics
+
+- **AI adoption** = share of papers mentioning AI-related terms in title or abstract
+
+- Tracks AI diffusion across all research fields, not just computer science
+]
+
+---
+class: middle
+
+.center-content[
+```{r fig-ai-mention-fields, out.width='82%'}
+knitr::include_graphics(file.path(deck_dir, "files", "ai_mention_fields.png"))
+```
+]
+
+---
+class: middle
+
+.center-content[
+```{r fig-ai-mention-econ-subfields, out.width='82%'}
+knitr::include_graphics(file.path(deck_dir, "files", "ai_mention_econ_subfields.png"))
+```
+]
+
+---
+
+# Top-cited examples from the AI-classified set
+
+<div style="min-height: 68%; display: flex; flex-direction: column; justify-content: center;">
+<div style="font-size: 58%; margin-top: 0.2em;">
+<div style="display: flex; gap: 1rem; align-items: flex-start;">
+
+<div style="flex: 1;">
+<div class="hi" style="margin-bottom: 0.5em;">Industrial Organization</div>
+
+<div style="margin-bottom: 0.55em; line-height: 1.15;">
+1. "Why Do Management Practices Differ across Firms and Countries?"<br/>
+<span class="gray">Bloom &amp; Van Reenen (2010)</span>
+</div>
+
+<div style="margin-bottom: 0.55em; line-height: 1.15;">
+2. "Information Technology, Workplace Organization and the Demand for Skilled Labor: Firm-Level Evidence"<br/>
+<span class="gray">Bresnahan, Brynjolfsson &amp; Hitt (1999)</span>
+</div>
+
+<div style="margin-bottom: 0.55em; line-height: 1.15;">
+3. "Artificial intelligence, firm growth, and product innovation"<br/>
+<span class="gray">Babina et al. (2023)</span>
+</div>
+
+<div style="margin-bottom: 0.55em; line-height: 1.15;">
+4. "Robots and Jobs: Evidence from US Labor Markets"<br/>
+<span class="gray">Acemoglu &amp; Restrepo (2017)</span>
+</div>
+
+<div style="line-height: 1.15;">
+5. "Artificial Intelligence and Jobs: Evidence from Online Vacancies"<br/>
+<span class="gray">Acemoglu, Autor, Hazell &amp; Restrepo (2022)</span>
+</div>
+</div>
+
+<div style="flex: 1;">
+<div class="hi" style="margin-bottom: 0.5em;">Macroeconomics</div>
+
+<div style="margin-bottom: 0.55em; line-height: 1.15;">
+1. "Modified SEIR and AI prediction of the epidemics trend of COVID-19 in China under public health interventions"<br/>
+<span class="gray">Yang et al. (2020)</span>
+</div>
+
+<div style="margin-bottom: 0.55em; line-height: 1.15;">
+2. "Ranking the effectiveness of worldwide COVID-19 government interventions"<br/>
+<span class="gray">Haug et al. (2020)</span>
+</div>
+
+<div style="margin-bottom: 0.55em; line-height: 1.15;">
+3. "Comparing SARS-CoV-2 with SARS-CoV and influenza pandemics"<br/>
+<span class="gray">Petersen et al. (2020)</span>
+</div>
+
+<div style="margin-bottom: 0.55em; line-height: 1.15;">
+4. "Impact of COVID-19 pandemic on information management research and practice: Transforming education, work and life"<br/>
+<span class="gray">Dwivedi et al. (2020)</span>
+</div>
+
+<div style="line-height: 1.15;">
+5. "Artificial intelligence in sustainable energy industry: Status Quo, challenges and opportunities"<br/>
+<span class="gray">Ahmad et al. (2021)</span>
+</div>
+</div>
+
+<div style="flex: 1;">
+<div class="hi" style="margin-bottom: 0.5em;">Economic History</div>
+
+<div style="margin-bottom: 0.55em; line-height: 1.15;">
+1. "General Purpose Technologies"<br/>
+<span class="gray">Jovanovic &amp; Rousseau (2005)</span>
+</div>
+
+<div style="margin-bottom: 0.55em; line-height: 1.15;">
+2. "Measuring Central Bank Communication: An Automated Approach with Application to FOMC Statements"<br/>
+<span class="gray">Lucca &amp; Trebbi (2009)</span>
+</div>
+
+<div style="margin-bottom: 0.55em; line-height: 1.15;">
+3. "Increasing differences between firms: market power and the macro-economy"<br/>
+<span class="gray">Van Reenen (2018)</span>
+</div>
+
+<div style="margin-bottom: 0.55em; line-height: 1.15;">
+4. "Data and the Aggregate Economy"<br/>
+<span class="gray">Veldkamp &amp; Chung (2024)</span>
+</div>
+
+<div style="line-height: 1.15;">
+5. "Invariant Causal Prediction for Sequential Data"<br/>
+<span class="gray">Pfister, Bühlmann &amp; Peters (2018)</span>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+
+---
+class: agenda
+
+# Agenda
+
+<ul class="agenda-list">
+<li class="done">AI in Science</li>
+<li class="current">AI at Stanford</li>
+<li class="upcoming">Methods for Continuous Adaptation</li>
+</ul>
+
+---
+
+class: inverse, middle
+
+# AI at Stanford
+
+- This is a selected sample, not a representative Stanford cross-section
+- Students in this class
+- Others at Stanford (excluding this class; selectively invited respondents in different disciplines)
+
+---
+class: middle
+
+.center-content[
+```{r fig-stanford-time-saved, out.width='90%'}
+knitr::include_graphics(file.path(stanford_fig_dir, "stanford_vs_recent_ai_time_saved_total.png"))
+```
+]
+
+---
+class: middle
+
+.center-content[
+```{r fig-stanford-frequency, out.width='92%'}
+knitr::include_graphics(file.path(stanford_fig_dir, "stanford_vs_recent_ai_frequency.png"))
+```
+]
+
+---
+class: middle
+
+.center-content[
+```{r fig-stanford-tools, out.width='90%'}
+knitr::include_graphics(file.path(stanford_fig_dir, "stanford_vs_recent_ai_tools.png"))
+```
+]
+
+---
+class: middle
+
+.center-content[
+```{r fig-stanford-active-hours, out.width='90%'}
+knitr::include_graphics(file.path(stanford_fig_dir, "stanford_vs_recent_ai_active_hours.png"))
+```
+]
+
+---
+class: middle
+
+.center-content[
+```{r fig-stanford-autonomy, out.width='90%'}
+knitr::include_graphics(file.path(stanford_fig_dir, "stanford_vs_recent_ai_autonomy_self.png"))
+```
+]
+
+---
+class: agenda
+
+# Agenda
+
+<ul class="agenda-list">
+<li class="done">AI in Science</li>
+<li class="done">AI at Stanford</li>
+<li class="current">Methods for Continuous Adaptation</li>
+</ul>
+
+---
+
+# Using LLMs to generate data
+
+.center-content[
+- Turn unstructured sources into structured data: scanned documents, images, maps, free text
+
+- Course examples:
+  - Task-level skill and AI-exposure measures from job text <span class="gray">(Althoff & Reichardt 2026)</span>
+  - Belief in progress from digitized British books <span class="gray">(Almelhem et al. 2025)</span>
+  - Land use from satellite imagery <span class="gray">(Dippel, Frye & Leonard 2025)</span>
+
+- Workflow: define a schema, extract with a vision or language model, validate against a hand-coded sample
+
+- Always verify: spot-check accuracy and report error rates
+]
+
+---
+
+name: strategy
+# A strategy for continuous adaptation
+
+.center-content[
+1. Experiment with AI tools (= investment)
+
+  <a class="btn" href="#appendix-cursor-1">Cursor setup</a>
+  <a class="btn" href="#appendix-best-practices">Best practices</a>
+
+2. Keep trying new models
+  
+  <a class="btn" href="#appendix-arena-ai">Arena AI</a>
+
+3. Exchanging tacit knowledge
+  
+  <a class="btn" href="#appendix-pair-programming">Pair programming</a>
+
+4. Set up an AI-native knowledge base
+
+  <a class="btn" href="#appendix-obsidian">Obsidian</a>
+
+5. Codify your tacit knowledge and workflows
+
+  <a class="btn" href="#appendix-llm-skills-intro">Skills portable across LLMs</a>
+]
+
+---
+class: inverse, middle
+
+# Appendix
+
+---
+name: appendix-cursor-1
+class: middle
+
+<div style="position: absolute; bottom: 20px; left: 30px; z-index: 1000;"><a class="btn" href="#strategy">Back</a></div>
+
+.center-content[
+```{r fig-cursor-1, out.width='85%'}
+knitr::include_graphics(file.path(deck_dir, "files", "adaptation", "cursor1.png"))
+```
+]
+
+---
+name: appendix-cursor-2
+class: middle
+
+<div style="position: absolute; bottom: 20px; left: 30px; z-index: 1000;"><a class="btn" href="#strategy">Back</a></div>
+
+.center-content[
+```{r fig-cursor-2, out.width='85%'}
+knitr::include_graphics(file.path(deck_dir, "files", "adaptation", "cursor2.png"))
+```
+]
+
+---
+name: appendix-cursor-3
+class: middle
+
+<div style="position: absolute; bottom: 20px; left: 30px; z-index: 1000;"><a class="btn" href="#strategy">Back</a></div>
+
+.center-content[
+```{r fig-cursor-3, out.width='85%'}
+knitr::include_graphics(file.path(deck_dir, "files", "adaptation", "cursor3.png"))
+```
+]
+
+---
+name: appendix-best-practices
+
+# Some best practices
+
+<div style="position: absolute; bottom: 20px; left: 30px; z-index: 1000;"><a class="btn" href="#strategy">Back</a></div>
+
+- Choosing a mode and model
+  - Use **cheap models** in **agent mode** for easy tasks (*Composer 2*)  
+  - Use **advanced models** in **planning mode** for complex tasks (*Opus 4.6*, *GPT-5.4*, etc.)
+  - Personally, I like planning with *Claude Opus 4.6* and executing via *GPT-5.4*
+
+- Cursor vs. Cursor Extensions
+  - Most models available through **Cursor chat**
+  - **Extensions** for *Claude Code* and *OpenAI Codex* within Cursor
+  - Extensions valuable because **"harness"** is different and designed for longer-running tasks
+
+- Try using voice instead of typing (Wispr Flow, Cursor's own, etc.)
+
+- Create an AI-native **knowledge base** using *Obsidian*
+
+- Codify your tacit knowledge and workflows as **skills** (portable across LLMs)
+
+- Try out new models regularly (e.g., Arena AI)
+
+---
+name: appendix-llm-skills-intro
+
+# What LLM skills are
+
+<div style="position: absolute; bottom: 20px; left: 30px; z-index: 1000;">
+  <a class="btn" href="#strategy">Back</a>
+  <a class="btn" href="#appendix-llm-skills-map">Skill map</a>
+</div>
+
+.center-content[
+- **Skills** are reusable instructions for recurring tasks you want an LLM to handle in a disciplined way
+
+- They encode tacit knowledge into a portable workflow: what to do, in what order, what standards to apply, and when to use tools
+
+- Good skills reduce repeated prompting, make outputs more consistent, and let you reuse the same workflow across projects and models
+
+- You can build skills for literature reviews, coding, data cleaning, slide design, referee responses, or research ideation
+
+- Concretely, a skill is often just a Markdown or text file with instructions, written much like you would write instructions for a human, that the large language model reads to understand what it is supposed to do
+]
+
+---
+name: appendix-llm-skills-map
+
+# Skills Across the Research Process
+
+<div style="position: absolute; bottom: 20px; left: 30px; z-index: 1000;">
+  <a class="btn" href="#appendix-llm-skills-intro">Back</a>
+  <a class="btn" href="#appendix-llm-skills">Ideation example</a>
+</div>
+
+.pull-left[
+- **Ideation**
+  - `brainstorming`
+
+- **Data gathering**
+  - `data-gathering`
+  - `web-scraping`
+  - `digitization`
+
+- **Data analysis**
+
+- **Writing**
+  - `writing`
+  - `style`, `structure`, `formatting`
+  - `presentations`, `first-draft`
+]
+
+.pull-right[
+- **Reading**
+
+- **Reviewing**
+
+- **Mentorship**
+
+- **Administration**
+]
+
+---
+name: appendix-llm-skills
+
+# Skill example: ideation
+
+<div style="position: absolute; bottom: 20px; left: 30px; z-index: 1000;">
+  <a class="btn" href="#appendix-llm-skills-map">Back</a>
+  <a class="btn" href="#strategy">Strategy</a>
+</div>
+
+.center-content[
+- **Input**: a project idea, draft, or short summary
+
+- <span class="hi-laorange">Main agent</span>: writes a structured summary that serves as memory for <span class="hi-layellow">sub-agents</span>
+
+- <span class="hi-laorange">Main agent</span> asks <span class="hi-layellow">sub-agents</span>:
+  - Recommendations on framing, empirical strategy, data, heterogeneity, theory, wild cards
+
+- <span class="hi-layellow">Sub-agents</span>: work in parallel
+  - Each approaches question from different angle (expert personas are described to the agent)
+  - Each returns concrete ideas
+
+- <span class="hi-laorange">Main agent</span>: aggregates and rates the output
+  - Clusters overlap and looks for convergence across <span class="hi-layellow">sub-agents</span>
+  - Combined score = transformative potential × feasibility, plus a convergence, adjusted for novelty
+
+- **Output**: a short synthesis plus a ranked shortlist of next directions
+]
+
+---
+name: appendix-obsidian
+
+# How the Obsidian knowledge base works
+
+<div style="position: absolute; bottom: 20px; left: 30px; z-index: 1000;">
+  <a class="btn" href="#strategy">Back</a>
+  <a class="btn" href="#appendix-obsidian-image">Vault screenshot</a>
+</div>
+
+.center-content[
+- **Folder flow**: `raw/` stores source material, `wiki/summaries/` creates one note per source, `wiki/concepts/` distills reusable ideas, and `wiki/index.md` gives one-line navigation across the whole vault
+
+- **LLM workflow**: `.cursorrules` tells Cursor to read new raw files, write summaries, extract concepts, update related notes, and always refresh the master index
+
+- **Automatic cross-referencing**: Obsidian `[[wikilinks]]`, related frontmatter, and backlinks turn each note into a node in a graph rather than a standalone file
+
+- **Fast retrieval**: the index keeps one sentence per item, so the LLM can cheaply scan the whole knowledge base first, then open only the few notes that matter
+
+- **Compounding through interaction**: when a chat produces a useful synthesis, clarification, or new connection, ask the LLM to file it back into the vault, so the knowledge base grows with your own understanding
+]
+
+---
+name: appendix-obsidian-image
+class: middle
+
+<div style="position: absolute; bottom: 20px; left: 30px; z-index: 1000;"><a class="btn" href="#strategy">Back</a></div>
+
+.center-content[
+```{r fig-obsidian, out.width='85%'}
+knitr::include_graphics(file.path(deck_dir, "files", "adaptation", "obsidian.png"))
+```
+]
+
+---
+name: appendix-arena-ai
+class: middle
+
+<div style="position: absolute; bottom: 20px; left: 30px; z-index: 1000;"><a class="btn" href="#strategy">Back</a></div>
+
+.center-content[
+```{r fig-arena-ai, out.width='85%'}
+knitr::include_graphics(file.path(deck_dir, "files", "adaptation", "arena_ai.png"))
+```
+]
+
+---
+name: appendix-pair-programming
+class: middle
+
+<div style="position: absolute; bottom: 20px; left: 30px; z-index: 1000;"><a class="btn" href="#strategy">Back</a></div>
+
+.center-content[
+```{r fig-pair-programming, out.width='68%'}
+knitr::include_graphics(file.path(deck_dir, "files", "adaptation", "pair_programming.png"))
+```
+]
+
+---
+name: pub-volume
+class: middle
+
+.center-content[
+```{r fig-papers-by-domain, out.width='88%'}
+knitr::include_graphics(file.path(deck_dir, "files", "papers_by_domain.png"))
+```
+]
+
+<a class="btn btn-back" href="#3">← Back</a>

@@ -1,0 +1,608 @@
+---
+title: "Lectures 14 & 15: Gender"
+author: "Graduate Economic History"
+date: "Lukas Althoff"
+output:
+  xaringan::moon_reader:
+    chakra: '../../shared/remark-latest.min.js'
+    css: ['default', 'metropolis', 'metropolis-fonts', '../../shared/my-css.css']
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r, setup, include = F}
+library(knitr)
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 7,
+  fig.width = 10.5,
+  warning = F,
+  message = F
+)
+```
+
+class: agenda
+
+# Agenda
+
+<ul class="agenda-list">
+<li class="current">Gender inequality</li>
+<li class="upcoming">Norms</li>
+</ul>
+
+---
+# What history teaches about gender gaps
+.center-content[
+- Technology shifts labor demand; norms govern who gets access to it .small[<span class="gray">Goldin (1990)</span>]
+
+- Gaps closed unevenly: Services raised demand for female labor, the pill lowered the cost of long training, the quiet revolution turned jobs into careers .small[<span class="gray">Goldin (1995, 2006); Goldin, Katz (2002)</span>]
+
+- Child penalty remains: Concentrated in occupations with convex returns to long, inflexible hours .small[<span class="gray">Goldin (2014); Kleven, Landais, Søgaard (2019)</span>]
+
+- Norms outlive their origins: Plough societies show less equal gender roles long after leaving agriculture .small[<span class="gray">Alesina, Giuliano, Nunn (2013)</span>]
+
+]
+
+---
+
+# Female labor force participation around the world 
+
+```{r, echo = F, out.width = '60%'}
+knitr::include_graphics("files/lfp_devo_ushape.png")
+```
+
+.footnote[.small[Source: [Kleven, Landais, Leite-Mariante (2024)](https://academic.oup.com/restud/advance-article/doi/10.1093/restud/rdae104/7840285)]]
+
+---
+# Three movements in female labor supply
+.center-content[
+- U-shape across development: High in agriculture → low in early industry as production leaves the home → rising with services and human capital .small[<span class="gray">Goldin (1995); Olivetti, Petrongolo (2016); Ngai, Petrongolo (2017)</span>]
+
+- Quiet revolution (1970s–): Pill enabled long training incl. college reversal, from jobs to lifetime careers .small[<span class="gray">Goldin (2006); Goldin, Katz, Kuziemko (2006)</span>]
+
+- Residual gap = parenthood gap: Concentrated in "greedy" occupations with convex returns to long, inflexible hours .small[<span class="gray">Goldin (2014, 2021); Kleven, Landais, Søgaard (2019)</span>]
+]
+
+
+---
+# Drivers of change and persistence
+.center-content[
+
+- **Marriage bars.** Formal exclusions of married women from many occupations into 1950s .small[<span class="gray">Goldin (1990)</span>]
+
+- **Discrimination.**
+
+- **Contraception.** The pill lowered the cost of long professional training .small[<span class="gray">Goldin, Katz (2002)</span>]
+
+- **Home production.** Durables freed time for market work; collective-household bargaining microfoundation .small[<span class="gray">Greenwood, Seshadri, Yorukoglu (2005); Chiappori (1992)</span>]
+
+- **Labor technology.** Gender-biased technical change reshaped where women worked — milking machines pushed women off farms; typewriters opened clerical work; clinical-trial regulation shaped female-targeted innovation .small[<span class="gray">Ager, Go&ntilde;i, Salvanes (2026); Rashid (2026); Michelman, Msall (2024)</span>]
+
+- **Legal and political.** Suffrage and expansion of women's rights shifted spending and earnings; protective labor laws .small[<span class="gray">Doepke, Tertilt (2009); Miller (2008); Doepke, Foerster, Hannusch, Tertilt (2025)</span>]
+
+- **Culture.** Plough hypothesis; transmission via mothers; identity norm against out-earning husbands .small[<span class="gray">Alesina, Giuliano, Nunn (2013); Fernandez, Fogli, Olivetti (2004); Michalopoulos, Xue (2021); Bertrand, Kamenica, Pan (2015)</span>]
+
+]
+
+---
+# Female labor force participation around the world
+
+```{r, echo = F, out.width = '100%'}
+knitr::include_graphics("files/female_lfp.jpeg")
+```
+
+.footnote[.small[Source: [World Bank data via Patrick Collison](https://x.com/patrickc/status/1906749795248595077)]]
+
+---
+class: agenda
+
+# Agenda
+
+<ul class="agenda-list">
+<li class="done">Gender inequality</li>
+<li class="current">Norms</li>
+</ul>
+
+---
+# Origins and persistence of gender norms
+
+.center-content[
+- Gender inequality is pervasive across most parts of the world
+
+- Why does gender play such a large role in shaping economic outcomes?
+
+  - Many explanations of the **origins** are often about how biology interacts with societal/economic environment
+
+    (e.g., returns to upper body strength in agricultural economies; childbearing)
+
+    - But (1/2): Power and status are multi-dimensional (many dominated by women)
+    - But (2/2): There are many examples of matriarchal* societies
+
+  - Explanations of **persistence** often institutional (e.g., cultural, economic, legal)
+
+.footnote[.small[* Matriarchal society: Women hold most of the power in political, economic, and social life. Example: Iroquois tribes of North America.]]
+]
+
+---
+# Big picture view of literature on unequal gender norms
+
+.center-content[
+- Why do they emerge?
+  - In some agricultural economies, men had physical advantage, concentrating power among them .small[<span class="gray">Alesina et al. (2013)</span>]
+
+- Why do they persist even if initial reason vanishes?
+  - Self-preservervation .small[<span class="gray">Jayachandran 2015, Giuliano, Nunn 2021, Nunn (2021)</span>]
+  - Institutions (economic, religious, legal) that are complementary to unequal gender norms
+
+- What are the economic consequences?
+  - Inequality
+  - Output .small[<span class="gray">Duflo 2012, Hsieh et al. (2014)</span>]
+
+- How do they change?
+  - Correction of higher-order beliefs .small[<span class="gray">Bursztyn et al. (2020, 2024)</span>]
+  - Representation .small[<span class="gray">Truffa, Wong (2025); Truffa et al. (2025)</span>] & Media .small[<span class="gray">Rusche (2024)</span>]
+]
+
+---
+class: inverse, center, middle
+
+<div style="text-align: center; width: 100%;">
+  <div style="color: #1A3A68; font-weight: 700; font-size: 42px; line-height: 1.2;">
+    On the Origins of Gender Roles: Women and the Plough
+  </div>
+  <div style="color: rgba(26, 58, 104, 0.7); font-weight: 400; font-size: 26px; line-height: 1.35; margin-top: 16px;">
+    Alesina, Giuliano &amp; Nunn (2013)
+  </div>
+</div>
+
+---
+# Origins and persistence of gender norms <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+.center-content[
+Natural-selection-like evolution of culture
+
+- Historically, plough societies benefit from gender norms (gains from specialization)
+
+- Industrialization presumably eliminates plough-specific advantage of gender norms
+
+- But, norms seem to persist even after economy transitions out of agriculture
+  1. Laws (e.g., unequal property rights)
+  2. Economic systems complementary to gender norms
+  3. Self-preservation (norms reduce information cost)
+]
+
+---
+# Global differences in gender norms <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+.center-content[
+- Vast cross-societal differences in both value-based survey responses and objective measures like female labor force participation
+
+- "When jobs are scarce, men should have more right to a job than women" (WVS):
+  - Proportion of the population that answers 'yes' they agree:
+  - Iceland 3.6%; USA 10.6%; Rwanda 28%; Switzerland 35.1%
+  - Japan 60%; Pakistan 79%; Egypt 94.9%
+
+- Female labor force participation rates in 2000:
+  - Burundi 93.2%; Tanzania 89.3%; Iceland 83.3%; USA 70.4%
+  - Japan 59%; Italy 46%; Pakistan 30.3%; Egypt 21.5%
+]
+
+---
+# Boserup's hypothesis <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+.center-content[
+1. Certain parts of the world traditionally used plough agriculture
+
+2. In these places, men had an advantage for work in the field
+   - Person had to pull plough or control an animal that pulled plough
+   - Use of plough leaves little need for weeding (a job in which women almost always specialize)
+   - Plough agriculture was less compatible with simultaneous child care
+
+3. Therefore, men tended to work in the field outside of the home, but not women
+
+4. Belief that the home was the 'normal' place for women evolved
+
+5. These beliefs continue to persist today (even after movement out of agriculture)
+]
+
+---
+# Plough agriculture <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+```{r, echo = F, out.width = '55%'}
+knitr::include_graphics("files/plough_agriculture_image.png")
+```
+
+---
+# Hoe agriculture <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+```{r, echo = F, out.width = '50%'}
+knitr::include_graphics("files/shifting_cultivation_image.png")
+```
+
+---
+# This paper <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+.center-content[
+- Document link between type of agriculture traditionally practiced and gender roles
+
+  1. **Ethnic groups**
+
+     Traditional plough agriculture $\Rightarrow$ traditional gender roles
+
+  2. **Countries**
+
+     Traditional plough agriculture $\Rightarrow$ objective country-level outcomes
+
+  3. **Individuals**
+
+     Traditional plough agriculture $\Rightarrow$ self-reported attitudes and objective outcomes
+
+  4. **Children of migrants to the US and Europe**
+
+     Isolate the importance of factors internal vs. external to the individual
+]
+
+---
+# Identification issues <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+.center-content[
+- Ethnicities that adopted plough were different in many dimensions
+  - $\rightarrow$ Control for a wide range of observable ethnographic characteristics (at time of plough use)
+
+- In particular, pre-existing values may have affected technology adoption
+  - $\rightarrow$ Exploit variation in ethnicity-level differences in the type of cereal crops that could be grown historically, conditioning on overall suitability for cultivation
+]
+
+---
+# Data: Traditional plough agriculture <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+.center-content[
+- **Ethnographic Atlas** categorizes 1265 ethnic groups into four categories:
+  1. Data missing (109)
+  2. Plough absent (999)
+  3. Plough exists but not aboriginal (18)
+  4. Aboriginal plough use prior to contact (141)
+
+- $I_e^{plough}=1$ if ethnic group $e$ engaged in plough agriculture
+]
+
+---
+# Data: Historical plough use <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+```{r, echo = F, out.width = '55%'}
+knitr::include_graphics("files/ethno_atlas_1.png")
+```
+
+---
+# Data: Overlaying modern boundaries <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+```{r, echo = F, out.width = '55%'}
+knitr::include_graphics("files/ethno_atlas_2.png")
+```
+
+---
+# Data: Historical plough use across modern districts <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+```{r, echo = F, out.width = '55%'}
+knitr::include_graphics("files/ethno_atlas_3.png")
+```
+
+---
+# Data: Historical plough use <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+```{r, echo = F, out.width = '90%'}
+knitr::include_graphics("files/ethno_world_1.png")
+```
+
+---
+# Data: Historical plough use across modern countries <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+```{r, echo = F, out.width = '90%'}
+knitr::include_graphics("files/ethno_world_3.png")
+```
+
+---
+# Data: Historical plough use across modern districts <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+```{r, echo = F, out.width = '90%'}
+knitr::include_graphics("files/ethno_world_5.png")
+```
+
+---
+# Data: Ethnographic controls I <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+.center-content[
+- Economic complexity
+  1. Nomadic or fully migratory (80)
+  2. Semi-nomadic (187)
+  3. Semi-sedentary (93)
+  4. Compact, but temporary settlements (15)
+  5. Neighborhoods of dispersed family homes (149)
+  6. Separated hamlets forming a single community (106)
+  7. Compact and relatively permanent (504)
+  8. Complex settlements (29)
+
+$\rightarrow$ Create variable for low (1) to high (8) settlement complexity
+]
+
+---
+# Data: Ethnographic controls II <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+.center-content[
+- Political hierarchies
+  - Number of levels of political authority beyond the local community
+
+- Domesticated animals
+  - Presence of large domesticated animals
+
+- Tropical climate
+  - Proportion of the land within 200 kilometers of an ethnic group's centroid that is tropical
+
+- Agricultural suitability
+  - Fraction of land within 200 km of an ethnic group's centroid that is arable
+]
+
+---
+# Data: Historical female participation in agriculture <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+.center-content[
+- Gender differences in agriculture (& other activities):
+  1. Males only (70)
+  2. Males appreciably more (161)
+  3. Equal participation (230)
+  4. Females appreciably more (227)
+  5. Females only (32)
+
+  $\rightarrow$ Create variable for low (1) to high (5) female participation in agriculture
+]
+
+---
+# Results: Gender division of labor within agriculture <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+.center-content[
+| | Overall agric. (EA) | Overall agric. (SCCS) | Land clearance | Soil preparation | Planting | Crop tending | Harvesting |
+|:--|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+| Plough use | -0.88\*\*\* | -1.14\*\*\* | -0.43\*\* | -1.18\*\*\* | -1.29\*\*\* | -1.19\*\*\* | -0.95\*\*\* |
+| | (0.11) | (0.24) | (0.20) | (0.32) | (0.31) | (0.35) | (0.27) |
+| Mean | 3.04 | 2.83 | 1.45 | 2.15 | 2.86 | 3.16 | 3.23 |
+| Controls | Y | Y | Y | Y | Y | Y | Y |
+| N | 660 | 124 | 129 | 124 | 131 | 122 | 131 |
+| R-squared | 0.13 | 0.23 | 0.18 | 0.14 | 0.13 | 0.18 | 0.20 |
+
+.footnote[.small[Relative female participation by task (1 "low" to 5 "high"). EA = Ethnographic Atlas; SCCS = Standard Cross-Cultural Sample.]]
+]
+
+---
+# Results: Gender division of labor in other activities <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+.center-content[
+| | Small animals | Large animals | Milking | Cooking | Fuel gath. | Water fetching | Burden carrying | Handicrafts | Trading |
+|:--|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+| Plough use | 0.14 | 0.06 | 0.63 | -0.02 | -0.64 | -0.05 | -0.96\*\* | -0.16 | -0.16 |
+| | (0.52) | (0.25) | (0.70) | (0.11) | (0.40) | (0.21) | (0.38) | (0.27) | (0.54) |
+| Mean | 3.53 | 1.73 | 3.25 | 4.65 | 3.90 | 4.64 | 3.47 | 2.78 | 2.47 |
+| Controls | Y | Y | Y | Y | Y | Y | Y | Y | Y |
+| N | 88 | 95 | 48 | 173 | 159 | 154 | 135 | 74 | 59 |
+| R-squared | 0.05 | 0.04 | 0.14 | 0.04 | 0.04 | 0.04 | 0.16 | 0.15 | 0.10 |
+
+.footnote[.small[Relative female participation by task (1 "low" to 5 "high")]]
+]
+
+---
+# Data: Country-level outcomes <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+.center-content[
+- Female labor force participation:
+  - Proportion of women in the labor force (employed or seeking employment)
+
+- Female representation in positions of power:
+  - Female share of firm owners/managers
+  - Female share of seats in national parliament
+
+- Controls
+  - Historical: Agricultural suitability, tropical climate, presence of large animals, political hierarchies, economic complexity
+  - Modern: Log-income in 2000, log-income in 2000 squared
+]
+
+---
+# Results: Country-level impacts of historical plough use <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+.center-content[
+| | FLFP (2000) | | Female ownership | | Women in politics (2000) | |
+|:--|:--:|:--:|:--:|:--:|:--:|:--:|
+| Plough use | -12.40\*\*\* | -12.93\*\*\* | -15.24\*\*\* | -16.59\*\*\* | -4.82\*\* | -5.13\*\* |
+| | (2.96) | (3.54) | (4.06) | (4.96) | (1.78) | (2.06) |
+| Historical controls | Y | Y | Y | Y | Y | Y |
+| Contemporary controls | Y | Y | Y | Y | Y | Y |
+| Continent FEs | N | Y | N | Y | N | Y |
+| N | 165 | 165 | 123 | 123 | 144 | 144 |
+| R-squared | 0.40 | 0.41 | 0.16 | 0.22 | 0.31 | 0.34 |
+]
+
+---
+# Data: Individual-level outcomes <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+.center-content[
+- Female labor force participation
+
+- Subjective gender role attitudes that underly objective country-level measures:
+
+  2. Employment: "When jobs are scarce, men should have more right to a job than women"
+     - (i) agree, (ii) neither (iii) disagree
+     - Variable equals 1 if agree, and 0 if disagree.
+
+  3. Leadership and politics: "On the whole, men make better political leaders than women"
+     - (i) strongly disagree, (ii) disagree, (iii) agree, (iv) strongly agree
+     - Variable takes on values 1, 2, 3, 4.
+]
+
+---
+# Results: Individual-level values <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+.center-content[
+| | FLFP | Jobs | Leaders | FLFP | Jobs | Leaders |
+|:--|:--:|:--:|:--:|:--:|:--:|:--:|
+| Plough use | -0.18\*\*\* | 0.19\*\*\* | 0.22\*\*\* | -0.00 | 0.10\* | 0.30\*\*\* |
+| | (0.04) | (0.03) | (0.07) | (0.03) | (0.06) | (0.12) |
+| Fixed effects | Continent | | | Country | | |
+| Controls | Y | Y | Y | Y | Y | Y |
+| N (individuals) | 43,801 | 80,303 | 64,215 | 47,587 | 87,528 | 72,152 |
+| N (countries) | 73 | 74 | 50 | 78 | 79 | 55 |
+| R-squared | 0.17 | 0.21 | 0.19 | 0.27 | 0.28 | 0.26 |
+
+.footnote[.small[FLFP = Female labor participation. Jobs = "When jobs are scarce, men should have priority". Leaders = "Men make better political leaders"]]
+]
+
+---
+# Results: FLFP by ethnic group within country <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+.center-content[
+| | Bolivia | Chile | Cambodia | Malaysia | Nepal | Philippines | Uganda | All |
+|:--|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+| Plough use | -0.04\*\*\* | -0.07\*\*\* | -0.06\*\* | -0.08\*\*\* | -0.10\*\* | 0.04 | -0.08\*\*\* | -0.04\*\* |
+| | (0.00) | (0.00) | (0.03) | (0.02) | (0.04) | (0.02) | (0.02) | (0.02) |
+| Controls | Y | Y | Y | Y | Y | Y | Y | Y |
+| Ethnic gr. | 6 | 5 | 11 | 21 | 16 | 21 | 60 | 159 |
+| N | 173k | 505k | 432k | 319k | 710k | 1,266k | 1,003k | 4,536k |
+| R-squared | 0.07 | 0.17 | 0.19 | 0.10 | 0.19 | 0.13 | 0.09 | 0.15 |
+| Mean | 0.44 | 0.40 | 0.78 | 0.40 | 0.54 | 0.39 | 0.56 | 0.49 |
+| District FEs | 9 | 25 | 24 | 15 | 14 | 77 | 4 | 191 |
+
+.footnote[.small[Female labor force participation]]
+]
+
+---
+# Causality: Instrumental variables <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+.center-content[
+- Differences in extent to which crops benefit from introduction of plough
+  - Length of planting season
+  - Frequency of planting
+  - Amount of land to be prepared
+  - Qualities/characteristics of the soil that crops grown in (sloped, rocky, swampy, etc)
+
+- Group crops into two categories .small[<span class="gray">Pryor (1985)</span>]
+  1. **Plough-positive:** Wheat, barley, rye, teff, buckwheat, wet rice, industrial crops
+  2. **Plough-negative:** Millet, sorghum, root crops, maize, dry rice, tree crops
+]
+
+---
+# Data: Crop suitability
+
+```{r, echo = F, out.width = '75%'}
+knitr::include_graphics("files/barley_suitability.png")
+```
+
+---
+# Constructing the instruments <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+.center-content[
+- $x_e^j$: area suitable for growing crop $j$ in ethnic group $e$ (within 200 km of centroid)
+
+- Suitability of location of ethnic group $e$ for growing plough-positive cereals:
+$$Area\,Share_e^{positive} = \frac{(x_e^{wheat} + x_e^{barley} + x_e^{rye})/3}{x_e^{all}}$$
+
+- Suitability of location of ethnic group $e$ for growing plough-negative cereals is:
+$$Area\,Share_e^{negative} = \frac{(x_e^{sorghum} + x_e^{foxtail\,millet} + x_e^{pearl\,millet})/3}{x_e^{all}}$$
+]
+
+---
+# IV Results: First stage estimates <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+.center-content[
+| | FLFP | | Female firm ownership | | Women in politics | |
+|:--|:--:|:--:|:--:|:--:|:--:|:--:|
+| Plough-positive environment | 0.74\*\*\* | 0.63\*\*\* | 0.86\*\*\* | 0.67\*\*\* | 0.82\*\*\* | 0.69\*\*\* |
+| | (0.08) | (0.09) | (0.08) | (0.10) | (0.08) | (0.10) |
+| Plough-negative environment | 0.12 | 0.19 | 0.10 | 0.12 | 0.13 | 0.19 |
+| | (0.12) | (0.13) | (0.17) | (0.17) | (0.13) | (0.14) |
+| Continent FEs | N | Y | N | Y | N | Y |
+| F | 40.21 | 25.06 | 66.80 | 21.88 | 51.96 | 21.88 |
+| N | 160 | | 122 | | 140 | |
+| Mean | 0.53 | | 0.44 | | 0.54 | |
+
+.footnote[.small[First stage: Plough use]]
+]
+
+---
+# IV Results: Second stage estimates <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+.center-content[
+| | FLFP | | Female firm ownership | | Women in politics | |
+|:--|:--:|:--:|:--:|:--:|:--:|:--:|
+| Traditional plough use | -21.63\*\*\* | -25.01\*\*\* | -17.49\*\*\* | -22.69\*\*\* | -6.46\*\*\* | -9.73\*\*\* |
+| | (5.25) | (7.51) | (5.53) | (7.62) | (2.33) | (3.75) |
+| Continent FEs | N | Y | N | Y | N | Y |
+| Controls | Y | Y | Y | Y | Y | Y |
+| Hansen J | 0.00 | 0.00 | 0.41 | 0.31 | 0.72 | 0.86 |
+| N | 160 | | 122 | | 140 | |
+| Mean | 51.10 | | 35.04 | | 11.86 | |
+
+.footnote[.small[Second stage: Effect of plough use on gender outcomes]]
+]
+
+---
+# Identifying cultural transmission as mechanism <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+.center-content[
+- Historical plough use may not have only affected norms, but also institutions, markets and policies, which may also impact our outcomes of interest
+
+- To better identify a purely cultural channel, examine FLFP of second-generation immigrants living within the US and Europe
+  - Same domestic institutions, markets, policies, but different cultural backgrounds
+
+- Data on FLFP of immigrant daughters
+  - Daughters of immigrants to US from CPS (1994-2009)
+  - Daughters of immigrants to Europe from European Social Survey (2002-2011)
+]
+
+---
+# Results: US immigrants (CPS 1994-2011) <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+.center-content[
+| | All women | | | Married women | | | | | |
+|:--|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+| | Father's country | Mother's country | Parents same | Father's country | Mother's country | Parents same | Father's country | Mother's country | Parents same |
+| Plough use | -0.04\*\*\* | -0.04\*\* | -0.06\*\*\* | -0.09\*\* | -0.12\*\*\* | -0.14\*\*\* | -0.07\*\*\* | -0.05\*\* | -0.06\*\* |
+| | (0.02) | (0.02) | (0.02) | (0.05) | (0.04) | (0.05) | (0.02) | (0.02) | (0.02) |
+| Mean | 0.63 | 0.64 | 0.60 | 0.68 | 0.69 | 0.69 | 0.70 | 0.71 | 0.70 |
+| N | 57,138 | 55,341 | 32,776 | 10,206 | 9,508 | 6,835 | 35,393 | 35,158 | 23,124 |
+| R-squared | 0.23 | 0.23 | 0.26 | 0.11 | 0.11 | 0.12 | 0.09 | 0.08 | 0.09 |
+
+.footnote[.small[Female labor force participation]]
+]
+
+---
+# Results: European immigrants (ESS 2004-2011) <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+.center-content[
+| | Father's country | | Mother's country | | Same country | |
+|:--|:--:|:--:|:--:|:--:|:--:|:--:|
+| | 1-5 scale | Indicator | 1-5 scale | Indicator | 1-5 scale | Indicator |
+| Plough use | 0.22\*\* | 0.07\*\* | 0.21\*\* | 0.07\*\* | 0.30\*\*\* | 0.09\*\* |
+| | (0.09) | (0.03) | (0.09) | (0.03) | (0.10) | (0.04) |
+| Mean | 2.54 | 0.32 | 2.53 | 0.32 | 2.62 | 0.35 |
+| N | 15,545 | 13,024 | 15,260 | 12,788 | 10,535 | 8,780 |
+| R-squared | 0.18 | 0.17 | 0.17 | 0.16 | 0.17 | 0.17 |
+
+.footnote[.small["When jobs are scarce, men should have priority"]]
+]
+
+---
+# Further evidence: gender
+
+.center-content[
+- The pill lowered the cost of long training, raising women's career investment <span class="gray">(Goldin & Katz 2002)</span>
+
+- The remaining pay gap is driven by nonlinear pay for long hours <span class="gray">(Goldin 2014)</span>
+
+- The child penalty is the main remaining source of gender gaps <span class="gray">(Kleven, Landais & Sogaard 2019)</span>
+
+- Household technology raised female labor force participation <span class="gray">(Greenwood, Seshadri & Yorukoglu 2005)</span>
+
+- Men raised by working mothers more often have working wives <span class="gray">(Fernandez, Fogli & Olivetti 2004)</span>
+]
+
+---
+# Conclusions <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+.center-content[
+- Evidence that historical plough use resulted in a culture of gender role inequality today
+
+- Identify a causal effect of the plough using differences in geo-climatic conditions for cultivating plough-positive and plough-negative crops
+
+- Examines US and European immigrants, we are able to hold constant the external environment, and examine cultural transmission as a channel
+]
+
+---
+# Potential issues to consider <br> .small[<span class="gray">Alesina et al. (2013)</span>]
+.center-content[
+- Plough used virtually uniformly in some regions (e.g., Europe, North America)
+- Exclusion restriction
+- Bad controls
+- Large coefficients vs. high $R^2$ (plough use adds 0.06 to $R^2$ in regression of female participation on controls)
+- Exogeneity (were unequal societies more likely to adopt plough?)
+- Confounders (wealthy countries both adopt plough and become more gender unequal; agricultural intensity)
+- Measurement (missing language data)
+]
+
+---
+# Alternative explanation <br> .small[<span class="gray">Engels (1902)</span>]
+.center-content[
+- Agrigultural intensity produced surplus
+- Surplus allowed private property to develop
+- Slight disadvantages in physical strength or social roles now give men an edge, making it easier for them to take control of private property
+  - This point is debated because pre-agricultural societies had a large variety of gender roles
+- Men imposed a system of patrilineal inheritance and other social structures
+]
